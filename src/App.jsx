@@ -5,6 +5,7 @@ import Signup from "./pages/SignUp/SignUp.jsx";
 import LetterRoom from "./pages/LetterRoom/LetterRoom.jsx";
 import LetterRoomCreate from "./pages/LetterRoomCreate/LetterRoomCreate.jsx";
 import LetterRoomOpen from "./pages/LetterRoom/LetterRoomOpen.jsx";
+import LetterRoomLocked from "./pages/LetterRoom/LetterRoomLocked";
 
 
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
       <Route path="/letterroom" element={<LetterRoom />} />
       <Route path="/letterroom/create" element={<LetterRoomCreate />} />
       <Route path="/letterroom/open/:id" element={<LetterRoomOpen />} />
+      <Route path="/letterroom/locked/:id" element={<LetterRoomLocked />} />
     </Routes>
   );
 }
