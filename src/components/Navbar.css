@@ -1,0 +1,80 @@
+:root {
+  --navbar-bg: #fff4cc;           /* 파스텔 노랑 */
+  --navbar-border: #ffe680;
+  --navbar-shadow: 0 -2px 10px rgba(255, 200, 0, 0.2);
+
+  --icon-color: #1e3a8a80;        /* 남색 50% */
+  --icon-active: #1e3a8a;         /* 남색 100% */
+  --text-color: #1e3a8a80;
+  --text-active: #1e3a8a;
+
+  --navbar-height: 78px;
+  --navbar-max-width: 393px;      /* 모바일 기준 폭 */
+}
+
+/* 네비게이션 전체 */
+.navbar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--navbar-max-width);
+  background: var(--navbar-bg);
+  border-top: 1px solid var(--navbar-border);
+  box-shadow: var(--navbar-shadow);
+  backdrop-filter: blur(8px);
+  border-radius: 18px 18px 0 0;
+  z-index: 50;
+}
+
+/* 내부 레이아웃 (4칸 그리드) */
+.navbar-inner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  height: var(--navbar-height);
+  padding: 10px 12px env(safe-area-inset-bottom, 0);
+}
+
+/* 각 탭 기본 스타일 */
+.nav-item {
+  text-decoration: none;
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: color 0.2s ease;
+  -webkit-tap-highlight-color: transparent; /* 모바일 탭 하이라이트 제거 */
+}
+
+/* 탭 클릭 시 살짝 올라가는 효과 */
+.nav-item:active .nav-icon {
+  transform: translateY(-1px) scale(1.05);
+}
+
+/* 활성 탭 스타일 */
+.nav-item.active {
+  color: var(--text-active);
+}
+
+.nav-item.active .nav-icon {
+  color: var(--icon-active);
+  transform: translateY(-1px) scale(1.06);
+}
+
+/* 아이콘 공통 스타일 */
+.nav-icon {
+  width: 22px;
+  height: 22px;
+  color: var(--icon-color);
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+/* 라벨 (텍스트) */
+.nav-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
