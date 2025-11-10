@@ -1,196 +1,248 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+/* 폰트 임포트 (예시: index.css나 public/index.html에 넣는 것을 권장) */
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap');
 
 .login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
+  height: 100vh;
   width: 100%;
-  min-height: 100vh;
-
-  background: linear-gradient(to bottom, #FFFAEB 0%, #FFF4CC 50%, #FFE680 100%);
-
-  padding-top: 100px;
+  margin: 0;
+  padding: 40px 20px 20px;
   box-sizing: border-box;
+  position: relative;
   overflow-x: hidden;
-  font-family: 'Noto Sans KR', sans-serif;
+}
+.gradient-background {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: #FFFAEB; /* 폴백 색상 */
+  background: linear-gradient(to bottom, #FFFAEB 0%, #FFF4CC 50%, #FFE680 100%);
 }
 
-/* 로고 영역 */
-.logo-section {
+.login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.logo-wrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
-.logo-text {
-  font-size: 40px;
-  font-weight: 700;
-  background: linear-gradient(90deg, #4E95F6, #3A7AF2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.logo-icon {
-  font-size: 22px;
-}
-.logo-icon:first-child { transform: rotate(-15deg); }
-.logo-icon:last-child { transform: rotate(15deg) translateY(-3px); }
 
-/* 부제목 */
-.subtitle {
+.logo-text {
+  font-family: 'DM Serif Display', serif; /* 디자인 폰트 (예시) */
+  font-size: 48px;
+  color: #333;
+  margin: 0;
+  margin-right: 10px;
+  -webkit-text-stroke: 1px #333;
+  color: transparent;
+  background: linear-gradient(to right, #6A5ACD, #4169E1);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.envelope-icon {
+  font-size: 36px;
+  margin-left: 5px;
+  color: #FFD700;
+}
+
+.slogan {
   font-size: 16px;
-  color: #9B8579;
-  line-height: 1.5;
-  margin-bottom: 32px;
+  color: #666;
   text-align: center;
 }
 
-/* 로그인 박스 */
-.login-form-box {
-  width: 345px;
-  max-width: 94vw;
-  background-color: #FFFFFF;
-  border-radius: 24px;
+.login-form-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
   padding: 30px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
 }
 
-/* 입력 필드 */
 .input-group {
   width: 100%;
   margin-bottom: 20px;
 }
-.input-group label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #4A3428;
-  margin-bottom: 8px;
+
+.label {
   display: block;
-}
-.input-group input {
-  width: 100%;
-  height: 48px;
-  padding: 12px 16px;
-  font-size: 16px;
-  border: 1px solid #F0D5CC;
-  border-radius: 20px;
-  color: #4A3428;
-  background-color: #FFFFFF;
-  box-sizing: border-box;
-}
-.input-group input::placeholder {
-  color: #9B8579;
-  opacity: 0.6;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 8px;
+  font-weight: 500;
 }
 
-/* 비밀번호 아이콘 */
-.password-wrapper {
+.input {
+  width: 100%; /* 너비를 100%로 설정 */
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+}
+
+.input:focus {
+  border-color: #6A5ACD;
+}
+
+.password-input-wrapper {
   position: relative;
+  width: 100%;
   display: flex;
   align-items: center;
 }
+
+/* 비밀번호 input은 wrapper 안에 있으므로 너비 100% */
+.password-input-wrapper .input {
+  width: 100%;
+  padding-right: 40px; /* 아이콘 공간 확보 */
+}
+
+
+/* ... (기존 CSS 코드) ... */
 
 .eye-icon {
   position: absolute;
-  right: 14px;
-  width: 22px;
-  height: 22px;
+  right: 12px;
   cursor: pointer;
-  opacity: 0.8;
-  transition: opacity 0.2s ease;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.eye-icon:hover {
-  opacity: 1;
+.eye-icon img {
+  width: 20px;
+  height: 20px;
+  /* fill 속성은 img 태그에 적용 안 됨 */
 }
 
-/* 로그인 버튼  */
+.eye-icon.active svg {
+  fill: #6A5ACD; /* 활성화 시 아이콘 색상 (보라색 계열) */
+}
+
+
 .login-button {
   width: 100%;
-  height: 48px;
-  border: none;
-  border-radius: 20px;
-  background: linear-gradient(to left, #60A5FA 0%, #1E3A8A 100%);
+  padding: 15px;
+  background: linear-gradient(90deg, #6A5ACD 0%, #4169E1 100%);
   color: #fff;
-  font-size: 16px;
-  font-weight: 700;
-  margin-top: 8px;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-top: 10px;
+  margin-bottom: 20px;
+  transition: background 0.3s ease;
 }
 
-/* 하단 링크 */
-.out-link {
-  margin-top: 20px;
-  color: #9B8579;
-  font-weight: 500;
-  text-align: center;
+.login-button:hover {
+  opacity: 0.9;
+}
+
+.link-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #777;
   font-size: 14px;
-  opacity: 0.8;
-}
-
-.out-link span {
-  text-decoration: underline;
-  font-weight: 800;
   cursor: pointer;
+  padding: 0 5px;
 }
 
+.link-button:hover {
+  color: #333;
+  text-decoration: underline;
+}
 
-.social-login-divider {
+.divider {
+  color: #ccc;
+  font-size: 14px;
+  margin: 0 5px;
+}
+
+.separator {
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  color: #9B8579;
-  opacity: 0.6;
-  margin: 24px 0;
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+  margin: 20px 0;
 }
-.social-login-divider::before,
-.social-login-divider::after {
+
+.separator::before,
+.separator::after {
   content: '';
   flex: 1;
-  border-bottom: 1px solid #F0D5CC;
+  border-bottom: 1px solid #eee;
 }
-.social-login-divider span { padding: 0 8px; }
 
-/* 카카오 로그인 */
+.separator:not(:empty)::before {
+  margin-right: .25em;
+}
+
+.separator:not(:empty)::after {
+  margin-left: .25em;
+}
+
 .kakao-login-button {
   width: 100%;
-  height: 48px;
-  border: none;
-  border-radius: 20px;
-  background-color: #FEE500;
+  padding: 15px;
+  background: #FEE500;
   color: #3C1E1E;
-  font-size: 14px;
-  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-}
-.kakao-login-button svg {
-  width: 16px;
-  height: 16px;
+  transition: background 0.3s ease;
 }
 
-.login-footer {
-  font-size: 14px;
-  font-weight: 400;
-  color: #9B8579;
+.kakao-login-button:hover {
   opacity: 0.9;
-  text-align: center;
-  margin-top: 15px;
 }
 
-@media (max-width: 360px) {
-  .login-container { padding-top: 60px; }
-  .login-form-box {
-    width: 90vw;
-    padding: 24px;
-    border-radius: 20px;
-  }
-  .logo-text { font-size: 34px; }
-  .subtitle { font-size: 14px; }
+.kakao-icon {
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.footer-text {
+  font-size: 12px;
+  color: #999;
+  margin-top: auto;
+  position: relative;
+  z-index: 1;
 }
