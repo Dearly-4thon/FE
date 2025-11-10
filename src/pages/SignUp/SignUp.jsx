@@ -5,7 +5,6 @@ import eye from "../../assets/eye.svg";
 import eyeoff from "../../assets/eyeoff.svg";
 import Toast from "../../components/Toast/Toast.jsx";
 
-
 export default function Signup() {
   const [username, setUsername] = useState("");
   const [nickname, setNickname] = useState("");
