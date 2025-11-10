@@ -1,42 +1,38 @@
+/* body가 화면 전체를 완전히 채우게 */
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #FFF9E0; /* 로그인 배경과 동일하게 */
+  overflow-x: hidden;
+}
+
+/* root는 더 이상 중앙정렬하지 않음 */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: #FFF9E0;
+  overflow-x: hidden;
+  display: block; /* flex 제거 */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* 페이지 전체를 꽉 채움 */
+.page-container {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #FFF9E0;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* 반응형 유지 */
+@media (min-width: 768px) {
+  .page-container {
+    max-width: 420px;
+    margin: 0 auto;
   }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
