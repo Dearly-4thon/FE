@@ -1,0 +1,39 @@
+.toast {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 15px;
+  color: #4A3428;
+  z-index: 9999;
+  animation: fadeInOut 2s ease forwards;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+
+  width: 345px;
+  max-width: 94vw;
+  box-sizing: border-box;
+}
+
+/* 색상별 구분 */
+.toast-info {
+  background-color: #fffff0;
+}
+
+.toast-success {
+  background-color: #fffff0;
+}
+
+.toast-error {
+  background-color: #fffff0;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translate(-50%, -10px); }
+  10% { opacity: 1; transform: translate(-50%, 0); }
+  90% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -10px); }
+}
+
