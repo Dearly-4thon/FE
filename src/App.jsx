@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login/Login.jsx";
 import Signup from "./pages/SignUp/SignUp.jsx";
-import KakaoCallback from "./pages/Login/KakaoCallback.jsx";
+import KakaoCallback from "./pages/SignUp/KakaoCallback.jsx";
 import LetterRoom from "./pages/LetterRoom/LetterRoom.jsx";
 import LetterRoomCreate from "./pages/LetterRoomCreate/LetterRoomCreate.jsx";
 import LetterRoomOpen from "./pages/LetterRoom/LetterRoomOpen.jsx";
