@@ -1,40 +1,42 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
-
+// src/App.jsx
+import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
-import "./components/Navbar.css";
+import LetterRoom from "./pages/LetterRoom/LetterRoomListe.jsx";
+import WriteLetterForm from "./pages/WriteLetter/WriteLetterForm.jsx";
+import Compose from "./pages/Compose/Compose.jsx"; 
+import Mailbox from "./pages/Mailbox/Mailbox.jsx";
+// Mailbox에서 상세 경로를 렌더링할 컴포넌트 추가 가정
+import SelfMailboxDetail from "./pages/Mailbox/SelfMailboxDetail.jsx"; // image_bd2b63.png
+import FriendMailboxDetail from "./pages/Mailbox/FriendMailboxDetail.jsx"; // image_bd2b9c.png
 
-function App() {
-  const [count, setCount] = useState(0);
-
+export default function App() {
   return (
-    <>
-      {/* 기존 Vite 데모 화면 그대로 유지 */}
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((c) => c + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div
+      className="app-shell"
+      style={{
+        maxWidth: "393px", 
+        margin: "0 auto",
+        minHeight: "100vh",
+      }}
+    >
+      <Navbar /> 
+      <Routes>
+        <Route index element={<Navigate to="/letters" replace />} />
+        <Route path="/letters" element={<LetterRoom />} />
+        
+        {/* 수신함 메인: initialTab="received"로 기본 탭 활성화 */}
+        <Route path="/inbox" element={<Mailbox initialTab="received" />} /> 
+        
+        {/* ✨ 수정: 본인 편지함 상세 경로 (image_bd2b63.png) */}
+        <Route path="/inbox/self" element={<SelfMailboxDetail />} />
+        
+        {/* ✨ 수정: 상대방 편지함 상세 경로 (image_bd2b9c.png) */}
+        <Route path="/inbox/friend/:id" element={<FriendMailboxDetail />} />
 
-      {/* ✅ 하단 네비게이션 붙이기 */}
-      <Navbar />
-    </>
+        <Route path="/compose" element={<Compose />} />
+        <Route path="/compose/write" element={<WriteLetterForm />} />
+        <Route path="*" element={<Navigate to="/letters" replace />} />
+      </Routes>
+    </div>
   );
 }
-
-export default App;

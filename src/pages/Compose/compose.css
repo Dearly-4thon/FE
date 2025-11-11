@@ -1,0 +1,296 @@
+/* ===== 전체 화면 스크롤 영역 ===== */
+.compose-screen {
+    position: relative;
+    min-height: 100vh;
+    background: #ebf5fb;
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.compose-screen::-webkit-scrollbar { display: none; }
+
+/* 연한 베이지 배경 (플레인 버전) */
+.compose-screen.plain {
+    background: linear-gradient(135deg, #fffef5 0%, #fffbf0 50%, #fff9e8 100%);
+}
+
+/* ===== 내부 스테이지: 제목 공간 확보 ===== */
+.compose-stage {
+    position: relative;
+    width: 100%;
+    max-width: 393px;
+    margin: 0 auto;
+    padding-top: 100px;  /* 헤더 높이 보정 */
+    padding-bottom: 140px;
+}
+
+/* ===== 상단 Header (fixed) ===== */
+.header-fixed {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    width: 100%;
+    max-width: 393px;
+    margin: 0 auto;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 20;
+    background: linear-gradient(to bottom, #fffef5 60%, rgba(255, 254, 245, 0.9));
+}
+.header-text-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex-grow: 1;
+    margin-top: 10px;
+}
+
+/* 뒤로가기/알림 버튼 */
+.icon-btn {
+    all: unset;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; height: 40px;
+    color: #6b5a50;
+}
+.icon-btn svg { width: 24px; height: 24px; stroke-width: 2; }
+
+/* 제목/부제 */
+.title-text {
+    color: #4A3428;
+    font-family: "Noto Sans KR", system-ui, -apple-system, sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 32px;
+    letter-spacing: -0.2px;
+    margin: 0;
+}
+.title-sub {
+    color: #9B8579;
+    font-family: "Noto Sans KR", system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+/* ===== 스크롤 콘텐츠 영역 ===== */
+.compose-scroll {
+    width: 100%;
+    max-width: 393px;
+    margin: 0 auto;
+    padding: 0 16px;
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.compose-scroll::-webkit-scrollbar { display: none; }
+
+/* ===== 섹션 공통 ===== */
+.block { margin-bottom: 24px; }
+.block-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #4A3428;
+    margin-bottom: 12px;
+}
+
+/* ===== 그리드 ===== */
+.grid { display: grid; gap: 8px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+/* ===== 폰트 카드 ===== */
+.option {
+    display: flex;
+    padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    flex-shrink: 0;
+    min-height: 70px;
+    border-radius: 12px;
+    border: 1px solid #E6D6CD;
+    background: #FFFDFa;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.option.active {
+    border: 2px solid #60A5FA;
+    background: #EFF6FF;
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.20);
+}
+.option-caption {
+    color: #9B8579;
+    font-family: "Noto Sans KR", system-ui, -apple-system, sans-serif;
+    font-size: 12px; line-height: 16px;
+}
+.option-sample {
+    color: #4A3428;
+    font-family: "Noto Sans KR", system-ui, -apple-system, sans-serif;
+    font-size: 16px; line-height: 24px;
+}
+
+/* ===== 편지지 칩 ===== */
+.paper-chips-scroll { overflow: visible; margin: 0; padding: 0; }
+.paper-chips-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 0;
+}
+.chip {
+    flex-shrink: 0;
+    border: 1px solid #e6d6cd;
+    background: #fffdfa;
+    border-radius: 12px;
+    padding: 16px 12px;
+    font-size: 14px;
+    color: #4b403a;
+    cursor: pointer;
+    text-align: center;
+    height: 70px;
+    display: flex; align-items: center; justify-content: center;
+}
+.chip.active {
+    border-color: #60A5FA;
+    background: #EFF6FF;
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+    color: #2b1e19;
+}
+
+/* ===== 칩 배경 프리셋 ===== */
+.paperchip-white { background: #ffffff; }
+.paperchip-lavender { background: #f6f1ff; }
+.paperchip-pink-heart { background: #fff0f6; }
+.paperchip-sky { background: #eef9ff; }
+.paperchip-clover { background: #f3fff2; }
+.paperchip-peach { background: #fff4ee; }
+
+/* ===== 에디터 ===== */
+.editor-container {
+    padding: 12px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.editor {
+    border: 1px dashed #e6d6cd;
+    border-radius: 12px;
+    background: #ffffffb0;
+    margin-top: 0;
+}
+.editor textarea {
+    width: 100%;
+    min-height: 180px;
+    resize: vertical;
+    padding: 14px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #2b1e19;
+    background: transparent;
+    border: 0;
+    outline: none;
+}
+
+/* ===== 날짜 ===== */
+.date-field {
+    display: flex; align-items: center; gap: 8px;
+    border: 1px solid #eadad3;
+    background: #fffdfa;
+    border-radius: 12px;
+    padding: 12px 14px;
+}
+.cal-ico { width: 20px; height: 20px; color: #8e7a6f; }
+.date-field input { all: unset; font-size: 14px; color: #4b403a; flex-grow: 1; }
+
+/* ===== 이미지 썸네일 ===== */
+.thumbs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.thumb { position: relative; }
+.thumb img {
+    width: 64px; height: 64px; object-fit: cover;
+    border-radius: 8px; border: 1px solid #eadad3;
+}
+.thumb-x {
+    position: absolute; top: -6px; right: -6px;
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 0; background: #2b1e19; color: #fff;
+    cursor: pointer; line-height: 18px; font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+}
+.image-sub { font-size: 12px; color: #9B8579; margin: 0 0 8px; }
+
+/* ===== 업로드 박스 ===== */
+.upload-box {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px; padding: 30px 20px;
+    border: 2px dashed #e6d6cd; background: #fffdfa;
+    border-radius: 12px; color: #6b5a50; cursor: pointer; margin-top: 10px; min-height: 120px;
+}
+.up-ico { width: 28px; height: 28px; }
+
+/* 폰트 패밀리 프리셋 */
+.font-basic { font-family: "Noto Sans KR", sans-serif; }
+.font-rounded { font-family: "Cafe24Surround", sans-serif; }
+.font-soft { font-family: "OngleipParkDahyeon", cursive; }
+.font-elegant { font-family: "JoseonGulim", serif; }
+.font-modern { font-family: "Suit", sans-serif; }
+.font-warm { font-family: "GowoonDodum", sans-serif; }
+
+/* 에디터 배경 프리셋 */
+.editor.paper-white { background: #ffffffb0; }
+.editor.paper-lavender { background: #f5f0ffb0; }
+.editor.paper-pink-heart { background: #fff0f6b0; }
+.editor.paper-sky { background: #eef9ffb0; }
+.editor.paper-clover { background: #f3fff2b0; }
+.editor.paper-peach { background: #fff4eeb0; }
+
+/* ===== 마지막 여유 간격 ===== */
+.bottom-spacer { height: 24px; }
+
+/* ===== 하단 고정 ===== */
+.footer-fixed {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    width: 100%; max-width: 393px; margin: 0 auto;
+    z-index: 30; background: transparent;
+}
+.submit-button-area {
+    padding: 16px;
+    background: linear-gradient(to top, #fffef5 50%, rgba(255, 254, 245, 0.9) 70%, rgba(255, 254, 245, 0));
+}
+.submit-button {
+    width: 100%; padding: 14px 20px;
+    background-color: #60A5FA; color: #fff; border: none; border-radius: 12px;
+    font-size: 16px; font-weight: 500; cursor: pointer;
+    box-shadow: 0 4px 10px rgba(96,165,250,0.3);
+    transition: background-color .2s ease;
+}
+
+.nav-bar {
+    display: flex; justify-content: space-around; align-items: center;
+    height: 70px; background: #fff; border-top: 1px solid #f0f0f0; padding: 0 8px;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+}
+.nav-item {
+    all: unset; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    flex: 1; cursor: pointer; color: #9B8579; transition: color .2s ease;
+}
+.nav-item.active { color: #60A5FA; }
+.nav-item svg { width: 22px; height: 22px; }
+.nav-item span { font-size: 10px; margin-top: 2px; }

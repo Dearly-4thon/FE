@@ -1,0 +1,59 @@
+/* === 제목 줄: 절대 고정(top:150px) === */
+.wl-title-row{
+  position: absolute;
+  top: 150px;              /* ✅ 완성본 간격 */
+  left: 0; right: 0;
+  width: 100%;
+  max-width: var(--page-width, 393px);
+  margin: 0 auto;
+  padding: 0 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 30;
+}
+
+/* (옵션) 간격 넓게 쓰고 싶을 때 */
+.wl-title-row.wl-title-spaced { top: 180px; }
+
+.wl-title{
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -.2px;
+  line-height: 1.2;
+  display:flex; align-items:center; gap:8px;
+  color:#1e3a8a;
+  white-space: nowrap;   /* 줄바꿈 방지 */
+}
+
+@keyframes wlBounce{0%,100%{transform:translateY(-1px)}50%{transform:translateY(3px)}}
+.wl-q{display:inline-block; font-weight:900; color:#2563eb; animation:wlBounce 1.6s ease-in-out infinite;}
+
+.wl-info-btn{
+  margin-left:auto; width:28px; height:28px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:#fff; border:1px solid rgba(0,0,0,.06); box-shadow:0 1px 2px rgba(0,0,0,.06);
+  color:#9B8579; cursor:pointer;
+}
+.wl-info-plain{ width:18px; height:18px; }
+.wl-info-btn:active{ transform: translateY(1px); }
+
+/* 툴팁 */
+.wl-tooltip{ position:absolute; right:6px; top:calc(100% + 8px); z-index:30; }
+.wl-tooltip-card{
+  position:relative; width:280px; padding:14px 16px;
+  background:rgba(255,253,250,.96);
+  border:1.5px solid #f3e8dc; border-radius:12px;
+  backdrop-filter:blur(6px); box-shadow:0 8px 24px rgba(0,0,0,.12);
+  color:#9B8579; font-size:12px; line-height:1.6;
+}
+.wl-tooltip-card h3{ margin:2px 0 6px; font-size:14px; font-weight:500; color:#3B2F27; display:flex; gap:6px; align-items:center; }
+.wl-tooltip-card h3::after{ content:"💌"; font-size:12px; }
+.wl-tooltip-card .self{ color:#FF4B4B; font-weight:500; }
+.wl-tooltip-card .friend{ color:#2563EB; font-weight:500; }
+.wl-tooltip-card .plus{ color:#FF4B4B; font-weight:500; }
+.wl-tooltip-arrow{ position:absolute; right:14px; top:-6px; width:12px; height:12px; transform:rotate(45deg);
+  background:#fffdfa; border-left:1.5px solid #f3e8dc; border-top:1.5px solid #f3e8dc; }
+
+@media (max-width:360px){ .wl-tooltip-card{ width:254px; } }

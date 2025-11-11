@@ -1,0 +1,133 @@
+/* =========================
+   공통 배경 (푸른 파스텔 계열)
+========================= */
+
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap");
+
+:root{
+  --app-width: 393px;
+  --hpad: 16px;
+  --navbar-height: 78px;
+
+  /* 🎨 푸른 파스텔 계열 */
+  --sky-1: #F0F8FF;
+  --sky-2: #E6F3FF;
+  --sky-3: #D9EEFF;
+}
+
+.wl-screen{
+  position:relative; 
+  min-height:100vh;
+  background: linear-gradient(135deg, var(--sky-1) 0%, var(--sky-2) 40%, var(--sky-3) 100%);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+.wl-bg{
+  position:absolute; inset:0;
+  background: radial-gradient(1000px 800px at 50% 30%, rgba(179,220,255,.35), rgba(255,255,255,0) 60%);
+  pointer-events:none;
+}
+
+.wl-bg{ display:none; } /* 크림톤 단색/그라데로 통일 */
+
+/* 앱 폭 고정 */
+#root, .app-shell { max-width: var(--app-width); margin: 0 auto; min-height: 100vh; }
+
+/* =========================
+   원형 스테이지
+========================= */
+
+.wl-screen { position: relative; }
+
+/* 상단 244px, 가운데 고정 */
+.wl-stage{
+  position:absolute; top:244px; left:50%; transform:translateX(-50%);
+  width:100%; max-width: var(--app-width); pointer-events:none; z-index:1;
+}
+
+/* 정사각 유지 + 좌우 16px 여백(최대 420px) */
+.wl-stage-inner{
+  position:relative; margin:0 auto; pointer-events:auto;
+  width: calc(100% - (var(--hpad) * 2));
+  max-width: 420px;
+  aspect-ratio: 1 / 1;
+}
+
+/* 3중 링 (여유 간격) */
+.wl-ring{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  border-radius:50%; pointer-events:none;
+}
+.wl-ring-1{ width: 50%; height: 50%; border:2px solid #FFE5DC; opacity:.38; }
+.wl-ring-2{ width: 76%; height: 76%; border:2px solid #FFD4CC; opacity:.28; }
+.wl-ring-3{ width:100%; height:100%; border:2px solid #FFC4B8; opacity:.20; }
+
+/* 중앙 슬롯 + 마스킹 테이프 */
+.wl-center-slot{
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  width:110px; height:110px; border-radius:14px;
+  background:#fffffff0; border:1px solid #e8e4d9;
+  display:grid; place-items:center; box-shadow:0 14px 24px rgba(0,0,0,.10);
+}
+.wl-center-image{ font-size:30px; }
+.wl-center-label{
+  position:absolute; bottom:-24px; left:50%; transform:translateX(-50%);
+  font-size:12px; font-weight:800; color:#1e3a8a;
+}
+
+/* 테이프 공통 */
+.wl-tape{
+  position:absolute; width:36px; height:10px; border-radius:4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.12);
+  opacity:.92;
+}
+.wl-tl{ top:-8px; left:-8px; transform:rotate(-18deg);
+  background: repeating-linear-gradient(45deg,#FFB5C1 0 2px,#FFC8D1 2px 4px);
+}
+.wl-tr{ top:-8px; right:-8px; transform:rotate(18deg);
+  background: repeating-linear-gradient(0deg,#FFE680 0 2px,#FFF4CC 2px 4px);
+}
+.wl-bl{ bottom:-8px; left:-8px; transform:rotate(18deg);
+  background: repeating-linear-gradient(0deg,#A8D5FF 0 2px,#C8E5FF 2px 4px);
+}
+.wl-br{ bottom:-8px; right:-8px; transform:rotate(-18deg);
+  background: repeating-linear-gradient(45deg,#B5E7B5 0 2px,#D0F0D0 2px 4px);
+}
+
+/* 친구 카드 + 네온 호버 (여유 간격) */
+.wl-friend{
+  position:absolute; display:flex; flex-direction:column; align-items:center; gap:6px;
+  width:70px; height:70px; padding-top:6px; border-radius:18px;
+  background:#FFF4CC; border:3px solid #fff; box-shadow:0 10px 18px rgba(0,0,0,.08);
+  cursor:pointer; transition:transform .15s ease, box-shadow .15s ease;
+}
+.wl-friend::after{ /* 네온 글로우 */
+  content:""; position:absolute; inset:-16px; border-radius:inherit;
+  background: radial-gradient(closest-side, rgba(96,165,250,.55), rgba(96,165,250,0) 65%);
+  filter: blur(10px); opacity:0; transition: opacity .15s ease;
+}
+.wl-friend:hover{
+  transform:translate(-50%, -50%) scale(1.06);
+  box-shadow:0 16px 28px rgba(59,130,246,.35);
+}
+.wl-friend:hover::after{ opacity:1; }
+
+.wl-friend-avatar{ font-size:22px; line-height:1; color:#1e3a8a; }
+.wl-friend-avatar-img{
+  width:36px; height:36px; object-fit:cover; border-radius:12px; border:2px solid #fff;
+}
+.wl-friend-name{ font-size:12px; color:#4A3428; opacity:.8; margin-top:2px; }
+
+/* + 버튼: 절대좌표 (상단 684px, 오른쪽 24px) */
+.wl-fab-abs{
+  position:absolute;
+  top:684px; right:24px;
+  width:64px; height:64px; border-radius:50%; border:none;
+  background: linear-gradient(135deg,#1e3a8a,#2563eb); color:#fff;
+  font-size:34px; line-height:1; cursor:pointer;
+  box-shadow:0 24px 44px rgba(30,58,138,.35);
+  display:flex; align-items:center; justify-content:center;
+}
+.wl-fab-abs:active{ transform: scale(.98); }

@@ -1,42 +1,59 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* === 공통 변수 === */
+:root {
+  --app-width: 393px;           /* 고정 가로 */
+  --app-height: 852px;          /* 고정 세로 */
+  --header-height: 56px;
+  --navbar-height: 78px;
+
+  --bg-body: #f7f8fa;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* 리셋 + 기본 */
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg-body);
+
+  /* ✅ 화면 한가운데 앱 캔버스 배치 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  -webkit-font-smoothing: antialiased;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* 앱 기준 프레임: CircleStage의 absolute 기준 */
+.app-shell {
+  position: relative;
+  width: 393px;
+  height: 852px;
+  background: #fff;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+
+/* 페이지 스크롤 영역 (필요하면 className="page-scroll"로 감싸서 사용) */
+.page-scroll {
+  position: absolute;
+  top: var(--header-height);
+  left: 0;
+  right: 0;
+  bottom: var(--navbar-height);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 16px;
 }
 
-.card {
-  padding: 2em;
+/* 하단 네비가 absolute로 캔버스 바닥에 딱 붙도록 */
+.navbar {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: var(--navbar-height);
 }
 
-.read-the-docs {
-  color: #888;
-}
+/* 활성 탭 시 텍스트/아이콘 강조(네가 쓰던 토큰 유지 가정) */
+.nav-item.active .nav-label { font-weight: 700; }
+.nav-item.active .nav-icon { transform: translateY(-1px) scale(1.06); }
