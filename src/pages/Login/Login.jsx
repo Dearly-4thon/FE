@@ -4,7 +4,7 @@ import "./Login.css";
 import eye from "../../assets/eye.svg";
 import eyeoff from "../../assets/eyeoff.svg";
 import Toast from "../../components/Toast/Toast.jsx";
-
+import { BASE_URL } from "../../api/config.js";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [toast, setToast] = useState(null); 
+  const [toast, setToast] = useState(null);
 
   const showToast = (message, type = "info") => {
     setToast({ message, type });
@@ -27,42 +27,46 @@ export default function Login() {
 
     setLoading(true);
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch(`${BASE_URL}/auth/login/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({
+          user_id: username,
+          password,
+        }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
         showToast("로그인 성공! 💌", "success");
-        console.log("✅ 로그인 성공:", data);
+
+        // 토큰 저장 (백엔드에서 access/refresh 둘 다 주면 둘 다 저장)
+        if (data.access) {
+          localStorage.setItem("accessToken", data.access);
+        }
+        if (data.refresh) {
+          localStorage.setItem("refreshToken", data.refresh);
+        }
+
+        // 페이지 이동
+        setTimeout(() => navigate("/letterroom"), 1000);
       } else {
         showToast(data.message || "로그인 실패 😢", "error");
       }
     } catch (error) {
       console.error("❌ 로그인 오류:", error);
-      showToast("아이디와 비밀번호를 확인해주세요.", "error");
+      showToast("서버 오류가 발생했습니다.", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  /** 카카오 로그인 */
-  const handleKakaoLogin = async () => {
-    try {
-      const response = await fetch("/api/auth/login/kakao", { method: "POST" });
-      if (response.ok) {
-        showToast("카카오 로그인 성공! 💛", "success");
-      } else {
-        showToast("카카오 로그인 실패 😢", "error");
-      }
-    } catch (err) {
-      console.error('카카오 로그인 에러:', err);
-      showToast("카카오 로그인 오류", "error");
-    }
+  /** 카카오 로그인 (선택사항: 콜백 연결 시 수정 가능) */
+  const handleKakaoLogin = () => {
+    window.location.href = "https://zihyuniz.shop/accounts/kakao/login/";
   };
+
 
   return (
     <div className="login-container">
@@ -141,12 +145,12 @@ export default function Login() {
           카카오 로그인
         </button>
       </div>
-      
+
       <p className="out-link">
         아직 계정이 없으신가요?{" "}
         <span onClick={() => navigate("/signup")}>회원가입</span>
       </p>
-      
+
       <p className="login-footer">© 2025 Dearly. All rights reserved.</p>
     </div>
   );
