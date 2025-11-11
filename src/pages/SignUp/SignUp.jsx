@@ -4,6 +4,7 @@ import "./SignUp.css";
 import eye from "../../assets/eye.svg";
 import eyeoff from "../../assets/eyeoff.svg";
 import Toast from "../../components/Toast/Toast.jsx";
+import { BASE_URL } from "../../api/config.js";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -16,10 +17,7 @@ export default function Signup() {
   const [toast, setToast] = useState(null);
 
   const navigate = useNavigate();
-
-  const showToast = (message, type = "info") => {
-    setToast({ message, type });
-  };
+  const showToast = (message, type = "info") => setToast({ message, type });
 
   /** 아이디 중복 확인 */
   const handleCheckUsername = async () => {
@@ -29,60 +27,63 @@ export default function Signup() {
     }
 
     try {
-      const res = await fetch(`/api/auth/check-username?username=${username}`);
+      const res = await fetch(`${BASE_URL}/auth/check-user-id/?user_id=${username}`);
       const data = await res.json();
 
       if (res.ok) {
-        showToast("사용 가능한 아이디입니다. ✅", "success");
+        if (data.available) {
+          showToast("사용 가능한 아이디입니다.", "success");
+        } else {
+          showToast("이미 사용 중인 아이디입니다.", "error");
+        }
       } else {
-        showToast(data.message || "이미 사용 중인 아이디입니다.", "error");
+        showToast(data.message || "요청이 올바르지 않습니다.", "error");
       }
     } catch (err) {
-      console.error('아이디 중복 확인 오류:', err);
+      console.error("아이디 중복 확인 오류:", err);
       showToast("서버 오류가 발생했습니다.", "error");
     }
   };
 
-  /** 회원가입 요청 */
+
+  /** 회원가입 */
   const handleSignup = async () => {
-    if (!username || !nickname || !password || !passwordCheck) {
+    if (!username || !password || !passwordCheck) {
       showToast("모든 필드를 입력해주세요.", "error");
       return;
     }
-
     if (password !== passwordCheck) {
       showToast("비밀번호가 일치하지 않습니다.", "error");
       return;
     }
 
-    if (password.length < 8 || password.length > 16) {
-      showToast("비밀번호는 8~16자 사이여야 합니다.", "error");
-      return;
-    }
-
     setLoading(true);
     try {
-      const response = await fetch("/api/auth/signup", {
+      const res = await fetch(`${BASE_URL}/auth/register/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, nickname, password }),
+        body: JSON.stringify({
+          user_id: username,
+          password: password,
+          password_confirm: passwordCheck,   // ✅ 스펙 반영
+        }),
       });
+      const data = await res.json();
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (res.status === 201) {
         showToast("회원가입 성공! 🎉", "success");
-        setTimeout(() => navigate("/login"), 2000);
+        setTimeout(() => navigate("/login"), 1200);
       } else {
         showToast(data.message || "회원가입 실패 😢", "error");
       }
-    } catch (err) {
-      console.error('서버 오류:', err);
+    } catch (e) {
+      console.error(e);
       showToast("서버 오류가 발생했습니다.", "error");
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="signup-container">
@@ -146,12 +147,11 @@ export default function Signup() {
               onChange={(e) => setPassword(e.target.value)}
             />
             <img
-                src={showPassword ? eyeoff : eye}
-                alt="toggle password visibility"
-                className="eye-icon"
-                onClick={() => setShowPassword(!showPassword)}
+              src={showPassword ? eyeoff : eye}
+              alt="toggle password"
+              className="eye-icon"
+              onClick={() => setShowPassword(!showPassword)}
             />
-
           </div>
         </div>
 
@@ -184,10 +184,10 @@ export default function Signup() {
         </button>
       </div>
 
-        <p className="login-link">
-          이미 계정이 있으신가요?{" "}
-          <span onClick={() => navigate("/")}>로그인</span>
-        </p>
+      <p className="login-link">
+        이미 계정이 있으신가요?{" "}
+        <span onClick={() => navigate("/login")}>로그인</span>
+      </p>
     </div>
   );
 }
