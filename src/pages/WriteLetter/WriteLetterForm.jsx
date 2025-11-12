@@ -1,35 +1,45 @@
 import { useState } from "react";
-import PageHeader from "./components/PageHeader.jsx";
+import { useNavigate } from "react-router-dom";
+
 import TitleRow from "./components/TitleRow.jsx";
 import CircleStage from "./components/CircleStage.jsx";
 import ChooserModal from "./components/ChooserModal.jsx";
-import "./styles/base.css";
+
+import "./styles/title-row.css";
+import "./styles/circle-stage.css";
 
 export default function WriteLetterForm() {
-  const [showChooser, setShowChooser] = useState(false);
+  const [open, setOpen] = useState(false);
+  const nav = useNavigate();
+
+  const goSelf = () => nav("/compose/form");
+
+  const goFriend = (friend) => {
+    const handle = friend.handle ?? friend.id;
+    nav(`/compose/form/friend/${handle}`, {
+      state: { friendName: friend.name },
+    });
+  };
 
   return (
     <div className="wl-screen">
-      {/* 파스텔 하늘 + 종이질감 */}
-      <div className="wl-bg" />
+      <TitleRow title="누구에게 편지를 쓸까요" showQuestion />
 
-      <PageHeader title="편지쓰기" />
-      <TitleRow spaced />
+      <CircleStage
+        demoFriends={true}
+        onSelectRecipient={(t) => (t.id === "me" ? goSelf() : goFriend(t))}
+      />
 
-      {/* 원형 스테이지 (친구 더미 포함) */}
-      <CircleStage demoFriends onClickFab={() => setShowChooser(true)} />
-
-      {/* + 버튼: 절대좌표(상단 684px, 우측 24px) 고정 */}
+      {/* FAB: top 684px / left 24px 고정 */}
       <button
-        className="wl-fab-abs"
-        onClick={() => setShowChooser(true)}
-        aria-label="새 편지"
+        className="wl-fab"
+        onClick={() => setOpen(true)}
+        aria-label="친구 목록에서 선택"
       >
         +
       </button>
 
-      {/* 모달 */}
-      {showChooser && <ChooserModal onClose={() => setShowChooser(false)} />}
+      {open && <ChooserModal onClose={() => setOpen(false)} />}
     </div>
   );
 }

@@ -1,59 +1,139 @@
-/* === 제목 줄: 절대 고정(top:150px) === */
-.wl-title-row{
-  position: absolute;
-  top: 150px;              /* ✅ 완성본 간격 */
-  left: 0; right: 0;
-  width: 100%;
-  max-width: var(--page-width, 393px);
+/* ===========================
+   전체 컨테이너
+=========================== */
+.wl-screen {
+  position: relative; /* 기준 컨테이너 */
+  width: 393px;
+  height: 852px;
   margin: 0 auto;
-  padding: 0 18px;
+  background: linear-gradient(180deg, #f3f8ff 0%, #eaf3ff 100%);
+  overflow: hidden;
+}
 
+/* ===========================
+   제목줄 (144px 절대위치)
+=========================== */
+.wl-title-row {
+  position: absolute;
+  top: 144px;                /* ✅ 상단에서 144px 고정 */
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 12px;
-  z-index: 30;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 393px;
+  padding: 0 24px;
+  z-index: 10;
 }
 
-/* (옵션) 간격 넓게 쓰고 싶을 때 */
-.wl-title-row.wl-title-spaced { top: 180px; }
-
-.wl-title{
-  font-size: 24px;
-  font-weight: 400;
-  letter-spacing: -.2px;
-  line-height: 1.2;
-  display:flex; align-items:center; gap:8px;
-  color:#1e3a8a;
-  white-space: nowrap;   /* 줄바꿈 방지 */
+.wl-title {
+  margin: 0;
+  font-family: "Noto Sans KR", system-ui, -apple-system, Segoe UI;
+  font-size: 26.4px;
+  font-weight: 700;
+  line-height: 35.2px;
+  color: #1E3A8A;
 }
 
-@keyframes wlBounce{0%,100%{transform:translateY(-1px)}50%{transform:translateY(3px)}}
-.wl-q{display:inline-block; font-weight:900; color:#2563eb; animation:wlBounce 1.6s ease-in-out infinite;}
-
-.wl-info-btn{
-  margin-left:auto; width:28px; height:28px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  background:#fff; border:1px solid rgba(0,0,0,.06); box-shadow:0 1px 2px rgba(0,0,0,.06);
-  color:#9B8579; cursor:pointer;
+/* 물음표: 그라데이션 + bounce */
+.wl-qmark {
+  display: inline-block;
+  margin-left: 6px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #1E3A8A 0%, #1E40AF 50%, #3B82F6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: q-bounce 2.4s ease-in-out infinite;
 }
-.wl-info-plain{ width:18px; height:18px; }
-.wl-info-btn:active{ transform: translateY(1px); }
+@keyframes q-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* info 버튼 */
+.wl-title-actions {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.wl-info-btn {
+  all: unset;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+}
+.wl-info-btn img {
+  width: 20px;
+  height: 20px;
+  opacity: 0.75;
+}
+.wl-info-btn:active {
+  transform: translateY(1px);
+}
 
 /* 툴팁 */
-.wl-tooltip{ position:absolute; right:6px; top:calc(100% + 8px); z-index:30; }
-.wl-tooltip-card{
-  position:relative; width:280px; padding:14px 16px;
-  background:rgba(255,253,250,.96);
-  border:1.5px solid #f3e8dc; border-radius:12px;
-  backdrop-filter:blur(6px); box-shadow:0 8px 24px rgba(0,0,0,.12);
-  color:#9B8579; font-size:12px; line-height:1.6;
+.wl-tooltip {
+  position: absolute;
+  top: 34px;
+  right: 0;
+  z-index: 30;
 }
-.wl-tooltip-card h3{ margin:2px 0 6px; font-size:14px; font-weight:500; color:#3B2F27; display:flex; gap:6px; align-items:center; }
-.wl-tooltip-card h3::after{ content:"💌"; font-size:12px; }
-.wl-tooltip-card .self{ color:#FF4B4B; font-weight:500; }
-.wl-tooltip-card .friend{ color:#2563EB; font-weight:500; }
-.wl-tooltip-card .plus{ color:#FF4B4B; font-weight:500; }
-.wl-tooltip-arrow{ position:absolute; right:14px; top:-6px; width:12px; height:12px; transform:rotate(45deg);
-  background:#fffdfa; border-left:1.5px solid #f3e8dc; border-top:1.5px solid #f3e8dc; }
+.wl-tooltip-card {
+  position: relative;
+  width: 260px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 10px 24px rgba(24,39,75,.12);
+  font-size: 13.5px;
+  color: #374151;
+}
+.wl-tooltip-card h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1E3A8A;
+}
+.wl-tooltip-card .self { color:#3B82F6; font-weight:700; }
+.wl-tooltip-card .friend { color:#22C55E; font-weight:700; }
+.wl-tooltip-card .plus { color:#F97316; font-weight:700; }
+.wl-tooltip-arrow {
+  position: absolute;
+  top: -7px;
+  right: 14px;
+  width: 14px;
+  height: 14px;
+  transform: rotate(45deg);
+  background: #ffffff;
+  border-left: 1px solid #E5E7EB;
+  border-top: 1px solid #E5E7EB;
+}
 
-@media (max-width:360px){ .wl-tooltip-card{ width:254px; } }
+/* FAB 버튼 (좌표 고정) */
+.wl-fab {
+  position: absolute;
+  top: 684px;       /* ✅ 상단에서 684px */
+  left: 24px;       /* ✅ 좌측 여백 24px */
+  width: 64px;
+  height: 64px;
+  border: none;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  background: linear-gradient(135deg,#1E3A8A,#2563EB);
+  color: #fff;
+  font-size: 36px;
+  line-height: 0;
+  box-shadow: 0 18px 32px rgba(37,99,235,.28);
+  z-index: 100;
+}
+.wl-fab:active {
+  transform: translateY(1px);
+}

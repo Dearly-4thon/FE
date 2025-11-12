@@ -131,3 +131,95 @@
   display:flex; align-items:center; justify-content:center;
 }
 .wl-fab-abs:active{ transform: scale(.98); }
+
+.wl-info-btn{
+  /* 오른쪽에서 30px 떨어지도록, flex 컨테이너에서 우측 정렬 지원 */
+  margin-left: auto;
+  margin-right: 30px;
+
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #9B8579;
+  box-shadow: none;        /* 배경 그림자 제거 */
+  cursor: pointer;
+
+  background: transparent; /* 배경 없앰 */
+  border: none;
+  padding: 0;
+  vertical-align: middle;
+}
+.wl-info-btn svg {
+  width: 14px;
+  height: 14px;
+}
+.wl-info-btn:active { transform: translateY(1px); }
+
+/* overlay가 전체를 가리지 않게 하고, 버튼들만 클릭 가능하도록 설정 */
+.wl-screen,
+.wl-bg,
+.wl-stage,          /* 필요하면 추가 */
+.stage-abs {        /* 혹시 원형 스테이지의 절대 레이어명이라면 */
+  pointer-events: none;
+}
+
+/* 인터랙티브 요소는 다시 허용 */
+.wl-center,
+.wl-me-card,
+.wl-friend,
+.wl-fab,
+.wl-chooser-card {
+  pointer-events: auto;
+  z-index: 3; /* 필요시 클릭 우선권 확보 */
+}
+
+.wl-info-modal {
+  position: absolute;
+  right: 18px;            /* 오른쪽으로 붙임 */
+  top: 24px;              /* 위로 붙여 중앙 원형에서 멀리 떨어짐 */
+  width: 280px;           /* 전체 크기 축소 */
+  max-width: calc(var(--app-width) - 32px);
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px 14px;     /* 패딩 축소 */
+  box-shadow: 0 8px 20px rgba(18,36,72,0.12);
+  z-index: 1200;
+  color: #3b2f34;
+  pointer-events: auto;
+}
+
+.wl-info-modal::after {
+  content: "";
+  position: absolute;
+  right: 36px;
+  top: -7px;
+  width: 12px; height: 12px;
+  transform: rotate(45deg);
+  background: #fff;
+  box-shadow: -1px -1px 0 rgba(0,0,0,0.03);
+}
+
+/* 타이포 축소 */
+.wl-info-modal .wl-guide-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  color: #3b2f34;
+}
+
+.wl-info-modal .wl-guide-body {
+  font-size: 12px;
+  line-height: 1.45;
+  color: #6a6a6a;
+  margin: 0;
+}
+
+/* 작은 화면 보정 */
+@media (max-width: 420px) {
+  .wl-info-modal { right: 12px; top: 20px; width: calc(100% - 32px); }
+  .wl-info-modal::after { right: 28px; }
+}

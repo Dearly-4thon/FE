@@ -1,30 +1,33 @@
 import { NavLink } from "react-router-dom";
 import { Mail, PenLine, Inbox, User } from "lucide-react";
-import "./Navbar.css";
-
-const NAV_ITEMS = [
-  { to: "/letters",  label: "편지방",   Icon: Mail   },
-  { to: "/compose",  label: "편지쓰기", Icon: PenLine }, // 기본 탭: WriteLetterForm
-  { to: "/inbox",    label: "수신함",   Icon: Inbox  },
-  { to: "/mypage",   label: "마이페이지", Icon: User  },
-];
+import "./navbar.css";
 
 export default function Navbar() {
-  return (
-    <nav className="navbar" role="navigation" aria-label="하단 탭">
-      <div className="navbar-inner">
-        {NAV_ITEMS.map(({ to, label, Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={to === "/letters"}
-            className={({ isActive }) => "nav-item" + (isActive ? " active" : "")}
-          >
-            <Icon className="nav-icon" aria-hidden="true" />
-            <span className="nav-label">{label}</span>
-          </NavLink>
-        ))}
-      </div>
-    </nav>
-  );
+    const cx = ({ isActive }) => (isActive ? "nav-item active" : "nav-item");
+
+    return (
+        <nav className="navbar">
+            <div className="navbar-inner">{/* ← CSS와 동일한 클래스명 */}
+                <NavLink to="/letters" className={cx} aria-label="편지방">
+                    <Mail className="nav-icon" />
+                    <span className="nav-label">편지방</span>
+                </NavLink>
+
+                <NavLink to="/compose" className={cx} aria-label="편지쓰기">
+                    <PenLine className="nav-icon" />
+                    <span className="nav-label">편지쓰기</span>
+                </NavLink>
+
+                <NavLink to="/inbox" className={cx} aria-label="수신함">
+                    <Inbox className="nav-icon" />
+                    <span className="nav-label">수신함</span>
+                </NavLink>
+
+                <NavLink to="/mypage" className={cx} aria-label="마이페이지">
+                    <User className="nav-icon" />
+                    <span className="nav-label">마이페이지</span>
+                </NavLink>
+            </div>
+        </nav>
+    );
 }

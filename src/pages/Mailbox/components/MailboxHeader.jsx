@@ -4,11 +4,7 @@ import { ArrowLeft } from "lucide-react";
 export default function MailboxHeader({ title = "수신함", onBack }) {
   return (
     <header className="mailbox-header" style={styles.header}>
-      <button type="button" onClick={onBack} style={styles.backBtn} aria-label="뒤로">
-        <ArrowLeft size={20} />
-      </button>
-      <h1 style={styles.title}>{title}</h1>
-      <div style={{ width: 32 }} /> {/* 우측 공간 균형용 */}
+
     </header>
   );
 }

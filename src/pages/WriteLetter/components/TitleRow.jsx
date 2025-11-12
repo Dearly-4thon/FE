@@ -1,42 +1,51 @@
-import { useState } from "react";
-import { Info } from "lucide-react";
-import "../styles/title-row.css";
+import { useEffect, useRef, useState } from "react";
+import infoIcon from "../../../assets/info.svg";
 
 export default function TitleRow({
-    title = "누구에게 편지를 쓸까요",
-    spaced = false,
-    showQuestion = true,
+  title = "누구에게 편지를 쓸까요",
+  showQuestion = true,
 }) {
-    const [openTip, setOpenTip] = useState(false);
+  const [openTip, setOpenTip] = useState(false);
+  const tipRef = useRef(null);
 
-    return (
-        <div className={`wl-title-row ${spaced ? "wl-title-spaced" : ""}`}>
-            <h1 className="wl-title">
-                {title} {showQuestion && <span className="wl-q">?</span>}
-            </h1>
+  useEffect(() => {
+    const onClickOutside = (e) => {
+      if (tipRef.current && !tipRef.current.contains(e.target)) setOpenTip(false);
+    };
+    document.addEventListener("click", onClickOutside);
+    return () => document.removeEventListener("click", onClickOutside);
+  }, []);
 
-            <button
-                className="wl-info-btn"
-                onClick={() => setOpenTip((v) => !v)}
-                aria-label="도움말"
-                type="button"
-            >
-                <Info className="wl-info-plain" />
-            </button>
+  return (
+    <div className="wl-title-row">
+      <h2 className="wl-title">
+        {title}
+        {showQuestion && <span className="wl-qmark">?</span>}
+      </h2>
 
-            {openTip && (
-                <div className="wl-tooltip" role="tooltip">
-                    <div className="wl-tooltip-card">
-                        <h3>편지쓰기 가이드</h3>
-                        <p>
-                            • 가운데 <span className="self">나</span>를 클릭하면 나에게 편지를 쓸 수 있어요<br />
-                            • <span className="friend">즐겨찾기 친구</span>를 클릭하면 그 친구에게 편지를 쓸 수 있어요<br />
-                            • <span className="plus">+ 버튼</span>을 누르면 모든 친구 목록에서 선택할 수 있어요
-                        </p>
-                        <span className="wl-tooltip-arrow" />
-                    </div>
-                </div>
-            )}
-        </div>
-    );
+      <div className="wl-title-actions" ref={tipRef}>
+        <button
+          className="wl-info-btn"
+          aria-label="도움말"
+          onClick={() => setOpenTip((v) => !v)}
+        >
+          <img src={infoIcon} alt="" width="20" height="20" />
+        </button>
+
+        {openTip && (
+          <div className="wl-tooltip" role="tooltip">
+            <div className="wl-tooltip-card">
+              <h3>편지쓰기 가이드</h3>
+              <p>
+                • 가운데 <span className="self">나</span>를 클릭하면 나에게 편지를 쓸 수 있어요<br />
+                • <span className="friend">즐겨찾기 친구</span>를 클릭하면 그 친구에게 편지를 쓸 수 있어요<br />
+                • <span className="plus">+ 버튼</span>을 누르면 모든 친구 목록에서 선택할 수 있어요
+              </p>
+              <span className="wl-tooltip-arrow" />
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

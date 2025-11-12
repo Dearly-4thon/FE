@@ -1,0 +1,53 @@
+:root{
+  --app-width: 393px;
+  --navbar-height: 72px;
+}
+
+/* 강제 세로 고정(요청대로) */
+.app-scroll {
+  height: 852px !important;
+  max-width: var(--app-width);
+  width: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+  padding-bottom: 0; /* 네비와 겹치도록 바닥 여백 제거 */
+  margin-bottom: 0;
+  position: relative;
+  overflow: visible;
+}
+
+/* 네비는 화면 아래에 고정, 위로 겹치게 보이도록 z-index 높게 */
+.navbar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  width: var(--app-width);
+  height: var(--navbar-height);
+  z-index: 1200;
+  pointer-events: auto;
+  border-radius: 12px 12px 0 0;
+}
+
+/* 콘텐츠가 네비 아래로 가려져도 인터랙티브 요소는 클릭되도록 보장 */
+.app-scroll .wl-center,
+.app-scroll .wl-me-card,
+.app-scroll .wl-friend,
+.app-scroll .wl-fab,
+.app-scroll .wl-chooser-card,
+.app-scroll button,
+.app-scroll a,
+.app-scroll input,
+.app-scroll textarea {
+  pointer-events: auto;
+  z-index: 1100;
+}
+
+/* 오버레이(전체 덮개)가 클릭을 막지 않게 함 */
+.app-scroll .wl-screen,
+.app-scroll .wl-bg,
+.app-scroll .stage-abs,
+.app-scroll > .overlay {
+  pointer-events: none;
+  z-index: 100; 
+}

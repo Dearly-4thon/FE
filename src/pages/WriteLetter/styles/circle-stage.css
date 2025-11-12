@@ -1,135 +1,95 @@
-/* 기준: .app-shell이 position:relative; (393x852) */
-.stage-abs{
-  position:absolute; inset:0; pointer-events:auto; z-index:10;
-}
-
-/* 원형 스테이지: top 244px 고정 */
-.wl-center{
-  position:absolute;
-  top:280px;
-  left:13.5px; right:13.5px;  /* 좌우 여백 */
-  margin:0;
-  aspect-ratio:1 / 1;
-  display:flex; align-items:center; justify-content:center;
-  z-index:10;
-}
-
-/* 링 */
-.wl-ring{ position:absolute; border:2px solid; border-radius:9999px; opacity:.22; }
-.ring1{ width:180px; height:180px; border-color:#ffd8cf; }
-.ring2{ width:300px; height:300px; border-color:#ffd1c9; }
-.ring3{ width:420px; height:420px; border-color:#ffc8bf; }
-
-/* 중앙 카드 */
-.wl-me-card{
-  position:relative; width:106px; height:106px; border-radius:16px; background:#fff;
-  box-shadow:0 20px 40px rgba(255,230,128,.25); border:4px solid #fff;
-  display:flex; align-items:center; justify-content:center; cursor:pointer;
-}
-.wl-me-card:focus-visible{ outline:2px solid #88A8FF; }
-.wl-tapes .tape{ position:absolute; width:36px; height:14px; box-shadow:0 2px 4px rgba(0,0,0,.08); }
-.tl{ left:-10px; top:-10px; transform:rotate(-20deg);
-  background:repeating-linear-gradient(45deg,#FFB5C1 0,#FFB5C1 2px,#FFC8D1 2px,#FFC8D1 4px); }
-.tr{ right:-10px; top:-10px; transform:rotate(20deg);
-  background:repeating-linear-gradient(0deg,#FFE680 0,#FFE680 2px,#FFF4CC 2px,#FFF4CC 4px); }
-.bl{ left:-10px; bottom:-10px; transform:rotate(20deg);
-  background:repeating-linear-gradient(0deg,#A8D5FF 0,#A8D5FF 2px,#C8E5FF 2px,#C8E5FF 4px); }
-.br{ right:-10px; bottom:-10px; transform:rotate(-20deg);
-  background:repeating-linear-gradient(45deg,#B5E7B5 0,#B5E7B5 2px,#D0F0D0 2px,#D0F0D0 4px); }
-.wl-me-img{ width:100%; height:100%; display:grid; place-items:center; color:#9bb1ff; }
-.wl-img-icon{ width:56%; height:56%; opacity:.85; }
-.wl-name{ position:absolute; bottom:-22px; left:50%; transform:translateX(-50%);
-  color:#1e3a8a; font-weight:700; font-size:12px; white-space:nowrap; }
-
-/* 친구칩 */
-.wl-friend{ position:absolute; }
-.wl-friend-avatar{
-  width:100%; height:100%; border-radius:16px; background:#FFF4CC; border:3px solid #fff;
-  display:grid; place-items:center; box-shadow:0 8px 16px rgba(255,154,162,.25);
-}
-.wl-friend-avatar svg{ width:60%; height:60%; color:#1e3a8a; }
-.wl-friend-name{
-  position:absolute; left:50%; transform:translateX(-50%); bottom:-18px;
-  color:#4A3428; opacity:.75; font-size:11px; white-space:nowrap;
-}
-
-/* 비어있을 때 안내 */
-.wl-empty{ position:absolute; inset:auto 0 0 0; height:50%; display:grid; place-items:center; text-align:center; pointer-events:none; }
-.wl-empty p{ color:#8f7d73; margin-bottom:4px; }
-.wl-empty span{ color:#C4B5AB; font-size:12px; }
-
-/* + 버튼: 상단 684px, 우 23px 고정 */
-.wl-fab{
-  position:absolute; top:684px; right:23px;
-  width:56px; height:56px; border-radius:9999px; border:0;
-  display:grid; place-items:center; color:#fff;
-  background:linear-gradient(135deg,#1e3a8a,#2563eb);
-  box-shadow:0 18px 40px rgba(30,58,138,.35);
-  z-index:60; cursor:pointer; transition:transform .12s ease, box-shadow .12s ease;
-}
-.wl-fab:active{ transform: translateY(1px); }
-.wl-fab svg{ width:26px; height:26px; color:#fff; }
-/* 기존 스타일 유지 + overlay 개선 (미관상 하얀 레이어가 전체를 가리지 않도록) */
-
-.stage-abs {
-  position: relative;
-  width: 100%;
-  height: 420px;
-  margin: 0 auto;
-  pointer-events: none; /* 기본적으로 배경 레이어가 클릭을 막지 않게 함 */
-}
-
-/* 인터랙티브한 자식만 pointer-events 허용 */
-.stage-abs .wl-center,
-.stage-abs .wl-fab,
-.stage-abs .wl-friend,
-.stage-abs .wl-me-card {
-  pointer-events: auto;
+/* ===========================
+   3중 링 스테이지 (244px 절대위치)
+=========================== */
+.wl-stage {
   position: absolute;
-}
-
-/* 중앙 원형 영역 */
-.wl-center {
+  top: 244px;               /* ✅ 상단에서 244px 고정 */
   left: 50%;
   transform: translateX(-50%);
-  top: 12px;
-  width: 393px;
-  height: 393px;
-  background: transparent;
-  border-radius: 12px;
-  z-index: 2;
+  width: 420px;
+  height: 420px;
+  margin: 0 auto;
+  background: radial-gradient(
+    120px 120px at 50% 50%,
+    rgba(255, 243, 200, .35),
+    rgba(0, 0, 0, 0) 60%
+  );
+  z-index: 1;
 }
 
-/* 친구칩 / 중앙 카드 */
-.wl-friend, .wl-me-card {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-  cursor: pointer;
-  z-index: 3;
-}
-
-/* FAB 위치 */
-.wl-fab {
+/* 3중 링 */
+.wl-ring {
   position: absolute;
-  right: 20px;
-  bottom: 20px;
-  width: 64px;
-  height: 64px;
-  border-radius: 999px;
-  background: linear-gradient(180deg,#2e6ef6,#1b4ce6);
-  color: white;
+  border-radius: 9999px;
+  border: 1.6px solid rgba(255,120,80,.12);
+  pointer-events: none;
+}
+.wl-ring.ring1 { border-color: rgba(255,120,80,.16); }
+.wl-ring.ring2 { border-color: rgba(255,120,80,.13); }
+.wl-ring.ring3 { border-color: rgba(255,120,80,.10); }
+
+/* 중앙 카드 */
+.wl-me-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 112px;
+  height: 112px;
+  border-radius: 16px;
+  background: #fff;
+  border: 4px solid #fff;
+  box-shadow: 0 20px 40px rgba(30,58,138,.12);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(27,76,230,0.28);
-  pointer-events: auto;
-  z-index: 4;
+  flex-direction: column;
+}
+.wl-me-imgbox {
+  width: 86px;
+  height: 86px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px #E8EEF7, 0 10px 18px rgba(30,58,138,.08);
+  display: grid;
+  place-items: center;
+}
+.wl-name {
+  margin-top: 8px;
+  font-weight: 700;
+  color: #1E3A8A;
+  font-size: 13.4px;
 }
 
-/* ring들은 배경 데코레이션 — pointer-events:none */
-.wl-ring { position: absolute; left: 0; top: 0; right: 0; bottom: 0; pointer-events: none; }
-/* 기타 필요 스타일 생략 — 조정 가능 */
+/* 친구 카드 */
+.wl-friend {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 68px;
+  height: 68px;
+  border-radius: 16px;
+  background: #FFF6D9;
+  border: 4px solid #fff;
+  box-shadow: 0 10px 20px rgba(30,58,138,.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.wl-friend-avatar {
+  display: grid;
+  place-items: center;
+}
+.wl-friend-img {
+  width: 28px;
+  height: 28px;
+}
+.wl-friend-name {
+  position: absolute;
+  top: 74px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12.3px;
+  color: #4B5563;
+  white-space: nowrap;
+}

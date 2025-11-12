@@ -1,124 +1,93 @@
-// src/pages/WriteLetter/components/CircleStage.jsx
-import React from "react";
-// import "../styles/CircleStage.css"; 
+import React, { useMemo } from "react";
+import profileSvg from "../../../assets/profile.svg";
 
 export default function CircleStage({
-  onClickFab, 
-  // 🚨 i 아이콘 클릭 핸들러 추가
-  onClickInfo, 
-  onSelectRecipient,
   friends,
   demoFriends = true,
-  showFab = true,
-  isMailboxMode = false,
+  onSelectRecipient,
 }) {
   const DUMMY = [
-    { id: 1, name: "조대현" }, { id: 2, name: "강준호" }, 
-    { id: 3, name: "김소연" }, { id: 4, name: "박민호" }, 
-    { id: 5, name: "신하은" }, { id: 6, name: "이지은" }, 
-    { id: 7, name: "임승호" }, { id: 8, name: "정유나" },
+    { id: 1, name: "조대현", handle: "jo" },
+    { id: 2, name: "강준호", handle: "kang" },
+    { id: 3, name: "김소연", handle: "kim" },
+    { id: 4, name: "박민호", handle: "park" },
+    { id: 5, name: "정유나", handle: "jung" },
+    { id: 6, name: "임승호", handle: "lim" },
+    { id: 7, name: "이지은", handle: "lee" },
+    { id: 8, name: "신하은", handle: "shin" },
   ];
-
   const list = demoFriends ? DUMMY : (friends ?? []);
-  const SIZE = 420; 
-  const R = 150;
-  const center = { x: SIZE / 2, y: SIZE / 2 };
-  
-  // Mailbox 모드일 때 하단 UI
-  const mailboxContent = (
-      <div className="mailbox-bottom-section" style={{ /* 여기에 CSS 스타일 적용 필요 */ }}>
-          <div className="mailbox-tab-container">
-              <button className="received-tab tab-active">받은 편지 (0)</button>
-              <button className="sent-tab">보낸 편지 (3)</button>
-          </div>
-          <div className="empty-state-card">
-              <span style={{ color: '#E91E63' }}>💖</span>
-              <p>아직 받은 편지가 없어요.</p>
-              <p>친구들과 편지방 만들어보세요!</p>
-          </div>
-      </div>
-  );
-  
+
+  const STAGE = 420;                 // 전체 스테이지
+  const CENTER = STAGE / 2;
+  const ORBIT_R = 170;               // 친구 배치 반지름
+  const RINGS = [130, 170, 210];     // 3중 링 반지름
+
+  const nodes = useMemo(() => {
+    const base = list.slice(0, 8);
+    return base.map((f, i) => {
+      const theta = (2 * Math.PI * i) / 8 - Math.PI / 2; // 위쪽부터
+      return {
+        ...f,
+        x: CENTER + ORBIT_R * Math.cos(theta),
+        y: CENTER + ORBIT_R * Math.sin(theta),
+      };
+    });
+  }, [friends, demoFriends]);
+
   return (
-    <div className="wl-stage">
-      
-      {/* 🚨 상단 제목/i 아이콘 영역 - 가로 정렬 및 위치 조정을 위해 CSS 필수 */}
-      <div className="wl-stage-header">
-        {/* 제목 */}
-        <h2 className="wl-stage-title">
-          {isMailboxMode ? "누구의 편지를 볼까요?" : "누구에게 편지를 쓸까요?"}
-        </h2>
-        
-        {/* i 아이콘 - 클릭 이벤트 연결 */}
-        <span 
-          className="wl-stage-info-icon" 
-          onClick={onClickInfo} // 🚨 onClickInfo 연결
-        >
-          ⓘ
-        </span>
-      </div>
-      
-      {/* Mailbox 모드일 때만 보이는 부제목 */}
-      {isMailboxMode && (
-          <p className="wl-stage-subtitle" style={{ 
-              position: 'absolute', 
-              top: '130px', 
-              left: '50%', 
-              transform: 'translateX(-50%)', 
-              fontSize: '14px', 
-              color: '#888',
-              width: 'calc(100% - 32px)',
-              maxWidth: '420px',
-              textAlign: 'center',
-              pointerEvents: 'none'
-          }}>
-              프로필을 선택해서 주고받은 편지를 확인해보세요
-          </p>
-      )}
+    <div className="wl-stage" style={{ width: STAGE, height: STAGE }}>
+      {/* 3중 링 */}
+      {RINGS.map((r, idx) => (
+        <div
+          key={r}
+          className={`wl-ring ring${idx + 1}`}
+          style={{ width: r * 2, height: r * 2, left: CENTER - r, top: CENTER - r }}
+        />
+      ))}
 
-
-      <div className="wl-stage-inner" style={{ width: SIZE, height: SIZE }}>
-        {/* ── 배경 3중 링, 중앙 슬롯 ── */}
-        <div className="wl-ring wl-ring-1" />
-        <div className="wl-ring wl-ring-2" />
-        <div className="wl-ring wl-ring-3" />
-        <div className="wl-center-slot">
-          {/* 마스킹 테이프 UI 요소 */}
-          <div className="wl-tape wl-tl" />
-          <div className="wl-tape wl-tr" />
-          <div className="wl-tape wl-bl" />
-          <div className="wl-tape wl-br" />
-          
-          <div className="wl-center-image">🖼️</div>
-          <div className="wl-center-label">디어리</div>
+      {/* 중앙(나에게) */}
+      <button
+        className="wl-me-card"
+        onClick={() => onSelectRecipient?.({ id: "me", name: "디어리" })}
+        aria-label="나에게 쓰기"
+        style={{ left: CENTER, top: CENTER }}
+      >
+        <div className="wl-me-imgbox">
+          {/* placeholder 아이콘 (필요시 교체 가능) */}
+          <svg
+            width="64"
+            height="64"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#A3A3A3"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect x="3" y="3" width="18" height="14" rx="2" />
+            <path d="M3 17l6.5-6.5a2 2 0 0 1 2.8 0L21 20" />
+            <circle cx="8.5" cy="8.5" r="2" />
+          </svg>
         </div>
+        <div className="wl-name">디어리</div>
+      </button>
 
-        {/* ── 친구 아이콘(원형 배치) ── */}
-        {list.map((f, idx) => {
-          const angle = (2 * Math.PI * idx) / list.length - Math.PI / 2;
-          const x = center.x + R * Math.cos(angle);
-          const y = center.y + R * Math.sin(angle);
-
-          return (
-            <button
-              key={f.id}
-              className="wl-friend"
-              style={{
-                left: x,
-                top: y,
-                transform: "translate(-50%, -50%)",
-              }}
-              onClick={() => onSelectRecipient?.(f)}
-            >
-              <span className="wl-friend-avatar">👤</span>
-              <span className="wl-friend-name">{f.name}</span>
-            </button>
-          );
-        })}
-      </div>
-      
-      {/* Mailbox 모드일 때 하단 섹션 추가 */}
-      {isMailboxMode && mailboxContent}
+      {/* 친구들 */}
+      {nodes.map((f) => (
+        <button
+          key={f.id}
+          className="wl-friend"
+          style={{ left: f.x, top: f.y }}
+          onClick={() => onSelectRecipient?.(f)}
+          aria-label={`${f.name}에게 쓰기`}
+        >
+          <div className="wl-friend-avatar">
+            <img src={profileSvg} alt="" className="wl-friend-img" />
+          </div>
+          <div className="wl-friend-name">{f.name}</div>
+        </button>
+      ))}
     </div>
   );
 }

@@ -1,39 +1,45 @@
 // src/pages/WriteLetter/components/ChooserModal.jsx
 import { X, Image as ImageIcon, User as UserIcon, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-// 🚨🚨🚨 이 스타일 파일이 반드시 로드되어야 모달 내용(image_af273e.png)이 보입니다.
-import "../styles/chooser-modal.css"; 
+import "../styles/chooser-modal.css";
 
 export default function ChooserModal({ onClose }) {
   const nav = useNavigate();
 
-  const handleCardClick = (path) => {
-    // 먼저 페이지 이동
+  const go = (path) => {
     nav(path);
-    
-    // 이동 후 모달 닫기 충돌을 막기 위해 약간 지연
-    setTimeout(() => {
-        onClose();
-    }, 50); 
+    setTimeout(onClose, 50);
   };
 
   return (
-    // ... (UI 코드 생략) ...
+    <div className="wl-chooser-overlay" onClick={onClose}>
+      <div className="wl-chooser" onClick={(e) => e.stopPropagation()}>
+        <button className="wl-chooser-close" onClick={onClose}><X size={18} /></button>
+
+        <div className="wl-chooser-head">
+          <div className="wl-chooser-floating"><ImageIcon size={26} /></div>
+          <div className="wl-chooser-title">누구에게 편지를 쓸까요?</div>
+          <div className="wl-chooser-sub">특별한 메시지를 전해보세요 💌</div>
+        </div>
+
         <div className="wl-chooser-body">
-          <button
-            className="wl-chooser-card"
-            onClick={() => handleCardClick("/compose/write")} // image_b242fa.png로 이동
-          >
-            {/* ... */}
+          <button className="wl-chooser-card" onClick={() => go("/compose/form")}>
+            <div className="wl-chooser-card-icon red"><UserIcon size={24} /></div>
+            <div className="wl-chooser-card-text">
+              <div className="tit">나에게 쓰기 ✍️</div>
+              <div className="sub">미래의 나에게 남기는 메시지</div>
+            </div>
           </button>
 
-          <button
-            className="wl-chooser-card"
-            onClick={() => handleCardClick("/compose/select")}
-          >
-            {/* ... */}
+          <button className="wl-chooser-card" onClick={() => go("/compose/select")}>
+            <div className="wl-chooser-card-icon blue"><Users size={24} /></div>
+            <div className="wl-chooser-card-text">
+              <div className="tit">친구에게 쓰기 💖</div>
+              <div className="sub">친구에게 전하는 특별한 메시지</div>
+            </div>
           </button>
         </div>
-    // ...
+      </div>
+    </div>
   );
 }

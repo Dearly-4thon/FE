@@ -1,110 +1,54 @@
-:root {
-  --navbar-bg: #fff4cc;
-  --navbar-border: #ffe680;
-  --navbar-shadow: 0 -2px 10px rgba(255, 200, 0, 0.2);
+:root{
+  --navbar-bg:#fff4cc;
+  --navbar-border:#ffe680;
+  --navbar-shadow:0 -2px 10px rgba(255,200,0,.2);
 
-  --color-main: #1e3a8a; /* 동일 남색 */
+  --text:#1E3A8A;
+  --text-active:#1E3A8A;
+
+  /* 정확 사이즈 */
+  --navbar-height:72px;
+  --navbar-max-width:393px;
 }
 
-.navbar {
-  position: absolute;
+/* ✅ 고정 해제: 문서 흐름에 배치 + 메인 폭과 동일 */
+.navbar{
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
   bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  background: var(--navbar-bg);
-  border-top: 1px solid var(--navbar-border);
-  box-shadow: var(--navbar-shadow);
-  backdrop-filter: blur(8px);
-  border-radius: 0;
-  z-index: 50;
+  width: var(--app-width);
+  height: var(--navbar-height);
+  border-radius: 12px 12px 0 0;
+  background: var(--navbar-bg, #fff4cc);
+  box-shadow: var(--navbar-shadow, 0 -6px 24px rgba(0,0,0,0.08));
+  z-index: 1000;
+  pointer-events: auto;
 }
 
-/* 내부 구조 */
-.navbar-inner {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  height: 78px;
-  padding: 10px 12px env(safe-area-inset-bottom, 0);
+/* 내부 그리드 */
+.navbar-inner{
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  height:100%;
+  padding:0 12px;
 }
 
-/* 각 탭 기본 */
-.nav-item {
-  text-decoration: none;
-  color: var(--color-main);
-  opacity: 0.5; /* ✅ 비활성 상태: 투명도 50% */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  transition: color 0.2s ease, opacity 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
+/* 기본 50% 투명도 */
+.nav-item{
+  text-decoration:none;
+  color:var(--text);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:6px;
+  opacity:.5;
+  transition:opacity .2s ease, transform .15s ease;
+  -webkit-tap-highlight-color:transparent;
+  padding:10px 0;
 }
+.nav-item.active{ opacity:1; }
 
-/* 활성 탭 */
-.nav-item.active {
-  opacity: 1; /* ✅ 활성 탭: 불투명 */
-}
-
-/* 아이콘 */
-.nav-icon {
-  width: 22px;
-  height: 22px;
-  stroke: currentColor; /* ✅ 아이콘 선색을 글자색과 일치시킴 */
-  color: inherit;
-  transition: transform 0.15s ease, color 0.15s ease;
-}
-
-.nav-item:active .nav-icon {
-  transform: translateY(-1px) scale(1.05);
-}
-
-/* 라벨 */
-.nav-label {
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 0.2px;
-}
-
-/* === Navbar 최종 오버라이드 === */
-
-/* 둥근 모서리 제거 */
-.navbar {
-  border-radius: 0 !important;
-}
-
-/* 기본 상태: 같은 색(#1E3A8A) + 50% 투명 */
-.navbar .nav-item {
-  color: #1E3A8A !important;
-  opacity: 0.5 !important;
-  text-decoration: none;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 6px;
-  -webkit-tap-highlight-color: transparent;
-  transition: opacity .2s ease, transform .15s ease;
-}
-
-/* 활성 상태: 불투명 100% */
-.navbar .nav-item.active {
-  opacity: 1 !important;
-}
-
-/* lucide 아이콘이 글자색을 따르도록 */
-.navbar .nav-icon {
-  width: 22px; height: 22px;
-  color: inherit !important;
-  stroke: currentColor !important; /* 핵심 */
-  fill: none !important;
-  transition: transform .15s ease;
-}
-
-.navbar .nav-item:active .nav-icon {
-  transform: translateY(-1px) scale(1.05);
-}
-
-/* 라벨 */
-.navbar .nav-label {
-  font-size: 10px; font-weight: 600; letter-spacing: .2px;
-}
-
+.nav-icon{ width:22px; height:22px; stroke-width:2; }
+.nav-label{ font-size:10px; font-weight:600; letter-spacing:.2px; }
+.nav-item:active .nav-icon{ transform:translateY(-1px) scale(1.05); }
+.nav-item.active .nav-icon{ transform:translateY(-1px) scale(1.06); }

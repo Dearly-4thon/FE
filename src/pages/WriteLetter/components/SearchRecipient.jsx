@@ -148,7 +148,7 @@ export default function SearchRecipient() {
           list.map((u) => (
             <button
               key={u.key}
-              onClick={() => nav(`/compose/to/${u.handle}`)}
+              onClick={() => nav(`/compose/write/friend/${u.handle}`, { state: { friendName: u.name } })}
               style={{
                 textAlign: "left",
                 padding: "12px 14px",
