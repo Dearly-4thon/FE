@@ -1,168 +1,85 @@
-/* Mailbox.css 파일에 추가 */
-
-/* --- 탭 박스 스타일 --- */
-.mailbox-tabs {
-    display: flex;
-    /* 요청하신 스타일 적용 시작 */
-    height: 49.672px;
-    padding: 3.997px 3.997px 0 3.997px;
-    align-items: flex-start;
-    gap: 7.993px;
-    flex-shrink: 0;
-    align-self: stretch;
-    border-radius: 16px;
-    border: 0.85px solid #F0D5CC;
-    background: linear-gradient(180deg, #FFF 0%, #FFFBF8 100%);
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.10), 0 1px 2px -1px rgba(0, 0, 0, 0.10);
-    /* 요청하신 스타일 적용 끝 */
-    margin: 20px; /* 적절한 마진 */
-    justify-content: space-between;
+/* 상단바(56px) + 여백(44px) 고려해서 내려놓기 */
+.mbx-header{
+  margin-top: calc(env(safe-area-inset-top) + 56px + 44px);
+  text-align: center;
+  position: relative;
+  z-index: 500; /* 허브(200) 위로만 띄우되, 화면 전체 오버레이는 사용 안 함 */
+  font-family: "Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
 }
 
-.tab-button {
-    flex-grow: 1;
-    padding: 10px 0;
-    font-size: 16px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #999;
-    border-radius: 12px;
-    transition: background-color 0.2s, color 0.2s;
-    height: 100%;
+/* 제목: 전역 h2 영향 제거 */
+.mbx-title{
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #4A3428;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 28px;
 }
 
-/* 클릭된 (활성화된) 탭 스타일 */
-.tab-button.active {
-    background-color: #7296FF; /* 이미지의 밝은 파란색 계열 */
-    color: white;
-    font-weight: bold;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.10), 0 1px 2px -1px rgba(0, 0, 0, 0.10);
+/* info 버튼 + 팝오버 기준점 */
+.mbx-info-wrap{
+  position: relative;
+  display: inline-block;
+  margin-left: 8px;
 }
 
-/* --- LetterItem (편지 카드) 스타일 --- */
-.letter-list.sent-list {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* 두 개의 열로 나눔 */
-    gap: 12px;
-    padding: 0 20px;
+/* i 버튼(투명) */
+.mbx-info-btn{
+  width: 22px; height: 22px;
+  border: 1px solid rgba(74,52,40,.25);
+  border-radius: 999px;
+  background: transparent;
+  color: #4A3428;
+  font-size: 12px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
-.letter-card {
-    border-radius: 12px;
-    padding: 15px;
-    height: 150px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+/* 작은 팝오버 (오버레이 X, 고정 위치) */
+.mbx-popover{
+  position: absolute;
+  top: 28px;
+  right: 0;                /* 아이콘 오른쪽 정렬 */
+  width: 280px;
+  background: #fff;
+  border: 1px solid #F0D5CC;
+  border-radius: 12px;
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.12),
+    0 0 18px 6px rgba(232,72,85,.15); /* 연한 레드 블러 */
+  padding: 14px 16px;
 }
 
-.letter-card.opened {
-    background-color: #fcf9e3; /* 일반 편지 배경색 (노란색 계열) */
+.mbx-popover-arrow{
+  position: absolute;
+  top: -8px; right: 12px;
+  width: 14px; height: 14px;
+  background: #fff;
+  border-left: 1px solid #F0D5CC;
+  border-top: 1px solid #F0D5CC;
+  transform: rotate(45deg);
 }
 
-.letter-card.locked {
-    background-color: #f7f7f7; /* 잠금 편지 배경색 (회색 계열) */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    text-align: center;
+.mbx-popover-title{
+  margin: 0 0 8px;
+  color:#4A3428; font-size:16px; font-weight:600; line-height:22px;
 }
 
-/* 잠긴 편지 내용 */
-.lock-header {
-    display: flex;
-    align-items: center;
-    color: #FF9F00; /* D-Day 색상 */
-    align-self: flex-start;
+.mbx-popover-list{
+  margin: 0; padding-left: 0; list-style: none;
+  color:#4A3428; font-size:14px; line-height:20px;
 }
+.mbx-em.me{ color:#4A3428; font-weight:700; }
+.mbx-em.fav{ color:#2563EB; font-weight:700; }
+.mbx-em.pink{ color:#FF9AA2; font-weight:700; }
 
-.lock-icon-group {
-    position: relative;
-    margin: 10px 0;
-}
-.lock-icon { color: #999; }
-.mail-icon { 
-    position: absolute; 
-    top: 50%; 
-    left: 50%; 
-    transform: translate(-50%, -50%);
-    color: #ccc;
-}
-.open-date { font-size: 14px; color: #555; }
-
-/* 열린 편지 내용 */
-.opened-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    justify-content: space-between;
-}
-.letter-title { font-weight: bold; font-size: 16px; }
-.letter-sender { font-size: 13px; color: #888; align-self: flex-end; }
-
-
-/* --- Info Modal 스타일 --- */
-.info-modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-}
-
-.info-modal-content {
-    position: absolute;
-    top: 100px; /* 적절한 위치 조정 */
-    right: 20px;
-    width: 250px;
-    padding: 15px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-    border: 1px solid #ddd;
-}
-.info-modal-content ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.5;
-}
-.info-modal-content li {
-    margin-bottom: 5px;
-    color: #555;
-}
-.info-modal-content li::before {
-    content: "•";
-    color: #ff99aa;
-    font-weight: bold;
-    display: inline-block; 
-    width: 1em;
-    margin-left: -1em;
-}
-
-/* --- MailboxHeader 스타일 --- */
-.wl-info-text {
-    padding: 20px 20px 0;
-    text-align: center;
-}
-.wl-info-text h2 {
-    font-size: 18px;
-    margin-bottom: 5px;
-}
-.wl-info-text .info-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #6a8cf2; /* 아이콘 색상 */
-    margin-left: 5px;
-    padding: 0;
-}
-.sub-info {
-    font-size: 14px;
-    color: #888;
-    margin-top: 0;
-    margin-bottom: 10px;
+.mbx-subtitle{
+  margin-top: 6px;
+  color:#9B8579; font-size:14px; line-height:20px; font-weight:400;
 }

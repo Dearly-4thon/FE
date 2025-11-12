@@ -1,0 +1,152 @@
+/* ===========================
+   스테이지
+=========================== */
+.wl-stage{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  width:360px; height:360px; /* 359.987과 동일 */
+  margin:0 auto;
+  background: radial-gradient(120px 120px at 50% 50%, rgba(255,244,204,.55), rgba(0,0,0,0) 60%);
+
+  /* 라우트 튀는 문제 방지 (네비보다 위) */
+  z-index: 200;
+  pointer-events: auto;
+
+  /* 변수 */
+  --me-size:104px;
+  --friend-inner:52.899px;   /* 내부 노란 52.899 */
+  --friend-pad:2.549px;      /* (57.997 - 52.899) / 2 */
+  --friend-size:57.997px;    /* 바깥 흰 프레임 총크기 */
+}
+.wl-stage.wl-stage--exact{ left:50%; }
+
+/* ===========================
+   배경 데코 원형 (맥박)
+   (겹침 방지: 각각 160/260/360 → 156/252/344로 미세 축소)
+=========================== */
+.wl-deco-circles{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  pointer-events:none; /* 클릭 투명 */
+  overflow:hidden; z-index:0;
+}
+.wl-deco-circles .deco{
+  position:absolute; border-radius:9999px;
+  animation: wl-pulse 2.8s ease-in-out infinite;
+  transform-origin:center;
+}
+.wl-deco-circles .deco-1{ width:156px; height:156px; border:2px solid #FFE5DC; opacity:.40; animation-delay:0s; }
+.wl-deco-circles .deco-2{ width:252px; height:252px; border:2px solid #FFD4CC; opacity:.30; animation-delay:.5s; }
+.wl-deco-circles .deco-3{ width:344px; height:344px; border:2px solid #FFC4B8; opacity:.20; animation-delay:1s; }
+@keyframes wl-pulse{ 0%{transform:scale(0.98);filter:blur(0)} 50%{transform:scale(1.02);filter:blur(.4px)} 100%{transform:scale(0.98);filter:blur(0)} }
+
+/* ===========================
+   링 (마지막 링은 요구 스펙으로 유지)
+=========================== */
+.wl-ring{
+  position:absolute;
+  border-radius:9999px;
+  pointer-events:none; /* 클릭 투명 */
+  border:2px solid rgba(255,120,80,.12);
+  z-index: 1;
+}
+.wl-ring.ring1{ border-color:rgba(255,120,80,.16); } /* 지름 160 */
+.wl-ring.ring2{ border-color:rgba(255,120,80,.13); } /* 지름 260 */
+.wl-ring.ring3{
+  /* 지름 359.987px, #FFC4B8, 1.7px, opacity 0.4591 */
+  border:1.7px solid #FFC4B8 !important;
+  opacity:0.4591 !important;
+}
+
+/* ===========================
+   중앙 카드(나)
+=========================== */
+.wl-me-card{
+  position:absolute; left:50%; top:50%;
+  transform:translate(-50%,-50%);
+  width:var(--me-size); height:var(--me-size);
+  border:none; outline:none; background:transparent;
+  transition: transform .22s ease, filter .22s ease;
+  cursor:pointer;
+  pointer-events:auto; /* 실제 클릭 대상 */
+  z-index: 210;        /* 링/데코 위 */
+}
+.wl-me-outer{
+  position:relative; width:100%; height:100%;
+  border-radius:16px; background:#F7F8FA;
+  box-shadow:0 8px 22px rgba(0,0,0,.12), inset 0 1px 1px rgba(255,255,255,.9);
+  padding:8px; box-sizing:border-box; display:grid; place-items:center;
+}
+.wl-me-inner{
+  width:100%; height:100%; border-radius:12px; background:#fff;
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset, 0 0 0 1px rgba(30,58,138,.05), 0 3px 8px rgba(30,58,138,.08);
+  display:grid; place-items:center;
+}
+.wl-me-img{ width:64%; height:64%; object-fit:contain; }
+.wl-name{ position:absolute; bottom:calc(-1 * (var(--me-size) * .19)); left:50%; transform:translateX(-50%); font-weight:600; color:#1e3a8a; font-size:12px; white-space:nowrap; }
+.wl-me-card::after{ content:""; position:absolute; inset:-16px; border-radius:22px; background:radial-gradient(60% 60% at 50% 50%, rgba(255,244,204,.65), rgba(255,244,204,0) 70%); filter:blur(8px); z-index:-1; transition:opacity .22s ease, filter .22s ease; }
+/* 수신함: 버튼 스케일업 X, 박스만 확대 */
+.wl-me-card:hover{ transform:translate(-50%,-50%) !important; }
+.wl-me-card .wl-me-outer{ transition: transform .22s ease; transform-origin:center; }
+.wl-me-card:hover .wl-me-outer{ transform: scale(1.10); }
+.wl-me-card:hover::after{ filter: blur(10px); opacity: 1; }
+
+/* ===========================
+   마스킹테이프
+=========================== */
+.mask{ position:absolute; width:36px; height:16px; opacity:.9; box-shadow:0 2px 4px rgba(0,0,0,.1); z-index:10; }
+.mask-tl{ top:-6px; left:-6px; transform:rotate(-20deg); background:repeating-linear-gradient(45deg,#FFB5C1 0,#FFB5C1 2px,#FFC8D1 2px,#FFC8D1 4px); }
+.mask-tr{ top:-6px; right:-6px; transform:rotate(20deg);  background:repeating-linear-gradient(0deg,#FFE680 0,#FFE680 2px,#FFF4CC 2px,#FFF4CC 4px); }
+.mask-bl{ bottom:-6px; left:-6px; transform:rotate(20deg);  background:repeating-linear-gradient(0deg,#A8D5FF 0,#A8D5FF 2px,#C8E5FF 2px,#C8E5FF 4px); }
+.mask-br{ bottom:-6px; right:-6px; transform:rotate(-20deg); background:repeating-linear-gradient(45deg,#B5E7B5 0,#B5E7B5 2px,#D0F0D0 2px,#D0F0D0 4px); }
+
+/* ===========================
+   친구 카드 (요구 레이아웃)
+=========================== */
+.wl-friend{
+  position:absolute;
+  transform:translate(-50%,-50%);
+  width:var(--friend-size); height:var(--friend-size); /* 57.997 */
+  border:0; outline:none; background:transparent; padding:0; cursor:pointer;
+  pointer-events:auto; /* 실제 클릭 대상 */
+  z-index: 210;
+}
+.wl-friend-frame{
+  display:flex; width:57.997px; height:57.997px;
+  align-items:flex-start; flex-shrink:0;
+  border-radius:16px;
+  border:2.549px solid #FFF;
+  background: rgba(255,255,255,0);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.10), 0 4px 6px -4px rgba(0,0,0,0.10);
+  box-sizing:border-box;
+  padding: var(--friend-pad);              /* ≈2.549px */
+  position:relative;
+  justify-content:center;
+}
+.wl-friend-inner{
+  display:flex; width:52.899px; height:52.899px;
+  justify-content:center; align-items:center;
+  border-radius:16px; background:#FFF4CC;
+}
+.wl-friend-img{ width:23px; height:23px; }
+
+.wl-friend-name{
+  position:absolute; top:calc(var(--friend-size) + 11px);
+  left:50%; transform:translateX(-50%);
+  font-size:12px; color:#4B5563; white-space:nowrap;
+}
+
+/* hover 효과 */
+.wl-friend-frame::before{
+  content:""; position:absolute; inset:-10px; border-radius:18px;
+  background:radial-gradient(60% 60% at 50% 50%, rgba(255,244,204,0), rgba(255,244,204,0) 70%);
+  filter:blur(8px); z-index:-1; transition:background .18s ease, filter .18s ease, opacity .18s ease; opacity:0;
+}
+.wl-friend:hover .wl-friend-frame::before{
+  background:radial-gradient(60% 60% at 50% 50%, rgba(255,244,204,.55), rgba(255,244,204,0) 70%);
+  filter:blur(10px); opacity:1;
+}
+.wl-friend:hover .wl-friend-frame{
+  box-shadow: 0 8px 18px rgba(0,0,0,.12), 0 0 18px 6px rgba(232, 75, 85, .25);
+}

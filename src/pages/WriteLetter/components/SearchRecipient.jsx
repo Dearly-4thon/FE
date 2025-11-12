@@ -1,191 +1,111 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+// src/pages/WriteLetter/components/SearchRecipient.jsx
+import React, { useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, User } from "lucide-react";
-import PageHeader from "./PageHeader.jsx";
-import "../styles/page-header.css";
-import { fetchJSON } from "../../../lib/api"; // 앞서 만든 공용 fetch 유틸
+import { navToCompose } from "../../../utils/navToCompose";
+import "../styles/search-recipient.css";
 
-// 폴백 더미(개발/오프라인용) - 백엔드 스키마에 맞춤
-const DUMMY = Object.freeze([
-  { id: 1, username: "soyeon_kim", nickname: "김소연" },
-  { id: 2, username: "minho_park", nickname: "박민호" },
-  { id: 3, username: "jieun_lee", nickname: "이지은" },
-  { id: 4, username: "daehyun_cho", nickname: "조대현" },
-  { id: 5, username: "yuna_jung", nickname: "정유나" },
-  { id: 6, username: "junho_kang", nickname: "강준호" },
-  { id: 7, username: "haeun_shin", nickname: "신하은" },
-]);
-
-// 서버 응답을 화면 모델로 정규화
-function normalize(u) {
-  // name: 표시용(닉네임 우선), handle: 라우팅/검색용 username
-  return {
-    key: u.id ?? u.username,
-    name: u.nickname && String(u.nickname).trim() ? u.nickname : u.username,
-    handle: u.username,
-  };
-}
-
-export default function SearchRecipient() {
+/**
+ * 받는 사람 선택 화면
+ * - 친구를 누르면 navToCompose로 컴포즈 화면으로 이동
+ * - friends prop이 없으면 DEFAULT 데이터 사용
+ * - handle/username 섞여 있어도 안전하게 표시/검색
+ */
+export default function SearchRecipient({ friends = [] }) {
   const nav = useNavigate();
+
+  // 데모용 기본 데이터
+  const DEFAULT = [
+    { id: "u1", name: "김소연", handle: "@soyeon_kim" },
+    { id: "u2", name: "박민호", handle: "@minho_park" },
+    { id: "u3", name: "이지은", handle: "@jieun_lee" },
+    { id: "u4", name: "조대현", handle: "@daehyun_cho" },
+    { id: "u5", name: "정유나", handle: "@yuna_jung" },
+    { id: "u6", name: "강준호", handle: "@junho_kang" },
+    { id: "u7", name: "신하은", handle: "@haeun_shin" },
+  ];
+
+  // 실제 표출할 원본 배열
+  const rows = useMemo(() => (friends?.length ? friends : DEFAULT), [friends]);
+
+  // 다양한 형태의 필드를 통일
+  const normalize = useCallback((f) => {
+    return {
+      id: String(f.id ?? f.userId ?? f._id ?? ""),
+      name: String(f.name ?? f.displayName ?? f.fullName ?? ""),
+      handle: String(f.handle ?? f.username ?? f.tag ?? ""),
+    };
+  }, []);
+
+  // 검색
   const [q, setQ] = useState("");
-  const [items, setItems] = useState([]); // normalized array
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState(null);
-  const abortRef = useRef(null);
+  const filtered = useMemo(() => {
+    const s = q.trim().toLowerCase();
+    if (!s) return rows.map(normalize);
+    return rows
+      .map(normalize)
+      .filter(
+        (f) =>
+          f.name.toLowerCase().includes(s) ||
+          f.handle.toLowerCase().includes(s) ||
+          f.id.toLowerCase().includes(s)
+      );
+  }, [q, rows, normalize]);
 
-  useEffect(() => {
-    const timer = setTimeout(async () => {
-      setLoading(true);
-      setErr(null);
-
-      // 진행 중 요청 취소
-      if (abortRef.current) abortRef.current.abort();
-      const ctrl = new AbortController();
-      abortRef.current = ctrl;
-
-      try {
-        // ✔ 서버가 "내 친구만" 반환하는 Friends API (검색은 서버에서 처리)
-        const data = await fetchJSON("/api/friends", {
-          params: q ? { search: q } : undefined,
-          signal: ctrl.signal,
-        });
-
-        const safe = Array.isArray(data) ? data : [];
-        setItems(safe.map(normalize));
-      } catch (e) {
-        // 폴백: 더미 + 클라 필터
-        const base = DUMMY.map(normalize);
-        const kw = q.trim().toLowerCase();
-        const filtered = kw
-          ? base.filter(
-              (u) =>
-                u.name.toLowerCase().includes(kw) ||
-                u.handle.toLowerCase().includes(kw)
-            )
-          : base;
-        setItems(filtered);
-        setErr(e);
-      } finally {
-        setLoading(false);
-      }
-    }, 250); // 디바운스
-
-    return () => clearTimeout(timer);
-  }, [q]);
-
-  const list = useMemo(() => items ?? [], [items]);
+  // 클릭 시 compose로 이동
+  const handleClick = useCallback(
+    (f) => {
+      if (!f.id) return;
+      navToCompose(nav, { type: "friend", id: f.id, name: f.name });
+    },
+    [nav]
+  );
 
   return (
-    <div className="wl-screen plain">
-      <PageHeader title="받는 사람 선택" />
-      <div style={{ padding: "0 16px", color: "#9B8579", marginTop: -6 }}>
-        누구에게 편지를 보낼까요?
-      </div>
+    <div className="rcp-screen">
+      {/* 상단 영역 */}
+      <header className="rcp-header">
+        <h1 className="rcp-title">받는 사람 선택</h1>
+        <p className="rcp-sub">누구에게 편지를 보낼까요?</p>
 
-      {/* 검색 인풋 */}
-      <div style={{ padding: "14px 16px 6px" }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            height: 44,
-            border: "1px solid #F0D5CC",
-            borderRadius: 12,
-            padding: "0 12px",
-            background: "#fff",
-          }}
-        >
-          <Search size={18} color="#9B8579" />
+        <div className="rcp-search">
+          <Search className="rcp-search-icon" size={18} aria-hidden="true" />
           <input
-            placeholder="친구 이름(닉네임) 또는 @아이디 검색"
+            type="text"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            style={{
-              border: "none",
-              outline: "none",
-              flex: 1,
-              background: "transparent",
-            }}
+            placeholder="친구 이름 또는 @아이디 검색"
+            aria-label="친구 검색"
           />
         </div>
-      </div>
+      </header>
 
       {/* 리스트 */}
-      <div style={{ padding: "8px 16px 96px", display: "grid", gap: 10 }}>
-        {loading && (
-          <div
-            style={{
-              padding: "18px 12px",
-              textAlign: "center",
-              color: "#9B8579",
-              background: "#fff",
-              border: "1.5px solid #F0D5CC",
-              borderRadius: 12,
+      <main className="rcp-list" role="list">
+        {filtered.map((f) => (
+          <button
+            key={f.id}
+            className="rcp-item"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleClick(f);
             }}
+            role="listitem"
+            style={{ pointerEvents: "auto" }}
           >
-            불러오는 중…
-          </div>
+            <span className="rcp-avatar" aria-hidden="true">
+              <User size={18} />
+            </span>
+            <span className="rcp-texts">
+              <span className="rcp-name">{f.name}</span>
+              <span className="rcp-handle">{f.handle}</span>
+            </span>
+          </button>
+        ))}
+        {filtered.length === 0 && (
+          <p className="rcp-empty">검색 결과가 없어요.</p>
         )}
-
-        {!loading && list.length === 0 && (
-          <div
-            style={{
-              padding: "18px 12px",
-              textAlign: "center",
-              color: "#9B8579",
-              background: "#fff",
-              border: "1.5px solid #F0D5CC",
-              borderRadius: 12,
-            }}
-          >
-            검색 결과가 없어요.
-          </div>
-        )}
-
-        {!loading &&
-          list.map((u) => (
-            <button
-              key={u.key}
-              onClick={() => nav(`/compose/write/friend/${u.handle}`, { state: { friendName: u.name } })}
-              style={{
-                textAlign: "left",
-                padding: "12px 14px",
-                borderRadius: 16,
-                background: "#fff",
-                border: "1.5px solid #F0D5CC",
-                boxShadow: "0 6px 12px rgba(0,0,0,.04)",
-                display: "flex",
-                alignItems: "center",
-                gap: 12,
-              }}
-            >
-              <div
-                style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: 9999,
-                  background: "#ffeaa1",
-                  display: "grid",
-                  placeItems: "center",
-                  color: "#4A3428",
-                }}
-              >
-                <User size={18} />
-              </div>
-              <div style={{ lineHeight: 1.2 }}>
-                <div style={{ fontWeight: 700 }}>{u.name}</div>
-                <div style={{ color: "#9B8579", fontSize: 13 }}>@{u.handle}</div>
-              </div>
-            </button>
-          ))}
-        {!!err && (
-          <div style={{ color: "#cc5b5b", fontSize: 12, textAlign: "center" }}>
-            (네트워크 오류로 데모 데이터로 표시 중)
-          </div>
-        )}
-      </div>
+      </main>
     </div>
   );
 }

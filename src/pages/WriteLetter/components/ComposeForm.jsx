@@ -1,130 +1,292 @@
 // src/pages/WriteLetter/components/ComposeForm.jsx
-import { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Upload } from "lucide-react";
-import "../styles/form.css"; // ✅ 경로 확인
-import "../styles/base.css";  
+import SealButton from "./SealButton";
+import { toast } from "../../../lib/toast"; // ★ 추가 (간단 토스트)
+import "../styles/compose.css";
 
+// ===== 옵션 정의 =====
 const FONTS = [
-  { key: "basic", label: "기본체", sample: "안녕하세요 ♡" },
-  { key: "dunggeun", label: "둥근체", sample: "안녕하세요 ♡" },
-  { key: "soft", label: "부드러운체", sample: "안녕하세요 ♡" },
-  { key: "elegant", label: "우아한체", sample: "안녕하세요 ♡" },
-  { key: "modern", label: "모던체", sample: "안녕하세요 ♡" },
-  { key: "warm", label: "따뜻한체", sample: "안녕하세요 ♡" },
+  { key: "basic", label: "기본체", sample: "안녕하세요 ♡", css: "font-basic" },
+  { key: "dunggeun", label: "둥근체", sample: "안녕하세요 ♡", css: "font-rounded" },
+  { key: "soft", label: "부드러운체", sample: "안녕하세요 ♡", css: "font-soft" },
+  { key: "elegant", label: "우아한체", sample: "안녕하세요 ♡", css: "font-elegant" },
+  { key: "modern", label: "모던체", sample: "안녕하세요 ♡", css: "font-modern" },
+  { key: "warm", label: "따뜻한체", sample: "안녕하세요 ♡", css: "font-warm" },
 ];
-const PAPERS = ["white", "lavender", "pink-heart", "sky", "clover", "peach"];
+
+const FONT_FAMILIES = {
+  basic: '"Noto Sans KR", sans-serif',
+  dunggeun: '"Cafe24Surround", sans-serif',
+  soft: '"OngleipParkDahyeon", cursive',
+  elegant: '"JoseonGulim", serif',
+  modern: '"Suit", sans-serif',
+  warm: '"GowoonDodum", sans-serif',
+};
+
+const PAPERS = [
+  { key: "white", label: "white", chip: "paperchip-white" },
+  { key: "lavender", label: "lavender", chip: "paperchip-lavender" },
+  { key: "pink-heart", label: "pink-heart", chip: "paperchip-pink-heart" },
+  { key: "sky", label: "sky", chip: "paperchip-sky" },
+  { key: "clover", label: "clover", chip: "paperchip-clover" },
+  { key: "peach", label: "peach", chip: "paperchip-peach" },
+];
+
+// ===== localStorage 유틸 =====
+const LS_KEY = "dearly-mailbox";
+const loadMailbox = () => {
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || "{}"); }
+  catch { return {}; }
+};
+const saveMailbox = (data) => localStorage.setItem(LS_KEY, JSON.stringify(data));
 
 export default function ComposeForm() {
   const nav = useNavigate();
   const { handle } = useParams();
-  const { state } = useLocation();
-  const friendName = state?.friendName ?? "";
+  const location = useLocation();
+  const state = location.state || {};
+  const showBackFromState = state?.showBack;
 
+  // ===== URL 쿼리 읽기 =====
+  const qs = new URLSearchParams(location.search);
+  const qsTo = (qs.get("to") || "").toLowerCase();
+  const qsName = qs.get("name") ? decodeURIComponent(qs.get("name")) : undefined;
+
+  // ===== 수신자 이름/자기자신 판정 =====
+  const rawName = state?.friendName || qsName || handle || "";
+  const isSelf =
+    state?.isSelf === true ||
+    qsTo === "self" ||
+    qsTo === "me" ||
+    rawName === "나" ||
+    rawName.toLowerCase?.() === "me";
+  const recipientName = isSelf ? "나" : (rawName || "나");
+
+  // ===== 헤더 메타 =====
   const meta = useMemo(() => {
-    if (handle) {
-      const name = friendName || handle;
+    const baseShowBack = (showBackFromState !== undefined) ? showBackFromState : true;
+    if (recipientName === "나") {
       return {
-        title: `${name}에게 쓰는 편지`,
-        subtitle: `${name}님에게 전하는 메시지`,
-        showBack: true,
+        title: "나에게 쓰는 편지",
+        subtitle: "미래의 나에게 남기는 메시지",
+        showBack: baseShowBack,
       };
     }
     return {
-      title: "나에게 쓰는 편지",
-      subtitle: "미래의 나에게 남기는 메시지",
-      showBack: true,
+      title: `${recipientName}에게 쓰는 편지`,
+      subtitle: `${recipientName}님에게 전하는 메시지`,
+      showBack: baseShowBack,
     };
-  }, [handle, friendName]);
+  }, [recipientName, showBackFromState]);
 
+  // ===== 상태 =====
   const [fontKey, setFontKey] = useState("basic");
   const [paper, setPaper] = useState("white");
   const [text, setText] = useState("");
-  const [files, setFiles] = useState([]);
+  const [openAt, setOpenAt] = useState("2025-12-31");
+  const [files, setFiles] = useState([]); // File[]
+  const fileInputRef = useRef(null);
 
+  const currentFontCss = useMemo(
+    () => FONTS.find((f) => f.key === fontKey)?.css ?? "font-basic",
+    [fontKey]
+  );
+  const currentFontFamily = FONT_FAMILIES[fontKey];
+
+  // 이미지 선택
   const onPickFiles = (e) => {
     const list = Array.from(e.target.files || []);
-    setFiles((prev) => [...prev, ...list]);
+    const remain = Math.max(0, 3 - files.length);
+    const next = list.slice(0, remain);
+    if (list.length > remain) alert("이미지는 최대 3장까지만 업로드할 수 있어요.");
+    setFiles((prev) => [...prev, ...next]);
+    e.target.value = "";
   };
   const removeAt = (idx) => setFiles((prev) => prev.filter((_, i) => i !== idx));
 
+  // 봉인
+  const onSeal = () => {
+    if (!text.trim()) {
+      // alert 대체: 현재 페이지 상단에 경고 토스트
+      toast("편지 내용을 입력해주세요.", "error");
+      return;
+    }
+
+    const store = loadMailbox();
+    const sent = store.sent || [];
+    const letter = {
+      id: crypto.randomUUID(),
+      to: (recipientName === "나") ? "나에게" : `${recipientName}에게`,
+      title: text.slice(0, 20) || "제목 없음",
+      body: text,
+      paper,
+      font: fontKey,
+      openAt,
+      images: files.map((f) => ({ name: f.name, size: f.size })),
+      createdAt: Date.now(),
+    };
+    sent.unshift(letter);
+    saveMailbox({ ...store, sent });
+
+    // 보낸편지 개수 즉시 갱신용 이벤트
+    window.dispatchEvent(new CustomEvent("letter:sent", { detail: { count: sent.length, letter } }));
+
+    // 성공 토스트 → 수신함 이동
+    toast(`${recipientName}님께 편지가 전송되었어요!`, "success");
+    setTimeout(() => {
+      nav("/mailbox", {
+        replace: true,
+        state: { focus: "sent" },
+      });
+    }, 700);
+  };
+
   return (
-    <div className="wl-screen plain">
-      <header className="compose-header">
-        {meta.showBack && (
-          <button className="back-btn" onClick={() => nav(-1)} aria-label="뒤로가기">
-            <ArrowLeft size={20} />
-          </button>
-        )}
-        <h1 className="compose-title">{meta.title}</h1>
-        <p className="compose-subtitle">{meta.subtitle}</p>
+    <div className="compose-screen plain">
+      {/* ── 헤더 ── */}
+      <header className="wl-compose-header">
+        <div className="wl-header-row">
+          {meta.showBack && (
+            <button className="wl-back-btn" onClick={() => nav(-1)} aria-label="뒤로가기">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                   viewBox="0 0 20 20" fill="none">
+                <path d="M10.0001 15.8327L4.16675 9.99935L10.0001 4.16602"
+                      stroke="#1E3A8A" strokeWidth="1.66667"
+                      strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M15.8334 10H4.16675"
+                      stroke="#1E3A8A" strokeWidth="1.66667"
+                      strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          )}
+
+          <div className="wl-title-group">
+            <h2 className="wl-header-title">{meta.title}</h2>
+            <p className="wl-header-sub">{meta.subtitle}</p>
+          </div>
+        </div>
       </header>
 
-      <form className="wl-form" onSubmit={(e) => e.preventDefault()}>
-        <label className="wl-label">폰트 선택</label>
-        <div className="wl-font-grid">
-          {FONTS.map((f) => (
-            <button
-              type="button"
-              key={f.key}
-              className={`wl-font-card ${fontKey === f.key ? "is-active" : ""}`}
-              onClick={() => setFontKey(f.key)}
-              style={{ fontFamily: `var(--font-${f.key})` }}
-            >
-              <div className="wl-font-title">{f.label}</div>
-              <div className="wl-font-sample">{f.sample}</div>
-            </button>
-          ))}
-        </div>
-
-        <label className="wl-label" style={{ marginTop: 16 }}>편지지 선택</label>
-        <div className="wl-paper-grid">
-          {PAPERS.map((p) => (
-            <button
-              type="button"
-              key={p}
-              className={`wl-paper-chip ${paper === p ? "is-active" : ""}`}
-              onClick={() => setPaper(p)}
-            >
-              {p}
-            </button>
-          ))}
-        </div>
-
-        <label className="wl-label with-note" style={{ marginTop: 16 }}>
-          편지 내용 <span className="note">받는 사람만 볼 수 있어요</span>
-        </label>
-        <div className={`wl-paper paper-${paper}`} style={{ fontFamily: `var(--font-${fontKey})` }}>
-          <textarea
-            className="wl-textarea"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder={handle ? `${friendName || handle}님에게 전하고 싶은 말을 적어보세요…` : "미래의 나에게 전하고 싶은 말을 적어보세요…"}
-          />
-        </div>
-
-        <label className="wl-label" style={{ marginTop: 16 }}>첨부</label>
-        <label className="wl-uploader">
-          <input type="file" accept="image/*" multiple onChange={onPickFiles} />
-          <div className="uploader-inner">
-            <Upload className="uploader-icon" />
-            이미지 추가
+      {/* ── 스크롤 컨텐츠 ── */}
+      <div className="compose-stage">
+        <div className="compose-scroll">
+          {/* 폰트 선택 */}
+          <div className="block">
+            <div className="block-title">폰트 선택</div>
+            <div className="grid grid-2">
+              {FONTS.map((f) => (
+                <button
+                  key={f.key}
+                  type="button"
+                  className={`option hoverable ${fontKey === f.key ? "active" : ""}`}
+                  onClick={() => setFontKey(f.key)}
+                >
+                  <div className="option-caption">{f.label}</div>
+                  <div className={`option-sample ${f.css}`}>{f.sample}</div>
+                </button>
+              ))}
+            </div>
           </div>
-        </label>
 
-        {files.length > 0 && (
-          <div className="wl-previews" aria-label="첨부 미리보기">
-            {files.map((f, i) => (
-              <div className="wl-preview" key={`${f.name}-${i}`}>
-                <img src={URL.createObjectURL(f)} alt="" />
-                <button className="wl-remove" type="button" onClick={() => removeAt(i)}>×</button>
+          {/* 편지지 선택 */}
+          <div className="block">
+            <div className="block-title">편지지 선택</div>
+            <div className="paper-chips-scroll">
+              <div className="paper-chips-container">
+                {PAPERS.map((p) => (
+                  <button
+                    key={p.key}
+                    type="button"
+                    className={`chip hoverable ${p.chip} ${paper === p.key ? "active" : ""}`}
+                    onClick={() => setPaper(p.key)}
+                  >
+                    {p.label}
+                  </button>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
-        )}
 
-        <button className="wl-submit" type="submit">저장하기</button>
-      </form>
+          {/* 본문 */}
+          <div className="block">
+            <div className="block-title">편지 내용</div>
+            <div className="editor-container">
+              <div
+                className={`editor hoverable paper-${paper} ${currentFontCss}`}
+                style={{ fontFamily: currentFontFamily }}
+              >
+                <textarea
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  placeholder={
+                    recipientName === "나"
+                      ? "미래의 나에게 전하고 싶은 말을 적어보세요…"
+                      : `${recipientName}님에게 전하고 싶은 말을 적어보세요…`
+                  }
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* 공개 날짜 */}
+          <div className="block">
+            <div className="block-title">공개 날짜</div>
+            <div className="date-field hoverable no-icon">
+              <input
+                type="date"
+                value={openAt}
+                onChange={(e) => setOpenAt(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* 이미지 업로드 */}
+          <div className="block">
+            <div className="block-title">이미지 추가 (선택)</div>
+            <p className="image-sub">첫 번째 사진이 썸네일로 표시돼요</p>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={onPickFiles}
+              hidden
+            />
+
+            {files.length < 3 && (
+              <button
+                type="button"
+                className="upload-box hoverable"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                이미지 추가 ({files.length}/3)
+              </button>
+            )}
+
+            {files.length > 0 && (
+              <div className="thumbs" aria-label="첨부 미리보기">
+                {files.map((f, i) => (
+                  <div className="thumb" key={`${f.name}-${i}`}>
+                    <img src={URL.createObjectURL(f)} alt="" />
+                    <button className="thumb-x" type="button" onClick={() => removeAt(i)}>×</button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="bottom-spacer" />
+        </div>
+      </div>
+
+      {/* 하단 고정 버튼 */}
+      <div className="footer-fixed">
+        <div className="submit-button-area">
+          <SealButton onClick={onSeal} />
+        </div>
+      </div>
     </div>
   );
 }

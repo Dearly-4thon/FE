@@ -1,101 +1,94 @@
-// src/pages/Mailbox/Mailbox.jsx (수정된 최종 버전)
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-// import './styles/Mailbox.css'; // CSS 파일 로드 확인
-import MailboxHeader from './components/MailboxHeader'; 
-import MailboxTab from './components/MailboxTab';
-import ReceivedLetters from './components/ReceivedLetters';
-import SentLetters from './components/SentLetters';
-import CircleStage from "../WriteLetter/components/CircleStage.jsx"; 
-import InfoModal from "../WriteLetter/components/InfoModal"; // 가이드 모달 재사용
+// src/pages/Mailbox/Mailbox.jsx
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const Mailbox = ({ initialTab }) => { 
-  const nav = useNavigate();
-  const [activeTab, setActiveTab] = useState(initialTab || 'received'); 
-  const [counts] = useState({ receivedCount: 0, sentCount: 3 });
-  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false); // i 아이콘 모달 상태 추가
+import MailboxHeader from "./components/MailboxHeader.jsx";
+import MailboxTab from "./components/MailboxTab.jsx";
+import ReceivedLetters from "./components/ReceivedLetters.jsx";
+import SentLetters from "./components/SentLetters.jsx";
+import CenterHub from "./components/CenterHub.jsx";
 
-  useEffect(() => { setActiveTab(initialTab || 'received'); }, [initialTab]);
-  
-  const handleTabChange = (tab) => { setActiveTab(tab); };
-  
-  const handleProfileClick = (friend) => {
-      if (friend.isSelf) { 
-          nav("/inbox/self"); 
-      } else { 
-          nav(`/inbox/friend/${friend.id}`); 
-      }
+import "./styles/Mailbox.css";
+
+export default function Mailbox() {
+  const { state } = useLocation();
+  const navigate = useNavigate();
+
+  const [toast, setToast] = useState(null);
+  const [tab, setTab] = useState(state?.focus ?? "received"); // 'received' | 'sent'
+
+  useEffect(() => {
+    if (state?.toast) {
+      setToast(state.toast);
+      const t = setTimeout(() => setToast(null), 2000);
+      return () => clearTimeout(t);
+    }
+  }, [state]);
+
+  // ===== 배치 상수 (허브 높이 + 간격) =====
+  const HUB_SIZE = 360;      // CenterHub의 실제 높이(px)
+  const HUB_GAP  = 24;       // 허브와 탭 사이 여백(px)
+  const HUB_TOP  = 244.67;   // 상단 기준으로 허브가 위치하는 top 값
+
+  // 중앙 허브 클릭 동작
+  const handleSelectSelf = () => setTab("received");
+
+  // ✅ 친구 선택 시: 대화 화면으로 이동 + 이름/아이디를 state로 전달
+  const handleSelectFriend = (friend) => {
+    const id = friend?.id ?? friend?.name ?? "";
+    const name = friend?.name ?? String(friend?.id ?? "");
+    const slug = encodeURIComponent(id);
+
+    navigate(`/mailbox/conversation/${slug}`, {
+      state: {
+        recipientId: id,
+        recipientName: name,   // ← ConversationHeader에서 이 값을 읽어 제목: `${name}에게 쓰는 편지`
+        isSelf: false,
+        from: "mailbox-centerhub",
+      },
+    });
   };
 
-  const handleOpenInfoModal = () => { setIsInfoModalOpen(true); };
-  const handleCloseInfoModal = () => { setIsInfoModalOpen(false); };
-
-
   return (
-    <div 
-        className="mailbox-container"
-        style={{ 
-            backgroundColor: '#FFFEF5', // image_bd2838.png 배경색
-            minHeight: '100vh', 
-            paddingBottom: '60px', 
-            overflowY: 'scroll', 
-            scrollbarWidth: 'none', 
-            msOverflowStyle: 'none' 
-        }}
+    <div
+      className="mailbox-screen"
+      style={{
+        position: "relative",
+        // 아래 CSS 변수로 하위 컴포넌트/스타일에서 참조 가능
+        "--hub-size": `${HUB_SIZE}px`,
+        "--hub-gap": `${HUB_GAP}px`,
+      }}
     >
-      {/* 1. 상단 Dearly 로고 및 알림 (MailboxHeader에서 처리) */}
-      <MailboxHeader /> 
-
-      {/* 2. 원형 친구 배치 영역 (CircleStage) */}
-      <div 
-        className="profile-chart-area" 
-        style={{ 
-            padding: '20px 0',
-            marginTop: '-20px', 
-            marginBottom: '40px', // 탭과의 간격 확보
-        }} 
-      >
-        <CircleStage 
-            onSelectRecipient={handleProfileClick} 
-            onClickInfo={handleOpenInfoModal} // i 아이콘 클릭 연결
-            showFab={false} 
-            isMailboxMode={true} // Mailbox 전용 UI (제목/부제목) 표시
-        />
-      </div>
-      
-      {/* 🚨🚨🚨 상단 중복 UI 제거 완료. 하단 탭과 목록만 렌더링합니다. 🚨🚨🚨 */}
-
-      {/* 3. 받은 편지/보낸 편지 탭 (하단) */}
-      <div className="mailbox-tab-wrapper" style={{ padding: '0 20px' }}>
-          <MailboxTab
-            activeTab={activeTab}
-            onTabChange={handleTabChange}
-            receivedCount={counts.receivedCount}
-            sentCount={counts.sentCount}
-          />
-      </div>
-      
-      {/* 4. 탭 내용 영역 */}
-      <div className="mailbox-content" style={{ padding: '20px' }}>
-        {activeTab === 'received' ? (
-          <ReceivedLetters count={counts.receivedCount} />
-        ) : (
-          <SentLetters count={counts.sentCount} />
-        )}
-      </div>
-
-      {/* 5. Info Modal 렌더링 (Mailbox 모드에 맞춰 위치 조정 필요) */}
-      {isInfoModalOpen && (
-        // InfoModal은 Compose용 위치로 설정되어 있어, Mailbox용 위치로 조정 필요
-        <InfoModal 
-            onClose={handleCloseInfoModal} 
-            isMailboxMode={true} // Mailbox 모드임을 알림
-        />
+      {toast && (
+        <div className={`toast-banner ${toast.type === "success" ? "ok" : ""}`}>
+          <span className="toast-dot" />
+          {toast.message}
+        </div>
       )}
-      
-      <style>{`.mailbox-container::-webkit-scrollbar { display: none; }`}</style>
+
+      {/* 상단 히어로/안내 영역 */}
+      <MailboxHeader />
+
+      {/* 중앙 원형 허브 (absolute 배치) */}
+      <CenterHub
+        favorites={[]}     // 즐겨찾기/친구 리스트 (없으면 데모 8명)
+        demo={true}
+        onSelectSelf={handleSelectSelf}
+        onSelectFriend={handleSelectFriend}
+        top={HUB_TOP}
+      />
+
+      {/* ⭐ 허브 높이만큼 공간 확보 (겹침 방지 스페이서) */}
+      <div aria-hidden style={{ height: HUB_TOP + HUB_SIZE + HUB_GAP }} />
+
+      {/* 탭 */}
+      <MailboxTab tab={tab} setTab={setTab} />
+
+      {/* 리스트 */}
+      {tab === "received" ? <ReceivedLetters /> : <SentLetters />}
+
+      {/* 하단 네비가 가리지 않도록 여백 (공통 Navbar 쓰는 경우) */}
+      <div aria-hidden style={{ height: "var(--navbar-height, 78px)" }} />
     </div>
   );
-};
-
-export default Mailbox;
+}

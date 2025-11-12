@@ -1,205 +1,170 @@
-/* =========================
-   Overlay (뒷배경 반투명 블러)
-========================= */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap");
+
+/* ===== Overlay (블러 X, 회색 반투명) ===== */
 .wl-chooser-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.50); /* ← 회색 반투명만 */
   display: grid;
   place-items: center;
-  z-index: 10000; /* 최상단 고정 */
   padding: 24px;
-  backdrop-filter: blur(2px);
-  pointer-events: auto;
+  z-index: 10000;
+  backdrop-filter: none !important;         /* 블러 제거 */
+  -webkit-backdrop-filter: none !important; /* iOS 대응 */
 }
 
-/* =========================
-   Modal Box
-   width: 340px / height: 570px / 상하 141px 여백
-========================= */
+/* ===== Modal Box ===== */
 .wl-chooser {
-  position: relative;
   width: 340px;
   height: 570px;
   flex-shrink: 0;
-
   border-radius: 16px;
-  border: 1.333px solid #f0d5cc;
-  background: linear-gradient(135deg, #fffef5 0%, #fffbf0 50%, #fff9e8 100%);
+  border: 1.333px solid #F0D5CC;
+  background: linear-gradient(135deg, #FFFEF5 0%, #FFFBF0 50%, #FFF9E8 100%);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
 
-  padding: 28px 20px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden;
+  padding: 24px;
+  position: relative;
 
-  margin-block: 141px !important; /* 위아래 정확히 141px */
-  margin-inline: auto; /* 좌우 중앙 정렬 */
-
-  z-index: 1;
-  pointer-events: auto;
+  font-family: "Noto Sans KR", Pretendard, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
-/* 작은 화면 대응 */
-@media (max-height: 852px) {
-  .wl-chooser {
-    margin-block: 24px !important;
-    height: min(570px, calc(100dvh - 48px));
-  }
-}
-
-/* =========================
-   닫기 버튼
-========================= */
+/* 닫기 버튼 */
 .wl-chooser-close {
   position: absolute;
   top: 12px;
   right: 12px;
   width: 32px;
   height: 32px;
-  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
   display: grid;
   place-items: center;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  cursor: pointer;
-}
-.wl-chooser-close:active {
-  transform: translateY(1px);
+  border-radius: 8px;
 }
 
-/* =========================
-   상단 이미지 배지 + 타이틀
-========================= */
+/* 헤더 */
 .wl-chooser-head {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 8px; /* 기존 12px → 8px로 간격 축소 */
 }
 
 .wl-chooser-floating {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
+  width: 44px; /* 기존 48px → 44px로 살짝 축소 */
+  height: 44px;
+  border-radius: 12px;
+  background: #FFF4CC;
+  border: 3px solid #fff;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
   display: grid;
   place-items: center;
-  background: #fff4d1;
-  color: #8b6b39;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  margin-top: 10px;
 }
 
 .wl-chooser-title {
-  margin: 18px 0 4px;
-  font-size: 20px;
-  font-weight: 800;
-  color: #342d27;
-  letter-spacing: -0.2px;
-}
-.wl-chooser-sub {
-  margin: 0 0 18px;
-  font-size: 13px;
-  color: #8c8279;
+  color: #4A3428;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 18px;
+  margin-top: 4px;
 }
 
-/* =========================
-   카드 영역
-========================= */
+.wl-chooser-sub {
+  color: #9B8579;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  margin-top: -6px; /* 기존 -10px → 위아래 균형 조정 */
+}
+
+/* ===== 카드 리스트 컨테이너 ===== */
 .wl-chooser-body {
   width: 100%;
+  margin-top: 24px; /* 기존 30px → 살짝 줄임 */
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 12px; /* 카드 간 간격 축소 */
 }
 
-/* ===== 개별 카드 ===== */
-.wl-chooser-card {
-  width: 286.667px;
-  height: 160px;
+/* ===== 카드 ===== */
+.wl-option {
+  width: 287px;
+  height: 150px; /* 기존 160px → 전체 높이 살짝 축소 */
   flex-shrink: 0;
-
-  background: #ffffff !important; /* 불투명 배경 */
+  background: #FFF;
+  border: 1.333px solid #1E3A8A;
   border-radius: 16px;
-  border: 2px solid #3f6ceb !important; /* 파란 테두리 */
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  gap: 12px;
-  padding: 18px;
   cursor: pointer;
-  text-align: center;
-  color: #1f2937;
-
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.05s;
-  position: relative;
-  z-index: 2;
-  pointer-events: auto;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
-.wl-chooser-card + .wl-chooser-card {
-  margin-top: 16px;
+.wl-option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Hover/Active */
-.wl-chooser-card:hover {
-  border-color: #2f5ce0;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
-}
-.wl-chooser-card:active {
-  transform: translateY(1px);
-}
-
-/* ===== 아이콘 배지 ===== */
-.wl-chooser-card-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  display: grid;
-  place-items: center;
-  color: #fff;
-  flex: 0 0 auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
-.wl-chooser-card-icon.red {
-  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
-}
-.wl-chooser-card-icon.blue {
-  background: linear-gradient(135deg, #5a8bff, #74a3ff);
-}
-
-/* ===== 텍스트 ===== */
-.wl-chooser-card-text {
+/* 카드 내부 스택 (아이콘/제목/부제목) */
+.wl-option-stack {
   display: flex;
   flex-direction: column;
-  gap: 6px;
   align-items: center;
-}
-.wl-chooser-card-text .tit {
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: -0.2px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.wl-chooser-card-text .sub {
-  font-size: 12.5px;
-  color: #6b7280;
-  letter-spacing: -0.1px;
+  gap: 6px; /* 기존 10px → 아이콘~텍스트 간격 줄임 */
 }
 
-/* 작은 화면 대응 */
-@media (max-height: 640px) {
-  .wl-chooser {
-    transform: scale(0.95);
-  }
+/* 아이콘 캡슐 */
+.wl-option-icon {
+  display: flex;
+  width: 48px; /* 기존 56px → 축소 */
+  height: 48px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 14px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+              0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }
-@media (max-height: 580px) {
-  .wl-chooser {
-    transform: scale(0.9);
-  }
+.wl-option-icon svg {
+  color: #fff;
+}
+
+/* 색상 변형 */
+.wl-option-icon.red {
+  background: linear-gradient(180deg, #E84855 0%, #FF9AA2 100%);
+}
+.wl-option-icon.blue {
+  background: linear-gradient(180deg, #5C8FFF 0%, #7FB2FF 100%);
+}
+
+/* 제목 */
+.wl-option-title {
+  color: #4A3428;
+  text-align: center;
+  font-size: 15px; /* 약간 작게 */
+  font-weight: 500;
+  line-height: 22px;
+  margin-top: 1px;
+}
+
+/* 부제목 */
+.wl-option-sub {
+  margin-top: 3px; /* 기존 6px → 간격 축소 */
+  color: #9B8579;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 18px;
 }

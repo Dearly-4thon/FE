@@ -1,39 +1,60 @@
-// src/lib/api.js
+// Vite는 ESM이 기본. CommonJS(require/module.exports) 쓰지 마세요.
+const BASE_URL =
+  import.meta.env?.VITE_API_BASE_URL ||
+  (typeof window !== "undefined" ? `${window.location.origin}/api` : "");
 
-// API 서버 베이스 URL: .env에 VITE_API_BASE=https://api.example.com 처럼 넣어두면 사용돼요.
-// 없으면 현재 origin을 사용합니다.
-const API_BASE = import.meta.env.VITE_API_BASE || "";
-
-// 토큰 저장 위치에 맞게 수정 (예: sessionStorage)
-export function getAccessToken() {
-  return localStorage.getItem("access_token") || "";
+// (선택) 토큰 보관 위치는 프로젝트 규칙에 맞춰 바꾸세요.
+function authHeaders() {
+  try {
+    const token = localStorage.getItem("accessToken");
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  } catch {
+    return {};
+  }
 }
 
-// JSON fetch 헬퍼
-export async function fetchJSON(path, { signal, params } = {}) {
-  const base = API_BASE || window.location.origin;
-  const url = new URL(path, base);
+/** 공용 fetch 래퍼: 에러/JSON 처리 통일 */
+async function request(path, { method = "GET", headers = {}, body, signal, credentials = "include" } = {}) {
+  const url = path.startsWith("http") ? path : `${BASE_URL.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
 
-  if (params) {
-    Object.entries(params).forEach(([k, v]) => {
-      if (v != null && v !== "") url.searchParams.set(k, v);
-    });
-  }
-
-  const headers = { Accept: "application/json" };
-  const token = getAccessToken();
-  if (token) headers.Authorization = `Bearer ${token}`;
-
-  const res = await fetch(url.toString(), {
-    method: "GET",
-    headers,
+  const res = await fetch(url, {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      ...authHeaders(),
+      ...headers,
+    },
+    body: body ? JSON.stringify(body) : undefined,
     signal,
-    credentials: "include", // 쿠키 세션 사용하는 경우
+    credentials, // 세션쿠키 쓰면 "include"
   });
 
+  // JSON/텍스트 자동 파싱
+  const text = await res.text();
+  const data = text ? (() => { try { return JSON.parse(text); } catch { return text; } })() : null;
+
   if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`HTTP ${res.status} ${text}`);
+    const msg = (data && data.message) || res.statusText || "Request failed";
+    const err = new Error(`${res.status} ${msg}`);
+    err.status = res.status;
+    err.data = data;
+    throw err;
   }
-  return res.json();
+  return data;
 }
+
+/** 내가 추가한 친구 목록 가져오기 (검색어 옵션) */
+export async function fetchMyFriends({ q = "", signal } = {}) {
+  const query = q ? `?q=${encodeURIComponent(q)}` : "";
+  // 서버 엔드포인트 예시: GET /friends?q=...
+  return request(`/friends${query}`, { signal });
+}
+
+/** 개별 프로필 (Compose에서 제목 보정 등) */
+export async function fetchUserProfile(userId, { signal } = {}) {
+  if (!userId) throw new Error("userId is required");
+  // 예시: GET /users/:id
+  return request(`/users/${encodeURIComponent(userId)}`, { signal });
+}
+
+export { BASE_URL }; // 디버그/테스트용

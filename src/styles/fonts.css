@@ -37,3 +37,11 @@
   font-weight: normal;
   font-display: swap;
 }
+
+/* === 전역 폰트 유틸 === */
+.font-basic   { font-family: "Noto Sans KR", sans-serif; }
+.font-rounded { font-family: "Cafe24Surround", sans-serif; }
+.font-soft    { font-family: "OngleipParkDahyeon", cursive; }
+.font-elegant { font-family: "JoseonGulim", serif; }
+.font-modern  { font-family: "Suit", sans-serif; }
+.font-warm    { font-family: "GowoonDodum", sans-serif; }
