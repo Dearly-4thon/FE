@@ -1,7 +1,7 @@
 // src/components/Navbar.jsx
 import { NavLink } from "react-router-dom";
 import { Mail, PenLine, Inbox, User } from "lucide-react";
-import "./navbar.css";
+import "./Navbar.css";
 
 export default function Navbar() {
   const cx = ({ isActive }) => (isActive ? "nav-item active" : "nav-item");
