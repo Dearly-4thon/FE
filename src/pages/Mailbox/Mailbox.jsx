@@ -40,7 +40,7 @@ export default function Mailbox() {
     });
   };
 
-  // ✅ 친구 카드 → 친구와의 편지 화면
+  // 친구 카드 → 친구와의 편지 화면
   const handleSelectFriend = (friend) => {
     const id = friend?.id ?? friend?.name ?? "";
     const name = friend?.name ?? String(friend?.id ?? "");
@@ -57,6 +57,7 @@ export default function Mailbox() {
   };
 
   return (
+    // 💛 PWA 393짜리 전체 배경용 래퍼
     <div className="mailbox-page">
       <div
         className="mailbox-screen"
@@ -64,7 +65,7 @@ export default function Mailbox() {
           position: "relative",
           "--hub-size": `${HUB_SIZE}px`,
           "--hub-gap": `${HUB_GAP}px`,
-          "--hub-top": `${HUB_TOP}px`,
+          "--hub-top": `${HUB_TOP}px`, // 스페이서 계산용
         }}
       >
         {toast && (
@@ -90,7 +91,7 @@ export default function Mailbox() {
           top={HUB_TOP}
         />
 
-        {/* 허브 높이만큼 간격 확보 */}
+        {/* 허브 아래로 리스트를 밀어주는 스페이서 */}
         <div aria-hidden className="mbx-center-spacer" />
 
         {/* 탭 */}

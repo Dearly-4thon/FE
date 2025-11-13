@@ -172,60 +172,39 @@ export default function FriendConversation() {
 
       {/* ===== 내용 ===== */}
       <section className="fc-body">
+        {/* 내용 영역 */}
         {isEmpty ? (
-          // ===== 비어 있을 때 =====
-          <div className="fc-empty-box">
-            <div className="fc-empty-icon-circle">
-              <img
-                src={tab === "from" ? mailSvg : sendSvg}
-                alt=""
-                className="fc-empty-icon"
-              />
+          <div className="mbx-empty-panel">
+            <div className="mbx-empty-icon-wrap">
+              <Mail className="mbx-empty-icon" size={32} />
             </div>
-
-            <div className="fc-empty-text">
-              <p className="fc-empty-title">
-                {tab === "from"
-                  ? `${friendName}님이 보낸 편지가 없어요.`
-                  : `${friendName}님에게 보낸 편지가 없어요.`}
-              </p>
-              <p className="fc-empty-sub">
-                {tab === "from"
-                  ? "친구가 편지를 보낼 때까지 기다려보세요 💌"
-                  : "친구에게 특별한 메시지를 전해보세요 💝"}
-              </p>
-            </div>
-
-            {tab === "to" && (
-              <button
-                type="button"
-                className="fc-empty-cta"
-                onClick={handleWrite}
-              >
-                <span className="fc-empty-cta-icon">✉️</span>
-                <span>편지 쓰기</span>
-              </button>
-            )}
+            <p className="mbx-empty-main">
+              아직 {tab === "inbox" ? "받은 편지가" : "보낸 편지가"} 없어요.
+            </p>
+            <p className="mbx-empty-sub">
+              친구들과 편지방을 만들어보세요!
+            </p>
           </div>
         ) : (
-          // ===== 편지가 있을 때 카드 리스트 =====
-          <div className="fc-card-list">
-            {(cards.length ? cards : [sampleCard]).map((card, idx) => (
-              <article key={idx} className="fc-card">
-                <div className="fc-card-top">
-                  <span className="fc-dday">
-                    D-{card.dday ?? sampleCard.dday}
-                  </span>
-                  <span className="fc-card-mail">✉️</span>
-                </div>
-
-                <div className="fc-card-lock">🔒</div>
-
-                <p className="fc-card-open">
-                  {(card.openAt ?? sampleCard.openAt) + "에 공개"}
-                </p>
-              </article>
-            ))}
+          /* ✅ 여기서부터 카드 그리드 */
+          <div className="mbx-mail-grid-wrap">
+            <ul className="mbx-mail-grid">
+              {list.map((item) => (
+                <li key={item.id} className="mbx-mail-card">
+                  <div className="mbx-mail-card-inner">
+                    <div className="mbx-mail-card-top">
+                      <span className="mbx-mail-badge">D-{item.dday}</span>
+                      <span className="mbx-mail-date">{item.openAt}</span>
+                    </div>
+                    <div className="mbx-mail-card-body">
+                      <div className="mbx-mail-card-title">
+                        {item.title}
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
       </section>

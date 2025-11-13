@@ -2,21 +2,15 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 
-// 페이지들
-import LetterRoom from "./pages/LetterRoom/LetterRoomListe.jsx";
-import Mailbox from "./pages/Mailbox/Mailbox.jsx";
-import MypageMain from "./pages/Mypage/MypageMain.jsx";
+import "./styles/overlap.css";
 
-// ✔️ 편지쓰기 관련
+// 페이지
 import WriteLetterForm from "./pages/WriteLetter/WriteLetterForm.jsx";
 import ComposeForm from "./pages/WriteLetter/components/ComposeForm.jsx";
+import Mailbox from "./pages/Mailbox/Mailbox.jsx";
+import MypageMain from "./pages/Mypage/MypageMain.jsx";
+import LetterRoom from "./pages/LetterRoom/LetterRoomListe.jsx";
 import SearchRecipient from "./pages/WriteLetter/components/SearchRecipient.jsx";
-import SentToMePage from "./pages/Mailbox/components/SentTomePage.jsx";
-
-// ✔️ 수신함 친구/나와의 편지 화면
-import FriendConversation from "./pages/Mailbox/components/FriendConversation.jsx";
-
-import "./styles/overlap.css";
 
 export default function App() {
   return (
@@ -24,36 +18,34 @@ export default function App() {
       <div className="app-frame">
         <div className="app-scroll">
           <Routes>
-            {/* 기본: 편지방 */}
-            <Route index element={<Navigate to="/letters" replace />} />
+            {/* 기본 경로는 편지방으로 */}
+            <Route index element={<Navigate to="/letters" />} />
 
-            {/* 편지방 / 수신함 / 마이페이지 */}
+            {/* 편지방 */}
             <Route path="/letters" element={<LetterRoom />} />
+
+            {/* ✅ 편지쓰기 메인(지금 캡쳐한 CircleStage 화면) */}
+            <Route path="/write" element={<WriteLetterForm />} />
+            <Route path="/write/compose/:handle" element={<ComposeForm />} />
+
+            {/* 받는 사람 검색 */}
+            <Route path="/write/search" element={<SearchRecipient />} />
+
+            {/* ✅ 편지지 고르고 내용 쓰는 화면 */}
+            <Route path="/write/compose" element={<ComposeForm />} />
+
+            {/* 수신함 */}
             <Route path="/mailbox" element={<Mailbox />} />
+
+            {/* 마이페이지 */}
             <Route path="/mypage" element={<MypageMain />} />
 
-            {/* ✅ 수신함 - 친구/나와의 편지 화면 */}
-            <Route
-              path="/mailbox/conversation/:friendId"
-              element={<FriendConversation />}
-            />
-            <Route path="/mailbox/self" element={<SentToMePage />} />
-
-
-            {/* ➜ 편지쓰기 진입(폼 틀) */}
-            <Route path="/compose" element={<WriteLetterForm />} />
-            {/* ➜ 받는 사람 선택 */}
-            <Route path="/compose/select" element={<SearchRecipient />} />
-            {/* ➜ 실제 작성 폼 */}
-            <Route path="/compose/form" element={<ComposeForm />} />
-
-            {/* 404 fallback */}
             <Route path="*" element={<Navigate to="/letters" replace />} />
           </Routes>
         </div>
-      </div>
 
-      <Navbar />
+        <Navbar />
+      </div>
     </div>
   );
 }

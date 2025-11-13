@@ -9,7 +9,7 @@ export default function LetterRoomListe() {
     e?.preventDefault?.();
     e?.stopPropagation?.();
     console.log("openComposeFor -> navigate", { from: location.pathname, to: recipient });
-    navigate("/compose/full", { state: { from: location.pathname, to: recipient } });
+    navigate("/write/compose/full", { state: { from: location.pathname, to: recipient } });
   };
 
   return (

@@ -79,68 +79,67 @@
 /* ===== 탭 ===== */
 
 /* 탭 래퍼 */
-/* ===== 탭 ===== */
-
 .fc-tabs-wrap {
   margin-top: 12px;
   margin-bottom: 16px;
 }
 
-/* 탭 전체 박스 (바깥 흰 박스) */
+/* 탭 컨테이너 (바깥 흰 박스) */
 .fc-tabs {
   display: flex;
-  height: 50px;
-  padding: 4px 4px 0 4px;
   align-items: flex-start;
-  gap: 4px;
+  gap: 3.998px;
   flex-shrink: 0;
   align-self: stretch;
 
+  height: 49.581px;
+  padding: 3.998px 3.998px 0 3.998px;
+
   border-radius: 16px;
-  border: 0.8px solid #F0D5CC;
-  background: linear-gradient(180deg, #ffffff 0%, #fffbf8 100%);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
-    0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  border: 0.795px solid #F0D5CC;
+  background: linear-gradient(180deg, #FFF 0%, #FFFBF8 100%);
+  box-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.10),
+    0 1px 2px -1px rgba(0, 0, 0, 0.10);
 }
 
-/* 각각의 탭 버튼 (반씩 차지) */
+/* 각 탭 버튼 공통 */
 .fc-tab {
-  flex: 1 0 0; /* ← 반띵 */
+  border: none;
+  background: transparent;
+  border-radius: 20px; /* 비활성도 pill 모양 유지 */
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  flex: 1 0 0;          /* 두 탭이 같은 넓이 */
+  padding: 8px 12px;    /* 기본 패딩 (활성일 때 덮어씀) */
 
-  padding: 6px 12px 10px;
-  border: none;
-  border-radius: 20px;
-  background: transparent;
-
-  font-size: 14px;
+  color: #9B8579;
+  font-family: "Noto Sans KR";
+  font-size: 16px;
+  font-style: normal;
   font-weight: 400;
-  color: #9b8579;
+  line-height: 24px; /* 150% */
+
   cursor: pointer;
-  transition:
-    background 0.18s ease,
-    color 0.18s ease,
-    box-shadow 0.18s ease;
+  transition: background 0.18s ease, color 0.18s ease,
+    box-shadow 0.18s ease, transform 0.12s ease;
 }
 
-.fc-tab-arrow {
-  opacity: 0.6;
-}
-
-.fc-tab-count {
-  font-weight: 500;
-}
-
-/* 선택된 탭 (파란 캡슐) */
+/* 활성 탭 (친구 → 나 또는 나 → 친구) */
 .fc-tab--active {
-  background: #60a5fa;
-  color: #ffffff;
+  display: flex;
+  padding: 5.996px 52.717px 9.998px 11.995px; /* ← 네가 준 값 그대로 */
+  align-items: center;
+  flex: 1 0 0;
+
+  border-radius: 20px;
+  background: #60A5FA;
   box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    0 4px 6px -1px rgba(0, 0, 0, 0.10),
+    0 2px 4px -2px rgba(0, 0, 0, 0.10);
+
+  color: #ffffff;
 }
 
 

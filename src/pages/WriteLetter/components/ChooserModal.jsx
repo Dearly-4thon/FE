@@ -30,8 +30,8 @@ export default function ChooserModal({ onClose }) {
             className="wl-option"
             role="button"
             tabIndex={0}
-            onClick={() => go("/compose/form")}
-            onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && go("/compose/form")}
+            onClick={() => go("/write/compose/form")}
+            onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && go("/write/compose/form")}
           >
             <div className="wl-option-stack">
               <div className="wl-option-icon red">

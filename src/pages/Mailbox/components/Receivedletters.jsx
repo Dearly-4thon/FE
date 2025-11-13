@@ -7,13 +7,7 @@ const ReceivedLetters = ({ count }) => {
     return <EmptyReceivedMessage />;
   }
 
-  // 받은 편지 목록이 있을 경우의 렌더링
-  return (
-    <div className="letter-list">
-      {/* <LetterItem key={...} data={...} /> */}
-      <p>받은 편지 목록 ({count}개)</p>
-    </div>
-  );
+
 };
 
 export default ReceivedLetters;

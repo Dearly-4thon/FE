@@ -19,79 +19,44 @@
 }
 
 /* ===== 앱 루트: 세로 100svh, 가로 min(100vw, maxW), 중앙정렬 ===== */
-.app-shell{
-  min-height: 100svh; /* 주소창 변화 대응(iOS/Android) */
-  width: min(100vw, var(--max-app-width));
-  margin: 0 auto;
+/* ==== 기본 html/body/root 높이 세팅 ==== */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
+/* ==== 앱 바깥 프레임 ==== */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: #f5f5f5; /* 바깥 회색 배경 (있으면 좋고, 아니면 수정 가능) */
+}
+
+/* ==== 393 x 100vh 고정 프레임 ==== */
+.app-frame {
+  width: 100%;
+  max-width: 393px;
+  height: 100vh;              /* 🔥 여기서 정확히 한 화면 높이 고정 */
   display: flex;
   flex-direction: column;
-  background: transparent;
-
-  font-family: Pretendard, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", Arial;
+  background: #fffaee;        /* 기본 노란 배경 */
 }
 
-/* 내부 프레임은 단순히 100% 폭만 유지 */
-.app-frame{
-  width: 100%;
-  display: contents; /* 불필요한 래퍼 박스화 방지 */
+/* ==== 실제 스크롤 담당 영역 ==== */
+.app-scroll {
+  flex: 1;                    /* 위에 헤더/네비 있으면 남은 영역 전부 */
+  overflow-y: auto;           /* 🔥 스크롤 켜기 */
+  overflow-x: hidden;
+
+  -ms-overflow-style: none;   /* IE/Edge 스크롤바 숨기기 */
+  scrollbar-width: none;      /* Firefox 스크롤바 숨기기 */
 }
 
-/* ===== 페이지 스크롤 컨테이너 =====
-   - 스크롤은 여기서만 발생
-   - 하단 네비 + 안전영역만큼 패딩을 주어 가림 방지 */
-.app-scroll{
-  position: relative;
-  width: 100%;
-  min-height: 0;                  /* 스크롤 안정성(모바일) */
-  flex: 1 1 auto;                 /* 남은 영역 채우기 */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;   /* 상/하단으로 튀는 바운스 축소 */
-
-  /* 하단 네비 높이 + 안전영역만큼 여백 확보 */
-  padding-bottom: calc(var(--navbar-height) + var(--safe-bottom));
-  /* 상단 바를 나중에 합칠 경우 여기만 조정
-     padding-top: var(--safe-top); */
-}
-
-/* ===== 네비게이션 레이어 정책 =====
-   - 위치/폭은 Navbar 컴포넌트의 CSS에서 관리
-   - 여기서는 '항상 최상단 레이어'만 보장 */
-.navbar{
-  z-index: 1000;
-}
-
-/* ===== FAB (Floating Action Button) =====
-   목표: "앱의 오른쪽 가장자리"에서 정확히 23px 안쪽
-   중앙 정렬된 고정 폭 앱이므로, 뷰포트 오른쪽에서 다음을 더해 계산:
-   (뷰포트좌/우 여백) + 23px
-   뷰포트 여백 = (100vw - 앱폭)/2
-   단, 100vw < 앱폭인 모바일에서는 여백이 음수가 될 수 있어 max(…, 0)로 클램프. */
-.wl-fab{
-  position: fixed;
-  right: calc( max( (100vw - var(--max-app-width)) / 2 , 0px ) + var(--fab-right) );
-  bottom: calc(var(--navbar-height) + var(--fab-gap-above-navbar) + var(--safe-bottom));
-  z-index: 1100;
-
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-
-  /* 기본 스타일(필요시 프로젝트 톤에 맞게 조정) */
-  background: #1e3a8a;
-  color: #fff;
-  box-shadow: 0 18px 40px rgba(0,0,0,.16);
-  border: none;
-  cursor: pointer;
-  transition: transform .08s ease;
-}
-.wl-fab:active{ transform: scale(.98); }
-
-/* ===== 큰 화면(태블릿/노트북) 보정 =====
-   - 중앙 고정 폭 유지(좌우 여백으로 균형) */
-@media (min-width: 480px){
-  .app-shell{ width: var(--max-app-width); }
+/* 크롬/사파리/엣지 스크롤바 숨기기 */
+.app-scroll::-webkit-scrollbar {
+  display: none;
 }

@@ -1,14 +1,15 @@
 /* 상단바(56px) + 여백(44px) 고려해서 내려놓기 */
-.mbx-header{
+.mbx-header {
   margin-top: calc(env(safe-area-inset-top) + 56px + 44px);
   text-align: center;
   position: relative;
-  z-index: 500; /* 허브(200) 위로만 띄우되, 화면 전체 오버레이는 사용 안 함 */
-  font-family: "Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  z-index: 500;
+  /* 허브(200) 위로만 띄우되, 화면 전체 오버레이는 사용 안 함 */
+  font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 }
 
 /* 제목: 전역 h2 영향 제거 */
-.mbx-title{
+.mbx-title {
   all: unset;
   display: inline-flex;
   align-items: center;
@@ -20,16 +21,17 @@
 }
 
 /* info 버튼 + 팝오버 기준점 */
-.mbx-info-wrap{
+.mbx-info-wrap {
   position: relative;
   display: inline-block;
   margin-left: 8px;
 }
 
 /* i 버튼(투명) */
-.mbx-info-btn{
-  width: 22px; height: 22px;
-  border: 1px solid rgba(74,52,40,.25);
+.mbx-info-btn {
+  width: 22px;
+  height: 22px;
+  border: 1px solid rgba(74, 52, 40, .25);
   border-radius: 999px;
   background: transparent;
   color: #4A3428;
@@ -42,46 +44,72 @@
 }
 
 /* 작은 팝오버 (오버레이 X, 고정 위치) */
-.mbx-popover{
+.mbx-popover {
   position: absolute;
   top: 28px;
-  right: -30px;                /* 아이콘 오른쪽 정렬 */
+  right: -30px;
+  /* 아이콘 오른쪽 정렬 */
   width: 280px;
   background: #fff;
   border: 1px solid #F0D5CC;
   border-radius: 12px;
   box-shadow:
-    0 8px 18px rgba(0,0,0,.12),
-    0 0 18px 6px rgba(232,72,85,.15); /* 연한 레드 블러 */
+    0 8px 18px rgba(0, 0, 0, .12),
+    0 0 18px 6px rgba(232, 72, 85, .15);
+  /* 연한 레드 블러 */
   padding: 14px 16px;
 }
 
-.mbx-popover-arrow{
+.mbx-popover-arrow {
   position: absolute;
-  top: -8px; right: 12px;
-  width: 14px; height: 14px;
+  top: -8px;
+  right: 12px;
+  width: 14px;
+  height: 14px;
   background: #fff;
   border-left: 1px solid #F0D5CC;
   border-top: 1px solid #F0D5CC;
   transform: rotate(45deg);
 }
 
-.mbx-popover-title{
+.mbx-popover-title {
   margin: 0 0 8px;
-  color:#4A3428; font-size:16px; font-weight:600; line-height:22px;
+  color: #4A3428;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
 }
 
-.mbx-popover-list{
-  margin: 0; padding-left: 0; list-style: none;
-  color:#4A3428; font-size:11px; line-height:20px;
+.mbx-popover-list {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  color: #4A3428;
+  font-size: 11px;
+  line-height: 20px;
 }
-.mbx-em.me{ color:#FF9AA2; font-weight:400; }
-.mbx-em.fav{ color:#2563EB; font-weight:400; }
-.mbx-em.pink{ color:#FF9AA2; font-weight:400; }
 
-.mbx-subtitle{
+.mbx-em.me {
+  color: #FF9AA2;
+  font-weight: 400;
+}
+
+.mbx-em.fav {
+  color: #2563EB;
+  font-weight: 400;
+}
+
+.mbx-em.pink {
+  color: #FF9AA2;
+  font-weight: 400;
+}
+
+.mbx-subtitle {
   margin-top: 6px;
-  color:#9B8579; font-size:14px; line-height:20px; font-weight:400;
+  color: #9B8579;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
 }
 
 /* 허브 아래 여백 (너무 멀지 않게) */
@@ -90,25 +118,23 @@
 }
 
 /* 화면 전체 배경 (노란 PWA 느낌) */
+/* 화면 전체 배경 (노란 PWA 느낌) */
 .mailbox-page {
-  background: #FFFAEE;              /* 네가 보여준 배경색 */
+  background: #FFFAEE;
 }
 
-/* 실제 앱 프레임 */
+/* 실제 앱 프레임 (393 고정) */
 .mailbox-screen {
   max-width: var(--app-width, 393px);
   margin: 0 auto;
 
-  /* 네비까지 꽉 채우기 */
+  /* 네비까지 꽉 채우되, 세로는 스크롤 가능하게 */
   min-height: calc(
     100vh - env(safe-area-inset-top) - var(--navbar-height, 78px)
   );
-
-  /* 위쪽 패딩은 헤더 / 허브에서 처리, 여기서는 아래만 */
   padding-bottom: calc(env(safe-area-inset-bottom) + 24px);
 }
 
-/* 허브 아래로 리스트를 밀어주는 여백 */
 .mbx-center-spacer {
-  height: calc(var(--hub-top, 160px) + var(--hub-size, 360px) / 2 + var(--hub-gap, 24px));
+  height: 550px; /* 393x852 기준 정확히 허브 아래 + 여유 있는 위치 */
 }
