@@ -13,7 +13,7 @@ import {
 import backIcon from "../../assets/icons/arrowBack.svg";
 import shareIcon from "../../assets/icons/share.svg";
 import defaultUserIcon from "../../assets/icons/mailclose.svg";
-import downLoadIcon from "../../assets/icons/downLoad.svg";
+import downLoadIcon from "../../assets/icons/download.svg";
 import copyIcon from "../../assets/icons/copy.svg";
 import kakao from "../../assets/icons/Login.svg";
 import moreIcon from "../../assets/icons/more.svg";
