@@ -68,17 +68,28 @@ export const getKakaoLoginUrl = () => {
 
 // 카카오 로그인 콜백 처리
 export const handleKakaoCallback = async () => {
-  const params = new URLSearchParams(window.location.search);
-  const access = params.get("access");
-  const refresh = params.get("refresh");
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const access = params.get("access");
+    const refresh = params.get("refresh");
+    const user_id = params.get("user_id");
 
-  if (access) {
-    saveTokens(access, refresh);
+    if (!access || !refresh || !user_id) {
+      console.error(" 카카오에서 받은 토큰 또는 유저 ID 없음");
+      return { success: false };
+    }
+
+    localStorage.setItem("access_token", access);  
+    localStorage.setItem("refresh_token", refresh);
+    localStorage.setItem("user_id", user_id);
+
     return { success: true };
+  } catch (e) {
+    console.error(" 카카오 콜백 처리 오류:", e);
+    return { success: false };
   }
-
-  return { success: false };
 };
+
 
 // Authorization 헤더 생성(로컬 토큰 사용)
 const authHeader = () => {
