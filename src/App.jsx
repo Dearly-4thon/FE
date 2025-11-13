@@ -19,6 +19,7 @@ import LetterRoomLocked from "./pages/LetterRoom/LetterRoomLocked.jsx";
 
 // 로그인 페이지
 import Login from "./pages/Login/Login.jsx";
+import SignUp from "./pages/SignUp/SignUp.jsx";
 import KakaoCallback from "./pages/SignUp/KakaoCallback.jsx";
 
 // 토큰 확인
@@ -198,6 +199,7 @@ export default function App() {
     <Routes>
       {/* 로그인은 가드 밖 */}
       <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
       <Route path="/auth/kakao/callback" element={<KakaoCallback />} />
 
       {/* 보호 라우트: 토큰 없으면 /login으로 */}

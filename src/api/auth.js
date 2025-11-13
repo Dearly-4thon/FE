@@ -1,21 +1,33 @@
 import { BASE_URL } from "./config.js";
 
-// 토큰 관리 유틸
+/* -----------------------------
+    토큰 키 통일
+----------------------------- */
+const ACCESS = "access_token";
+const REFRESH = "refresh_token";
+const USERID = "user_id";
+
+/* -----------------------------
+    로컬 저장/조회
+----------------------------- */
 export const saveTokens = (access, refresh) => {
-  if (access) localStorage.setItem("accessToken", access);
-  if (refresh) localStorage.setItem("refreshToken", refresh);
+  if (access) localStorage.setItem(ACCESS, access);
+  if (refresh) localStorage.setItem(REFRESH, refresh);
 };
 
-export const getAccessToken = () => localStorage.getItem("accessToken");
-export const getRefreshToken = () => localStorage.getItem("refreshToken");
+export const getAccessToken = () => localStorage.getItem(ACCESS);
+export const getRefreshToken = () => localStorage.getItem(REFRESH);
+export const getUserId = () => localStorage.getItem(USERID);
 
 export const logout = () => {
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
+  localStorage.removeItem(ACCESS);
+  localStorage.removeItem(REFRESH);
+  localStorage.removeItem(USERID);
 };
 
-
-// 일반 로그인
+/* -----------------------------
+    일반 로그인
+----------------------------- */
 export const loginUser = async ({ username, password }) => {
   const res = await fetch(`${BASE_URL}/auth/login/`, {
     method: "POST",
@@ -30,9 +42,15 @@ export const loginUser = async ({ username, password }) => {
   return { ok: res.ok, data };
 };
 
-
-// 회원가입
-export const registerUser = async ({ username, nickname, password, passwordCheck }) => {
+/* -----------------------------
+    회원가입
+----------------------------- */
+export const registerUser = async ({
+  username,
+  nickname,
+  password,
+  passwordCheck,
+}) => {
   const res = await fetch(`${BASE_URL}/auth/register/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -48,95 +66,90 @@ export const registerUser = async ({ username, nickname, password, passwordCheck
   return { ok: res.status === 201, data };
 };
 
-
-// 아이디 중복 확인
+/* -----------------------------
+    아이디 중복 확인
+----------------------------- */
 export const checkUserId = async (username) => {
   const res = await fetch(
     `${BASE_URL}/auth/check-user-id/?user_id=${username}`
   );
-
   const data = await res.json();
   return { ok: res.ok, data };
 };
 
-
-// 카카오 로그인 URL
+/* -----------------------------
+    카카오 로그인 URL
+----------------------------- */
 export const getKakaoLoginUrl = () => {
   return `${BASE_URL}/accounts/kakao/login/`;
 };
 
-
-// 카카오 로그인 콜백 처리
+/* -----------------------------
+    카카오 콜백 처리
+----------------------------- */
 export const handleKakaoCallback = async () => {
   try {
     const params = new URLSearchParams(window.location.search);
     const access = params.get("access");
     const refresh = params.get("refresh");
-    const user_id = params.get("user_id");
+    const userId = params.get("user_id");
 
-    if (!access || !refresh || !user_id) {
-      console.error(" 카카오에서 받은 토큰 또는 유저 ID 없음");
+    if (!access || !refresh || !userId) {
+      console.error("카카오 토큰 누락:", { access, refresh, userId });
       return { success: false };
     }
 
-    localStorage.setItem("access_token", access);  
-    localStorage.setItem("refresh_token", refresh);
-    localStorage.setItem("user_id", user_id);
+    //통일된 키로 저장
+    localStorage.setItem(ACCESS, access);
+    localStorage.setItem(REFRESH, refresh);
+    localStorage.setItem(USERID, userId);
 
     return { success: true };
   } catch (e) {
-    console.error(" 카카오 콜백 처리 오류:", e);
+    console.error("카카오 콜백 처리 오류:", e);
     return { success: false };
   }
 };
 
-
-// Authorization 헤더 생성(로컬 토큰 사용)
+/* -----------------------------
+    Authorization Header
+----------------------------- */
 const authHeader = () => {
   const at = getAccessToken();
   return at ? { Authorization: `Bearer ${at}` } : {};
 };
 
-/** 서버 로그아웃
- * POST /auth/logout
- * 성공하면 로컬 토큰도 지움
- */
+/* -----------------------------
+    서버 로그아웃
+----------------------------- */
 export const logoutServer = async () => {
   const res = await fetch(`${BASE_URL}/auth/logout/`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...authHeader(),
     },
   });
 
   let data = null;
-  try { data = await res.json(); } catch (_) {}
+  try {
+    data = await res.json();
+  } catch (_) {}
 
   if (res.ok) {
-    // 서버에서 세션/토큰 정리가 완료됐으니 로컬도 정리
     logout();
   }
   return { ok: res.ok, data };
 };
 
-/** 비밀번호 재설정(변경)
- * POST /auth/change-password
- * 기본 필드: current_password, new_password, new_password_confirm
- * 백엔드가 다른 키를 쓰면 payload에 추가로 넘긴 값(rest)이 그대로 병합됨.
- *
- * 예)
- * changePassword({
- *   currentPassword: 'old1234',
- *   newPassword: 'new1234!',
- *   newPasswordConfirm: 'new1234!'
- * })
- */
+/* -----------------------------
+    비밀번호 변경
+----------------------------- */
 export const changePassword = async ({
   currentPassword,
   newPassword,
   newPasswordConfirm,
-  ...rest // 서버가 password/password_confirm 등을 요구하는 경우 대응
+  ...rest
 }) => {
   const body = {
     current_password: currentPassword,
@@ -146,9 +159,9 @@ export const changePassword = async ({
   };
 
   const res = await fetch(`${BASE_URL}/auth/change-password/`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...authHeader(),
     },
     body: JSON.stringify(body),
@@ -157,5 +170,3 @@ export const changePassword = async ({
   const data = await res.json();
   return { ok: res.ok, data };
 };
-// ==== 추가 끝 ====
-
