@@ -1,0 +1,405 @@
+/* ===Friend Management (친구 관리)=== */
+
+.friend-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fffef5 0%, #fffaf0 50%, #fff9e8 100%);
+}
+
+.friend-inner {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px 24px 40px;
+}
+
+/* 상단 헤더 */
+
+.friend-top-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.friend-back-btn {
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 999px;
+  color: #4a3428;
+}
+
+.friend-back-btn:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.friend-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #4a3428;
+}
+
+.friend-info-dot {
+  margin-left: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1px solid #9b8579;
+  background: #ffffff;
+  font-size: 10px;
+  color: #9b8579;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.friend-info-dot:hover {
+  border-color: #e84855;
+  background: #fff5f0;
+  color: #e84855;
+}
+
+/* 안내 박스 */
+
+.friend-guide-box {
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  border: 1px solid #f0d5cc;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 229, 220, 0.3),
+    rgba(255, 245, 240, 0.3)
+  );
+  font-size: 11px;
+  color: #9b8579;
+  line-height: 1.5;
+}
+
+.friend-guide-badge {
+  margin-top: 6px;
+  padding: 4px 0;
+  border-radius: 10px;
+  border: 1px solid #f0d5cc;
+  background: #fffdf8;
+  text-align: center;
+  font-size: 11px;
+  color: #e84855;
+}
+
+/* 탭 */
+
+.friend-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid #f0d5cc;
+  background: #ffffff;
+  margin-bottom: 10px;
+}
+
+.friend-tab-btn {
+  flex: 1;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: #9b8579;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.friend-tab-btn-active {
+  background: linear-gradient(90deg, #60a5fa, #93c5fd);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(96, 165, 250, 0.35);
+}
+
+.friend-tab-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* 공통 섹션 */
+
+.friend-tab-panel {
+  margin-top: 6px;
+}
+
+.friend-section {
+  margin-bottom: 18px;
+}
+
+.friend-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.friend-section-title {
+  font-size: 12px;
+  color: #9b8579;
+}
+
+.friend-section-sub {
+  font-size: 11px;
+  color: #4a3428;
+}
+
+/* 검색창 */
+
+.friend-search {
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.friend-search input {
+  width: 100%;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid #f0d5cc;
+  padding: 0 14px 0 34px;
+  font-size: 13px;
+  color: #4a3428;
+  outline: none;
+  background-color: #ffffff;
+}
+
+.friend-search input::placeholder {
+  color: rgba(155, 133, 121, 0.7);
+}
+
+.friend-search input:focus {
+  border-color: #e84855;
+}
+
+.friend-search-icon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  opacity: 0.8;
+}
+
+/* 리스트 / 카드 */
+
+.friend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.friend-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 18px;
+  border: 1px solid #f0d5cc;
+  background: #ffffff;
+  padding: 10px 12px;
+  box-shadow: 0 2px 4px rgba(240, 213, 204, 0.4);
+}
+
+.friend-card-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.friend-card-main-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.friend-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #fff4cc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.friend-avatar-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.friend-name {
+  font-size: 13px;
+  color: #4a3428;
+}
+
+.friend-id {
+  font-size: 11px;
+  color: #9b8579;
+}
+
+/* 요청 카드 버튼 */
+
+.friend-card-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.friend-round-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.friend-round-btn img {
+  width: 16px;
+  height: 16px;
+}
+
+.friend-round-btn-blue {
+  background: linear-gradient(90deg, #5c8fff, #7fb2ff);
+  box-shadow: 0 2px 6px rgba(96, 165, 250, 0.4);
+  color: #ffffff;
+}
+
+.friend-round-btn-outline {
+  background: #ffffff;
+  border: 1px solid #f0d5cc;
+}
+
+/* 즐겨찾기 */
+
+.friend-star-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #c4b5ab;
+  background: transparent;
+}
+
+.friend-star-btn-active {
+  color: #ffb800;
+}
+
+/* 빈 상태 카드 */
+
+.friend-empty-card {
+  margin-top: 10px;
+  padding: 24px 16px 18px;
+  border-radius: 24px;
+  border: 1px dashed #f0d5cc;
+  background: #ffffff;
+  text-align: center;
+  color: #9b8579;
+  font-size: 13px;
+}
+
+.friend-empty-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #fff5f0;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.friend-empty-circle img {
+  width: 26px;
+  height: 26px;
+}
+
+.friend-empty-add-btn {
+  margin-top: 8px;
+  border-radius: 999px;
+  border: 1px solid #f0d5cc;
+  background: #fffaf3;
+  padding: 6px 14px;
+  font-size: 11px;
+  color: #4a3428;
+  cursor: pointer;
+}
+
+/* 확인 모달 */
+
+.friend-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 80;
+}
+
+.friend-modal {
+  width: 280px;
+  border-radius: 20px;
+  border: 1px solid #f0d5cc;
+  background: #ffffff;
+  padding: 18px 16px 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+.friend-modal-title {
+  font-size: 16px;
+  color: #4a3428;
+  margin-bottom: 8px;
+}
+
+.friend-modal-text {
+  font-size: 13px;
+  color: #9b8579;
+  margin-bottom: 16px;
+}
+
+.friend-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.friend-modal-btn {
+  min-width: 70px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.friend-modal-btn-cancel {
+  background: #ffffff;
+  border: 1px solid #f0d5cc;
+  color: #9b8579;
+}
+
+.friend-modal-btn-blue {
+  background: linear-gradient(90deg, #5c8fff, #7fb2ff);
+  color: #ffffff;
+}
+
+.friend-modal-btn-red {
+  background: linear-gradient(90deg, #e84855, #ff9aa2);
+  color: #ffffff;
+}

@@ -1,0 +1,157 @@
+/* ===Notices (공지사항)==== */
+
+.notices-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fffef5 0%, #fffbf0 50%, #fff9e8 100%);
+  padding-bottom: 80px; /* 네비바 공간 */
+}
+
+.notices-inner {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 18px 20px 32px;
+}
+
+/* 상단 타이틀 영역 */
+
+.notices-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.notices-back-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 8px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #4a3428;
+}
+
+.notices-back-btn:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.notices-top-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.notices-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #4a3428;
+}
+
+.notices-sub {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #9b8579;
+}
+
+/* 리스트 / 카드 */
+
+.notice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notice-card {
+  width: 100%;
+  border-radius: 18px;
+  border: none;
+  background: rgba(219, 234, 254, 0.8); /* 파스텔 블루 */
+  padding: 12px 14px;
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
+  text-align: left;
+  box-shadow: 0 2px 6px rgba(148, 163, 184, 0.3);
+  transition: background 0.15s ease, transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.notice-card:hover {
+  background: rgba(191, 219, 254, 0.95);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(148, 163, 184, 0.4);
+}
+
+.notice-icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #1e3a8a;
+  background: #fff4cc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.notice-icon-img {
+  width: 18px;
+  height: 18px;
+}
+
+.notice-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.notice-title {
+  font-size: 13px;
+  color: #4a3428;
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.notice-date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #9b8579;
+}
+
+.notice-date-icon {
+  width: 12px;
+  height: 12px;
+  opacity: 0.8;
+}
+
+/* 빈 상태 */
+
+.notice-empty {
+  margin-top: 32px;
+  padding: 24px 16px 18px;
+  border-radius: 24px;
+  border: 1px dashed #f0d5cc;
+  background: #ffffff;
+  text-align: center;
+}
+
+.notice-empty-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #fff5f0;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notice-empty-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.notice-empty-text {
+  font-size: 13px;
+  color: #9b8579;
+}

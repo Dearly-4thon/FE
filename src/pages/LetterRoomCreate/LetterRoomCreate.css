@@ -1,0 +1,281 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+.create-container {
+  width: 100%;
+  max-width: 393px;
+  height: 100vh;
+  background-color: #FFF9E6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  margin: 0 auto;
+}
+
+.create-header {
+  width: 100%;
+  height: 56px;
+  background: #FFF4CC;
+  padding-left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-bottom: 1px solid #e5e0d0;
+  position: sticky;
+  top: 0;
+}
+
+.back-btn {
+  background: none;    
+  border: none;      
+  padding-left: 8px;         
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1E3A8A;
+}
+
+.back-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+.create-header h2 {
+  font-size: 18px;
+  font-weight: 500;
+  color: #1E3A8A;
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  margin-top: 1ch;
+}
+
+.input-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #9B8579;
+  margin-bottom: 4px;
+}
+
+.input-box {
+  border: 0.8px solid #1E3A8A;
+  border-radius: 14px;
+  padding: 12px;
+  background: #FFFFFF;
+  font-size: 14px;
+  margin-bottom: 22px;
+}
+
+input:focus, 
+textarea:focus, 
+select:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: inherit; 
+}
+
+.cover-upload {
+  border: 1px dashed #1E3A8A;
+  border-radius: 16px;
+  background: #FFFFFF;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  color: #9b8579;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 22px;
+}
+
+.cover-upload img {
+  width: 30px;
+  height: 30px;
+}
+
+.date-selector {
+  display: flex;
+  align-items: center;
+  border: 0.8px solid #1E3A8A;
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: #fff;
+  font-size: 14px;
+  color: #4A3428;
+  margin-bottom: 22px;
+}
+
+.calendar-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+}
+
+.date-input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  color: #4A3428;
+  background: transparent;
+}
+
+.date-input::placeholder {
+  color: #4A3428;
+}
+
+/* 달력 */
+.react-datepicker {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 0.8px solid #e5e0d0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.react-datepicker__header {
+  background: #fffaf0;
+  border-bottom: 1px solid #e5e0d0;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background-color: #FFF4CC;
+  color: #4A3428;
+  border-radius: 50%;
+}
+
+.react-datepicker__day:hover {
+  background-color: #FFEAA7;
+  border-radius: 50%;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+}
+
+.radio-option {
+  border: 0.8px solid #1E3A8A;
+  border-radius: 14px;
+  padding: 10px;
+  background: #fff;
+  cursor: pointer;
+  display: flex;             
+  align-items: center;
+  gap: 6px; 
+}
+
+.radio-option.active {
+  border: 1px solid #1E3A8A;
+}
+
+.radio-option span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #9B8579;
+  margin-right: 6px;
+}
+
+.radio-option p {
+  display: inline;
+  font-size: 11px;
+  color: #9b8579;
+  margin: 2px 0 0;
+}
+
+.radio-group + .input-label {
+  margin-top: 24px; 
+}
+
+.input-label + .radio-group {
+  margin-top: 4px; 
+}
+
+.switch-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #4a3428;
+  margin-top: 25px;
+  margin-bottom: 2px;
+}
+
+.switch {
+  position: relative;
+  width: 40px;
+  height: 22px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: #ccc;
+  border-radius: 34px;
+  transition: 0.3s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+input:checked + .slider {
+  background: #1E3A8A;
+}
+
+input:checked + .slider:before {
+  transform: translateX(18px);
+}
+
+.btn-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 24px 0 40px;
+}
+
+.cancel-btn {
+  flex: 1;
+  background: #fff;
+  border: 0.8px solid #1E3A8A;
+  border-radius: 14px;
+  padding: 10px;
+  color: #4a3428;
+  font-size: 14px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.submit-btn {
+  flex: 1;
+  background: #1E3A8A;
+  border: none;
+  border-radius: 14px;
+  padding: 10px;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
