@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+  publish = "dist"         # Vite 기본 출력 폴더
+
+[build.environment]
+  NODE_VERSION = "20"      # LTS로 고정 (18도 OK)
+
+# 리액트/Vite 새로고침 404 방지
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
