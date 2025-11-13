@@ -1,1 +1,8 @@
-// 상단 고절 타이틀바 (Dearly 로고+알림버튼)
+// ✅ 이렇게 되어 있어야 함
+export default function Header(props) {
+  return (
+    <header className="header">
+      {/* 여기에 헤더 내용 */}
+    </header>
+  );
+}

@@ -1,0 +1,60 @@
+:root{
+  --app-width: 393px;
+  --navbar-height: 78px;
+  --fab-right: 23px;
+  --fab-gap-above-navbar: 34px;
+  --fab-size: 64px;
+}
+
+/* 앱 프레임(가운데 393 고정 폭) */
+.app-shell{
+  position: relative;
+  width: var(--app-width);
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* ▼ 네비: viewport 하단에 '고정', 가운데 정렬 */
+.navbar{
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--app-width);
+  z-index: 50;
+}
+
+/* ▼ FAB: viewport 기준 고정 + 가운데 기준으로 오른쪽 23px 보정 */
+.wl-fab{
+  position: fixed;
+  /* 가운데(50%) + 앱 반쪽 - 오른쪽 여백 - FAB 너비 */
+  left: calc(50% + (var(--app-width) / 2) - var(--fab-right) - var(--fab-size));
+  bottom: calc(var(--navbar-height) + var(--fab-gap-above-navbar));
+  width: var(--fab-size); height: var(--fab-size);
+  border: none; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg,#1e3a8a,#2563eb);
+  color: #fff; font-size: 34px; line-height: 1; cursor: pointer;
+  box-shadow: 0 24px 44px rgba(30,58,138,.35);
+  z-index: 100;
+}
+.wl-fab:active{ transform: scale(.98); }
+
+/* ▼ 모달 오버레이(네비까지 함께 어둡게) */
+.wl-overlay{
+  position: fixed;
+  inset: 0;
+  background: var(--overlay-bg);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 1200;
+}
+.wl-modal{
+  position: fixed;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
+
+/* (선택) 모달 열릴 때 스크롤 잠금 */
+.body-lock{ overflow: hidden; touch-action: none; }

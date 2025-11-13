@@ -1,0 +1,51 @@
+/* src/pages/Mailbox/styles/sent.css */
+
+/* ===== Sent list (보낸편지) ===== */
+.sent-wrap{
+  background:#FFFDF8;
+  padding: 12px 24px;
+  padding-bottom: calc(28px + var(--navbar-height, 78px));
+}
+
+.sent-list{ display:flex; flex-direction:column; gap:12px; }
+
+.sent-card{
+  display:flex; gap:12px; align-items:flex-start;
+  border:1.5px solid #F0D5CC; border-radius:16px;
+  background:#FFFEFB;
+  padding:12px 14px;
+  box-shadow:0 2px 0 rgba(0,0,0,.02);
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+.sent-card:hover{ transform: translateY(-2px); box-shadow:0 6px 14px rgba(0,0,0,.06); }
+
+.sent-thumb{
+  flex:0 0 56px; width:56px; height:56px;
+  border-radius:12px; overflow:hidden;
+  background:#F7F2FF; border:1px solid #EADFD5;
+}
+.sent-thumb img{ width:100%; height:100%; object-fit:cover; }
+
+.sent-body{ flex:1; min-width:0; }
+
+.sent-top{
+  display:flex; justify-content:space-between; align-items:center; gap:8px;
+}
+.sent-to{ color:#9B8579; font-size:12px; line-height:16px; }
+.sent-date{ color:#9B8579; font-size:12px; white-space:nowrap; }
+
+.sent-title{
+  margin-top:4px;
+  color:#4A3428; font-size:16px; line-height:22px;
+  /* 두 줄 말줄임 */
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.sent-badges{ margin-top:8px; display:flex; gap:8px; flex-wrap:wrap; }
+.badge{
+  padding:3px 8px; border-radius:999px; font-size:11px;
+  background:#FFF4E8; color:#4A3428; border:1px solid #F0D5CC;
+}
+.badge.locked{ background:#EEF4FF; border-color:#BFD9FF; color:#1E3A8A; }
+.badge-dday{ background:#FFF7CC; border-color:#F3E6A2; }

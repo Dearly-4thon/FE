@@ -1,0 +1,395 @@
+.compose-screen {
+  --topbar-h: 56px;
+  background: #FFFDF8;
+}
+
+.wl-compose-header {
+  padding-top: calc(env(safe-area-inset-top) + var(--topbar-h) + 13px);
+  background: transparent;
+}
+
+.wl-header-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 0 24px;
+}
+
+.wl-back-btn {
+  background: transparent;
+  border: none;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wl-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: -2px;
+}
+
+.wl-header-title {
+  color: #4A3428;
+  font-family: "Noto Sans KR";
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 32px;
+  margin: 0;
+}
+
+.wl-header-sub {
+  color: #9B8579;
+  font-family: "Noto Sans KR";
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 0;
+}
+
+.compose-stage {
+  height: calc(100vh - (var(--topbar-h) + env(safe-area-inset-top)));
+  overflow: hidden;
+}
+
+.compose-scroll {
+  padding: 12px 24px 30px;
+  /* 아래 140px: 푸터 + 네비 여유 */
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.compose-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* 공통 블록 */
+.block {
+  margin-top: 20px;
+}
+
+.block-title {
+  color: #4A3428;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  margin: 0 0 12px;
+}
+
+/* 2열 그리드 */
+.grid.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 14px;
+}
+
+/* hoverable 공통 */
+.hoverable {
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+
+.hoverable:hover {
+  transform: translateY(-2px);
+}
+
+/* === Compose 전용 폰트 클래스 === */
+.font-basic {
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+.font-rounded {
+  font-family: "Cafe24Surround", sans-serif;
+}
+
+.font-soft {
+  font-family: "OngleipParkDahyeon", cursive;
+}
+
+.font-elegant {
+  font-family: "JoseonGulim", serif;
+}
+
+.font-modern {
+  font-family: "Suit", sans-serif;
+}
+
+.font-warm {
+  font-family: "GowoonDodum", sans-serif;
+}
+
+.option {
+  appearance: none;
+  width: 100%;
+  border: 1.5px solid #F0D5CC;
+  background: linear-gradient(180deg, #FFFEFB 0%, #FFF9F3 100%);
+  border-radius: 16px;
+  padding: 13px 16px;
+  text-align: left;
+  cursor: pointer;
+  outline: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
+}
+
+.option:focus-visible {
+  box-shadow: 0 0 0 3px rgba(160, 200, 255, .35);
+}
+
+.option.active {
+  border-color: #BFD9FF;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .06),
+    0 0 0 4px rgba(191, 217, 255, .60) inset;
+}
+
+.option-caption {
+  color: #9B8579;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.option-sample {
+  color: #4A3428;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.paper-chips-scroll {
+  overflow: hidden;
+}
+
+.paper-chips-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px 5px;
+}
+
+.chip {
+  height: 80px;
+  width: 110px;
+  border: 1.5px solid #F0D5CC;
+  border-radius: 16px;
+  background: #FFF;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: #9B8579;
+  cursor: pointer;
+  outline: 0;
+}
+
+.chip.active {
+  border-color: #BFD9FF;
+  box-shadow: 0 0 0 4px rgba(191, 217, 255, .60) inset;
+}
+
+/* 개별 칩 톤 */
+.paperchip-white {
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFF8EE 100%);
+}
+
+.paperchip-lavender {
+  background: #F1E9FF;
+}
+
+.paperchip-pink-heart {
+  background: #FFE4E4;
+}
+
+.paperchip-sky {
+  background: #F0F7FF;
+}
+
+.paperchip-clover {
+  background: #EEF9F0;
+}
+
+.paperchip-peach {
+  background: #FFECE5;
+}
+
+.editor-container {}
+
+.editor {
+  border-radius: 16px;
+  border: 1.5px solid #EADFD5;
+  background: #FFFEFB;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, .02);
+}
+
+.editor textarea {
+  width: 100%;
+  min-height: 180px;
+  padding: 14px 16px;
+  resize: none;
+  border: none;
+  outline: 0;
+  background: transparent;
+  color: #4A3428;
+  font-size: 15px;
+  line-height: 22px;
+  font-family: inherit;
+  /* 선택된 폰트(.font-*) 상속 */
+}
+
+.editor textarea::placeholder {
+  color: #C5B7AD;
+}
+
+.editor:focus-within {
+  border-color: #BFD9FF;
+  box-shadow: 0 0 0 3px rgba(191, 217, 255, .45);
+}
+
+/* 종이 배경 (editor) */
+.paper-white {
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFF8EE 100%);
+}
+
+.paper-lavender {
+  background: #F7F2FF;
+}
+
+.paper-pink-heart {
+  background: #FFF0F0;
+}
+
+.paper-sky {
+  background: #F7FBFF;
+}
+
+.paper-clover {
+  background: #F4FFF5;
+}
+
+.paper-peach {
+  background: #FFF3EC;
+}
+
+/* 안내 문구 */
+.image-sub {
+  color: #9B8579;
+  font-size: 12px;
+  line-height: 16px;
+  margin: 6px 0 0 2px;
+}
+
+.date-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: inherit;
+  height: 48px;
+  padding: 0 14px;
+  border: 1.5px solid #EADFD5;
+  border-radius: 12px;
+  background: #FFFFFF;
+}
+
+.date-field input {
+  flex: 1;
+  border: none;
+  outline: 0;
+  background: transparent;
+  color: #4A3428;
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.upload-box {
+  width: 100%;
+  height: 132px;
+  border-radius: 16px;
+  border: 1.5px dashed #D6C9BD;
+  background: #FFFEFB;
+  display: grid;
+  place-items: center;
+  color: #9B8579;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+.thumbs {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.thumb {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #FFF;
+  border: 1px solid #EADFD5;
+}
+
+.thumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumb-x {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, .55);
+  color: #FFF;
+  font-size: 14px;
+  line-height: 22px;
+  cursor: pointer;
+}
+
+/* 아래 빈 공간(스크롤 끝 여유) */
+.bottom-spacer {
+  height: 12px;
+}
+
+/* =============================
+   하단 고정 버튼 영역
+============================= */
+/* 예전: position: fixed ... 로 되어 있을 부분 */
+.footer-fixed {
+  position: static;
+  /* ← 고정 해제 */
+  width: 100%;
+  max-width: var(--app-width, 393px);
+  margin: 24px auto 16px;
+  padding: 0 24px;
+  background: transparent;
+  /* 그라데이션 필요 없으면 투명 */
+  box-sizing: border-box;
+}
+
+.submit-button-area {
+  width: 100%;
+}
+
+.submit-button-area {
+  padding-bottom: 60px;
+}
+
+.footer-fixed .submit-button-area {
+  pointer-events: auto;
+}
+
+.footer-fixed {
+  padding-bottom: max(20px, calc(env(safe-area-inset-bottom) + 8px));
+}

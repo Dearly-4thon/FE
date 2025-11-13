@@ -1,0 +1,303 @@
+.fc-page {
+  max-width: var(--app-width, 393px);
+  margin: 0 auto;
+
+  /* 💛 여기 색상을 변경! */
+  background: #FFFAEE;
+
+  /* 화면 전체 채우기 */
+  min-height: calc(
+    100vh - env(safe-area-inset-top) - var(--navbar-height, 78px)
+  );
+
+  padding: calc(env(safe-area-inset-top) + 56px + 16px) 24px
+    calc(env(safe-area-inset-bottom) + 24px);
+
+  font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  color: #4a3428;
+}
+
+/* ===== 헤더 ===== */
+.fc-header {
+  display: flex;
+  align-items: flex-start;   /* 화살표와 제목을 같은 가로줄 중앙정렬 */
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+/* 이전 화면 돌아가기 버튼 */
+.fc-back-btn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  margin: 4px 0 0;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.fc-back-icon {
+  width: 24px;
+  height: 24px;
+  display: block;
+  object-fit: contain;
+}
+
+/* 텍스트 묶음 : 제목 + 소제목 */
+.fc-header-text {
+  display: flex;
+  flex-direction: column;  /* 위: 제목 / 아래: 소제목 */
+  gap: 4px;
+}
+
+/* 제목 */
+.fc-title {
+  margin: 0;
+  color: #4A3428;
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 32px;
+}
+
+/* 소제목 */
+.fc-sub {
+  margin: 0;
+  color: #9B8579;
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+
+/* ===== 탭 ===== */
+
+/* 탭 래퍼 */
+.fc-tabs-wrap {
+  margin-top: 12px;
+  margin-bottom: 16px;
+}
+
+/* 탭 컨테이너 (바깥 흰 박스) */
+.fc-tabs {
+  display: flex;
+  align-items: flex-start;
+  gap: 3.998px;
+  flex-shrink: 0;
+  align-self: stretch;
+
+  height: 49.581px;
+  padding: 3.998px 3.998px 0 3.998px;
+
+  border-radius: 16px;
+  border: 0.795px solid #F0D5CC;
+  background: linear-gradient(180deg, #FFF 0%, #FFFBF8 100%);
+  box-shadow:
+    0 1px 3px 0 rgba(0, 0, 0, 0.10),
+    0 1px 2px -1px rgba(0, 0, 0, 0.10);
+}
+
+/* 각 탭 버튼 공통 */
+.fc-tab {
+  border: none;
+  background: transparent;
+  border-radius: 20px; /* 비활성도 pill 모양 유지 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 0 0;          /* 두 탭이 같은 넓이 */
+  padding: 8px 12px;    /* 기본 패딩 (활성일 때 덮어씀) */
+
+  color: #9B8579;
+  font-family: "Noto Sans KR";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 150% */
+
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease,
+    box-shadow 0.18s ease, transform 0.12s ease;
+}
+
+/* 활성 탭 (친구 → 나 또는 나 → 친구) */
+.fc-tab--active {
+  display: flex;
+  padding: 5.996px 52.717px 9.998px 11.995px; /* ← 네가 준 값 그대로 */
+  align-items: center;
+  flex: 1 0 0;
+
+  border-radius: 20px;
+  background: #60A5FA;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.10),
+    0 2px 4px -2px rgba(0, 0, 0, 0.10);
+
+  color: #ffffff;
+}
+
+
+
+.fc-tab-arrow {
+    opacity: 0.6;
+}
+
+.fc-tab-count {
+    font-weight: 500;
+}
+
+/* ===== 본문 ===== */
+
+.fc-body {
+    margin-top: 8px;
+}
+
+/* ===== 비어 있을 때 큰 점선 박스 ===== */
+
+.fc-empty-box {
+    position: relative;
+    border-radius: 28px;
+    border: 1.5px dashed rgba(241, 151, 142, 0.8);
+    background: #fffaf3;
+    padding: 48px 24px 36px;
+    text-align: center;
+}
+
+/* 중앙 아이콘 */
+
+.fc-empty-icon-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 24px;
+
+  background: rgba(255, 245, 240, 1); /* ← Figma 값 */
+}
+
+
+.fc-empty-icon {
+  width: 32px;
+  height: 32px;
+  color: rgba(92, 143, 255, 1); /* ← Figma 값 */
+}
+
+
+/* 검정 필터 버튼 (좌측 하단) */
+
+.fc-filter-btn {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: #232323;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.fc-filter-icon {
+    width: 18px;
+    height: 18px;
+    color: #ffffff;
+}
+
+/* 텍스트 영역 */
+
+.fc-empty-text {
+    margin-bottom: 20px;
+}
+
+.fc-empty-title {
+    margin: 0 0 6px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #8a6b5c;
+}
+
+.fc-empty-sub {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 400;
+    color: #c1a79a;
+}
+
+/* "편지 쓰기" 버튼 */
+
+.fc-empty-cta {
+    margin: 0 auto;
+    margin-top: 4px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: none;
+    background: linear-gradient(135deg, #ff6b7f, #ff9472);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(255, 114, 129, 0.4);
+}
+
+.fc-empty-cta-icon {
+    font-size: 15px;
+}
+
+/* ===== 편지가 있을 때 카드 리스트 ===== */
+
+.fc-card-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.fc-card {
+    width: 100%;
+    border-radius: 24px;
+    background: #fffdf8;
+    box-shadow: 0 8px 20px rgba(255, 190, 144, 0.35);
+    padding: 16px 18px 18px;
+}
+
+.fc-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    font-size: 13px;
+}
+
+.fc-dday {
+    color: #e88a5a;
+    font-weight: 500;
+}
+
+.fc-card-mail {
+    font-size: 18px;
+}
+
+.fc-card-lock {
+    font-size: 32px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.fc-card-open {
+    margin: 0;
+    text-align: center;
+    font-size: 13px;
+    color: #8e7a6b;
+}

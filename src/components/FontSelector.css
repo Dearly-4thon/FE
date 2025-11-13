@@ -1,0 +1,30 @@
+.font_wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.font-btn {
+  padding: 8px 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fffaf7;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 15px;
+}
+
+.font-btn:hover {
+  background: #ffe9e0;
+  border-color: #ffbdbd;
+}
+
+.font-preview {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  font-size: 20px;
+  background: #fffdfb;
+  line-height: 1.6;
+}
