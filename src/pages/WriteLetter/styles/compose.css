@@ -1,33 +1,57 @@
-/* =============================
-   Compose Screen (이 파일 한정 변수)
-============================= */
 .compose-screen{
   --topbar-h: 56px;
   background: #FFFDF8;
 }
 
-/* =============================
-   헤더 (상단바 + 13px 여백)
-============================= */
 .wl-compose-header{
   padding-top: calc(env(safe-area-inset-top) + var(--topbar-h) + 13px);
   background: transparent;
 }
-.wl-header-row{ display:flex; align-items:flex-start; gap:12px; padding:0 24px; }
-.wl-back-btn{ background:transparent; border:none; width:24px; height:24px; padding:0; display:flex; align-items:center; justify-content:center; }
-.wl-title-group{ display:flex; flex-direction:column; gap:2px; margin-top:-2px; }
-.wl-header-title{ color:#4A3428; font-family:"Noto Sans KR"; font-size:24px; font-weight:400; line-height:32px; margin:0; }
-.wl-header-sub{ color:#9B8579; font-family:"Noto Sans KR"; font-size:14px; font-weight:400; line-height:20px; margin:0; }
+.wl-header-row{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  padding:0 24px;
+}
+.wl-back-btn{
+  background:transparent;
+  border:none;
+  width:24px;
+  height:24px;
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.wl-title-group{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  margin-top:-2px;
+}
+.wl-header-title{
+  color:#4A3428;
+  font-family:"Noto Sans KR";
+  font-size:24px;
+  font-weight:400;
+  line-height:32px;
+  margin:0;
+}
+.wl-header-sub{
+  color:#9B8579;
+  font-family:"Noto Sans KR";
+  font-size:14px;
+  font-weight:400;
+  line-height:20px;
+  margin:0;
+}
 
-/* =============================
-   스크롤 영역
-============================= */
 .compose-stage{
   height: calc(100vh - (var(--topbar-h) + env(safe-area-inset-top)));
   overflow: hidden;
 }
 .compose-scroll{
-  padding: 12px 24px 140px;
+  padding: 12px 24px 140px;   /* 아래 140px: 푸터 + 네비 여유 */
   height: 100%;
   overflow-y: auto;
   scrollbar-width: none;
@@ -38,7 +62,11 @@
 /* 공통 블록 */
 .block{ margin-top: 20px; }
 .block-title{
-  color:#4A3428; font-size:16px; font-weight:600; line-height:24px; margin:0 0 12px;
+  color:#4A3428;
+  font-size:16px;
+  font-weight:600;
+  line-height:24px;
+  margin:0 0 12px;
 }
 
 /* 2열 그리드 */
@@ -49,7 +77,9 @@
 }
 
 /* hoverable 공통 */
-.hoverable{ transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease; }
+.hoverable{
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
 .hoverable:hover{ transform: translateY(-2px); }
 
 /* === Compose 전용 폰트 클래스 === */
@@ -60,10 +90,6 @@
 .font-modern  { font-family: "Suit", sans-serif; }
 .font-warm    { font-family: "GowoonDodum", sans-serif; }
 
-
-/* =============================
-   폰트 카드 (option)
-============================= */
 .option{
   appearance:none;
   width:100%;
@@ -82,42 +108,53 @@
 .option:focus-visible{ box-shadow:0 0 0 3px rgba(160,200,255,.35); }
 .option.active{
   border-color:#BFD9FF;
-  box-shadow: 0 6px 14px rgba(0,0,0,.06), 0 0 0 4px rgba(191,217,255,.60) inset;
+  box-shadow: 0 6px 14px rgba(0,0,0,.06),
+              0 0 0 4px rgba(191,217,255,.60) inset;
 }
-.option-caption{ color:#9B8579; font-size:12px; line-height:16px; }
-.option-sample{ color:#4A3428; font-size:18px; line-height:24px; }
+.option-caption{
+  color:#9B8579;
+  font-size:12px;
+  line-height:16px;
+}
+.option-sample{
+  color:#4A3428;
+  font-size:18px;
+  line-height:24px;
+}
 
-/* =============================
-   편지지 선택 (chips)
-============================= */
 .paper-chips-scroll{ overflow: hidden; }
 .paper-chips-container{
   display:grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px 12px;
+  gap: 10px 5px;
 }
 .chip{
-  height:92px;
+  height:80px;
+  width: 110px;
   border:1.5px solid #F0D5CC;
   border-radius:16px;
   background:#FFF;
-  display:grid; place-items:center;
-  font-size:13px; font-weight:500; color:#9B8579;
-  cursor:pointer; outline:0;
+  display:grid;
+  place-items:center;
+  font-size:13px;
+  font-weight:500;
+  color:#9B8579;
+  cursor:pointer;
+  outline:0;
 }
-.chip.active{ border-color:#BFD9FF; box-shadow: 0 0 0 4px rgba(191,217,255,.60) inset; }
+.chip.active{
+  border-color:#BFD9FF;
+  box-shadow: 0 0 0 4px rgba(191,217,255,.60) inset;
+}
 
 /* 개별 칩 톤 */
-.paperchip-white   { background: linear-gradient(180deg,#FFFFFF 0%, #FFF8EE 100%); }
-.paperchip-lavender{ background:#F1E9FF; }
-.paperchip-pink-heart{ background:#FFE4E4; }
-.paperchip-sky     { background:#F0F7FF; }
-.paperchip-clover  { background:#EEF9F0; }
-.paperchip-peach   { background:#FFECE5; }
+.paperchip-white      { background: linear-gradient(180deg,#FFFFFF 0%, #FFF8EE 100%); }
+.paperchip-lavender   { background:#F1E9FF; }
+.paperchip-pink-heart { background:#FFE4E4; }
+.paperchip-sky        { background:#F0F7FF; }
+.paperchip-clover     { background:#EEF9F0; }
+.paperchip-peach      { background:#FFECE5; }
 
-/* =============================
-   본문 에디터
-============================= */
 .editor-container{ }
 .editor{
   border-radius:16px;
@@ -125,7 +162,6 @@
   background:#FFFEFB;
   box-shadow: 0 2px 0 rgba(0,0,0,.02);
 }
-/* compose.css - 에디터 부분 보강 */
 .editor textarea{
   width:100%;
   min-height:180px;
@@ -135,11 +171,10 @@
   outline:0;
   background:transparent;
   color:#4A3428;
-  font-size:15px; 
+  font-size:15px;
   line-height:22px;
-  font-family: inherit;   /* ★ 추가: 부모(.editor)의 폰트 상속 */
+  font-family: inherit;  /* 선택된 폰트(.font-*) 상속 */
 }
-
 .editor textarea::placeholder{ color:#C5B7AD; }
 .editor:focus-within{
   border-color:#BFD9FF;
@@ -147,43 +182,53 @@
 }
 
 /* 종이 배경 (editor) */
-.paper-white{ background: linear-gradient(180deg,#FFFFFF 0%, #FFF8EE 100%); }
+.paper-white   { background: linear-gradient(180deg,#FFFFFF 0%, #FFF8EE 100%); }
 .paper-lavender{ background:#F7F2FF; }
 .paper-pink-heart{ background:#FFF0F0; }
-.paper-sky{ background:#F7FBFF; }
-.paper-clover{ background:#F4FFF5; }
-.paper-peach{ background:#FFF3EC; }
+.paper-sky     { background:#F7FBFF; }
+.paper-clover  { background:#F4FFF5; }
+.paper-peach   { background:#FFF3EC; }
 
 /* 안내 문구 */
-.image-sub{ color:#9B8579; font-size:12px; line-height:16px; margin:6px 0 0 2px; }
+.image-sub{
+  color:#9B8579;
+  font-size:12px;
+  line-height:16px;
+  margin:6px 0 0 2px;
+}
 
-/* =============================
-   공개 날짜
-============================= */
 .date-field{
-  display:flex; align-items:center; gap:10px;
-  width:100%; height:48px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  height:48px;
   padding:0 14px;
-  border:1.5px solid #EADFD5; border-radius:12px;
+  border:1.5px solid #EADFD5;
+  border-radius:12px;
   background:#FFFFFF;
-  max-width: 320px;
+  max-width: 315px;
 }
 .date-field input{
-  flex:1; border:none; outline:0; background:transparent;
-  color:#4A3428; font-size:15px; line-height:20px;
+  flex:1;
+  border:none;
+  outline:0;
+  background:transparent;
+  color:#4A3428;
+  font-size:15px;
+  line-height:20px;
 }
 
-/* =============================
-   이미지 업로드
-============================= */
 .upload-box{
   width:100%;
   height:132px;
   border-radius:16px;
   border:1.5px dashed #D6C9BD;
   background:#FFFEFB;
-  display:grid; place-items:center;
-  color:#9B8579; font-size:14px;
+  display:grid;
+  place-items:center;
+  color:#9B8579;
+  font-size:14px;
   margin-top:12px;
 }
 .thumbs{
@@ -193,15 +238,34 @@
   gap:10px;
 }
 .thumb{
-  position:relative; width:100%; padding-top:100%;
-  border-radius:12px; overflow:hidden;
-  background:#FFF; border:1px solid #EADFD5;
+  position:relative;
+  width:100%;
+  padding-top:100%;
+  border-radius:12px;
+  overflow:hidden;
+  background:#FFF;
+  border:1px solid #EADFD5;
 }
-.thumb img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.thumb img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
 .thumb-x{
-  position:absolute; top:6px; right:6px;
-  width:22px; height:22px; border-radius:50%;
-  border:none; background:rgba(0,0,0,.55); color:#FFF; font-size:14px; line-height:22px; cursor:pointer;
+  position:absolute;
+  top:6px;
+  right:6px;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  border:none;
+  background:rgba(0,0,0,.55);
+  color:#FFF;
+  font-size:14px;
+  line-height:22px;
+  cursor:pointer;
 }
 
 /* 아래 빈 공간(스크롤 끝 여유) */
@@ -210,17 +274,26 @@
 /* =============================
    하단 고정 버튼 영역
 ============================= */
-.footer-fixed{
-  position: fixed;
-  left: 50%; transform: translateX(-50%);
-  bottom: 0;
-  width: 393px;        /* 앱 고정폭 */
-  background: linear-gradient(180deg, rgba(255,253,248,0) 0%, #FFFDF8 55%);
-  padding: 12px 24px 20px;
+/* 예전: position: fixed ... 로 되어 있을 부분 */
+.footer-fixed {
+  position: static;             /* ← 고정 해제 */
+  width: 100%;
+  max-width: var(--app-width, 393px);
+  margin: 24px auto 16px;
+  padding: 0 24px;
+  background: transparent;      /* 그라데이션 필요 없으면 투명 */
   box-sizing: border-box;
-  z-index: 1000;
 }
-.submit-button-area{ max-width: 100%; }
+
+.submit-button-area {
+  width: 100%;
+}
+
+
+.footer-fixed .submit-button-area {
+  pointer-events: auto;
+}
+
 
 @supports (padding: max(0px)){
   .footer-fixed{

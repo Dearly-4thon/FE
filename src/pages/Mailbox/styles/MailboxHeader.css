@@ -1,3 +1,4 @@
+/* 헤더 위치 */
 .mbx-header{
   margin-top: calc(env(safe-area-inset-top) + 56px + 44px);
   text-align: center;
@@ -6,34 +7,37 @@
   font-family: "Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
 }
 
-.mbx-title{
+/* 전역 h2 덮어쓰기 */
+.mbx-header h2.mbx-title{
   all: unset;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   color: #4A3428;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 22px;
+  font-size: 20px !important;
+  font-weight: 400 !important;
+  line-height: 22px !important;
 }
 
+/* info 버튼 */
 .mbx-info-wrap{
   position: relative;
   display: inline-block;
   margin-left: 6px;
 }
 
-/* 버튼 배경/테두리 전부 제거 */
 .mbx-info-btn{
-  background: transparent;
-  border: none;
-  padding: 0;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
   cursor: pointer;
   width: auto;
   height: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 /* 실제 SVG 아이콘 */
@@ -43,13 +47,12 @@
   display: block;
 }
 
+/* SVG 안에 있는 원/테두리 싹 지우기 (있다면) */
 .mbx-info-icon circle,
-.mbx-info-icon ellipse,
-.mbx-info-icon path[stroke]{
-  stroke: none !important;
+.mbx-info-icon ellipse{
   fill: none !important;
+  stroke: none !important;
 }
-
 
 /* 팝오버(말풍선) */
 .mbx-popover{
@@ -78,21 +81,25 @@
   transform: rotate(45deg);
 }
 
-.mbx-popover-title{
+/* 전역 h3 덮어쓰기 */
+.mbx-popover h3.mbx-popover-title{
   margin: 0 0 4px;
   color:#4A3428;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 18px !important;
 }
 
-.mbx-popover-list{
+/* 전역 ul/li 덮어쓰기 */
+.mbx-popover .mbx-popover-list,
+.mbx-popover .mbx-popover-list li{
   margin: 0;
   padding: 0;
   list-style: none;
   color:#4A3428;
-  font-size: 12px;
-  line-height: 18px;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 18px !important;
 }
 
 .mbx-em.me{ color:#4A3428; font-weight:700; }

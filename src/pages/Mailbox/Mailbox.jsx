@@ -26,14 +26,21 @@ export default function Mailbox() {
   }, [state]);
 
   // ===== 배치 상수 (허브 높이 + 간격) =====
-  const HUB_SIZE = 360;      // CenterHub의 실제 높이(px)
-  const HUB_GAP  = 24;       // 허브와 탭 사이 여백(px)
-  const HUB_TOP  = 244.67;   // 상단 기준으로 허브가 위치하는 top 값
+  const HUB_SIZE = 360; // CenterHub의 실제 높이(px)
+  const HUB_GAP = 24;   // 허브와 탭 사이 여백(px)
+  const HUB_TOP = 160;  // 상단 기준으로 허브가 위치하는 top 값
 
-  // 중앙 허브 클릭 동작
-  const handleSelectSelf = () => setTab("received");
+  // ✅ 가운데 내 카드 → "나에게 보낸 편지" 화면으로 이동
+  const handleSelectSelf = () => {
+    navigate("/mailbox/conversation/me", {
+      state: {
+        isSelf: true,
+        from: "mailbox-centerhub",
+      },
+    });
+  };
 
-  // ✅ 친구 선택 시: 대화 화면으로 이동 + 이름/아이디를 state로 전달
+  // ✅ 친구 카드 → 친구와의 편지 화면
   const handleSelectFriend = (friend) => {
     const id = friend?.id ?? friend?.name ?? "";
     const name = friend?.name ?? String(friend?.id ?? "");
@@ -42,7 +49,7 @@ export default function Mailbox() {
     navigate(`/mailbox/conversation/${slug}`, {
       state: {
         recipientId: id,
-        recipientName: name,   // ← ConversationHeader에서 이 값을 읽어 제목: `${name}에게 쓰는 편지`
+        recipientName: name,
         isSelf: false,
         from: "mailbox-centerhub",
       },
@@ -50,45 +57,51 @@ export default function Mailbox() {
   };
 
   return (
-    <div
-      className="mailbox-screen"
-      style={{
-        position: "relative",
-        // 아래 CSS 변수로 하위 컴포넌트/스타일에서 참조 가능
-        "--hub-size": `${HUB_SIZE}px`,
-        "--hub-gap": `${HUB_GAP}px`,
-      }}
-    >
-      {toast && (
-        <div className={`toast-banner ${toast.type === "success" ? "ok" : ""}`}>
-          <span className="toast-dot" />
-          {toast.message}
-        </div>
-      )}
+    <div className="mailbox-page">
+      <div
+        className="mailbox-screen"
+        style={{
+          position: "relative",
+          "--hub-size": `${HUB_SIZE}px`,
+          "--hub-gap": `${HUB_GAP}px`,
+          "--hub-top": `${HUB_TOP}px`,
+        }}
+      >
+        {toast && (
+          <div
+            className={`toast-banner ${
+              toast.type === "success" ? "ok" : ""
+            }`}
+          >
+            <span className="toast-dot" />
+            {toast.message}
+          </div>
+        )}
 
-      {/* 상단 히어로/안내 영역 */}
-      <MailboxHeader />
+        {/* 상단 히어로/안내 영역 */}
+        <MailboxHeader />
 
-      {/* 중앙 원형 허브 (absolute 배치) */}
-      <CenterHub
-        favorites={[]}     // 즐겨찾기/친구 리스트 (없으면 데모 8명)
-        demo={true}
-        onSelectSelf={handleSelectSelf}
-        onSelectFriend={handleSelectFriend}
-        top={HUB_TOP}
-      />
+        {/* 중앙 원형 허브 (absolute 배치) */}
+        <CenterHub
+          favorites={[]}
+          demo={true}
+          onSelectSelf={handleSelectSelf}
+          onSelectFriend={handleSelectFriend}
+          top={HUB_TOP}
+        />
 
-      {/* ⭐ 허브 높이만큼 공간 확보 (겹침 방지 스페이서) */}
-      <div aria-hidden style={{ height: HUB_TOP + HUB_SIZE + HUB_GAP }} />
+        {/* 허브 높이만큼 간격 확보 */}
+        <div aria-hidden className="mbx-center-spacer" />
 
-      {/* 탭 */}
-      <MailboxTab tab={tab} setTab={setTab} />
+        {/* 탭 */}
+        <MailboxTab tab={tab} setTab={setTab} />
 
-      {/* 리스트 */}
-      {tab === "received" ? <ReceivedLetters /> : <SentLetters />}
+        {/* 리스트 (메인 수신함) */}
+        {tab === "received" ? <ReceivedLetters /> : <SentLetters />}
 
-      {/* 하단 네비가 가리지 않도록 여백 (공통 Navbar 쓰는 경우) */}
-      <div aria-hidden style={{ height: "var(--navbar-height, 78px)" }} />
+        {/* 하단 네비 여백 */}
+        <div aria-hidden style={{ height: "var(--navbar-height, 78px)" }} />
+      </div>
     </div>
   );
 }

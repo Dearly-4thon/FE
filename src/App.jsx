@@ -8,10 +8,13 @@ import Mailbox from "./pages/Mailbox/Mailbox.jsx";
 import MypageMain from "./pages/Mypage/MypageMain.jsx";
 
 // ✔️ 편지쓰기 관련
-// 파일이 실제로 존재하는지, 이름/대소문자 맞는지 확인!
-import WriteLetterForm from "./pages/WriteLetter/WriteLetterForm.jsx"; 
+import WriteLetterForm from "./pages/WriteLetter/WriteLetterForm.jsx";
 import ComposeForm from "./pages/WriteLetter/components/ComposeForm.jsx";
 import SearchRecipient from "./pages/WriteLetter/components/SearchRecipient.jsx";
+import SentToMePage from "./pages/Mailbox/components/SentTomePage.jsx";
+
+// ✔️ 수신함 친구/나와의 편지 화면
+import FriendConversation from "./pages/Mailbox/components/FriendConversation.jsx";
 
 import "./styles/overlap.css";
 
@@ -21,17 +24,27 @@ export default function App() {
       <div className="app-frame">
         <div className="app-scroll">
           <Routes>
+            {/* 기본: 편지방 */}
             <Route index element={<Navigate to="/letters" replace />} />
 
+            {/* 편지방 / 수신함 / 마이페이지 */}
             <Route path="/letters" element={<LetterRoom />} />
             <Route path="/mailbox" element={<Mailbox />} />
             <Route path="/mypage" element={<MypageMain />} />
+
+            {/* ✅ 수신함 - 친구/나와의 편지 화면 */}
+            <Route
+              path="/mailbox/conversation/:friendId"
+              element={<FriendConversation />}
+            />
+            <Route path="/mailbox/self" element={<SentToMePage />} />
+
 
             {/* ➜ 편지쓰기 진입(폼 틀) */}
             <Route path="/compose" element={<WriteLetterForm />} />
             {/* ➜ 받는 사람 선택 */}
             <Route path="/compose/select" element={<SearchRecipient />} />
-            {/* ➜ 실제 작성 폼 (to, name 쿼리/state로 받는 페이지) */}
+            {/* ➜ 실제 작성 폼 */}
             <Route path="/compose/form" element={<ComposeForm />} />
 
             {/* 404 fallback */}

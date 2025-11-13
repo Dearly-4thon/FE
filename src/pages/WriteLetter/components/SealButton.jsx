@@ -1,20 +1,17 @@
 // src/pages/WriteLetter/components/SealButton.jsx
 import React from "react";
+import "../styles/seal-button.css";
 
-/**
- * 아주 단순한 프레젠테이셔널 버튼
- * - 스타일: compose.css의 .submit-button 재사용
- * - 외부 CSS/스토어 임포트 없음
- */
-export default function SealButton({ onClick, disabled, label = "편지 봉인하기" }) {
+export default function SealButton({ onClick, disabled = false }) {
   return (
     <button
       type="button"
-      className="submit-button"
+      className="seal-btn"
       onClick={onClick}
       disabled={disabled}
+      aria-label="편지 봉인하기"
     >
-      {label}
+      편지 봉인하기
     </button>
   );
 }
