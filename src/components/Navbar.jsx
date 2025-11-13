@@ -1,37 +1,36 @@
 // src/components/Navbar.jsx
 import { NavLink } from "react-router-dom";
-import { Mail, PenLine, Inbox, User } from "lucide-react";
-import "./navbar.css";
+import "./Navbar.css";
+
+import mailIcon from "../assets/icons/mail.svg";
+import penIcon from "../assets/icons/pen-line.svg";
+import inboxIcon from "../assets/icons/inbox.svg";
+import userIcon from "../assets/icons/user.svg";
+
+const NAV_ITEMS = [
+  { to: "/letters", label: "편지방", icon: mailIcon },
+  { to: "/write", label: "편지쓰기", icon: penIcon },
+  { to: "/mailbox", label: "수신함", icon: inboxIcon },
+  { to: "/mypage", label: "마이페이지", icon: userIcon },
+];
 
 export default function Navbar() {
-  const cx = ({ isActive }) => (isActive ? "nav-item active" : "nav-item");
-
   return (
-    <nav className="navbar" role="navigation" aria-label="하단 내비게이션">
-      <div className="navbar-inner" data-safearea>
-        {/* ✅ 편지방 = /letters */}
-        <NavLink to="/letters" className={cx} aria-label="편지방">
-          <Mail className="nav-icon" aria-hidden="true" />
-          <span className="nav-label">편지방</span>
-        </NavLink>
-
-        {/* ✅ 편지쓰기 = /write */}
-        <NavLink to="/write" className={cx} aria-label="편지쓰기">
-          <PenLine className="nav-icon" aria-hidden="true" />
-          <span className="nav-label">편지쓰기</span>
-        </NavLink>
-
-        {/* 수신함 */}
-        <NavLink to="/mailbox" className={cx} aria-label="수신함">
-          <Inbox className="nav-icon" aria-hidden="true" />
-          <span className="nav-label">수신함</span>
-        </NavLink>
-
-        {/* 마이페이지 */}
-        <NavLink to="/mypage" className={cx} aria-label="마이페이지">
-          <User className="nav-icon" aria-hidden="true" />
-          <span className="nav-label">마이페이지</span>
-        </NavLink>
+    <nav className="navbar" role="navigation" aria-label="하단 탭">
+      <div className="navbar-inner">
+        {NAV_ITEMS.map(({ to, label, icon }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={to === "/letters"}
+            className={({ isActive }) =>
+              "nav-item" + (isActive ? " active" : "")
+            }
+          >
+            <img src={icon} className="nav-icon" alt="" aria-hidden="true" />
+            <span className="nav-label">{label}</span>
+          </NavLink>
+        ))}
       </div>
     </nav>
   );
