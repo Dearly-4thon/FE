@@ -1,0 +1,43 @@
+:root{
+  --info-btn-right: 30px;
+  --info-btn-size: 28px;
+  --info-btn-icon-size: 14px;
+}
+
+/* 통일된 info 버튼 규칙 — 가장 높은 우선순위로 적용되도록 구체도 높임 */
+.header .wl-info-btn,
+.wl-info-btn,
+button.wl-info-btn,
+a.wl-info-btn {
+  margin-left: auto !important;    /* flex 컨테이너 우측 정렬 보장 */
+  margin-right: var(--info-btn-right) !important; /* 오른쪽 30px 고정 */
+  width: var(--info-btn-size) !important;
+  height: var(--info-btn-size) !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  background: transparent !important;  /* 배경 없앰 */
+  box-shadow: none !important;         /* 그림자 제거 */
+  border: none !important;
+  color: inherit !important;
+  cursor: pointer !important;
+  vertical-align: middle !important;
+  pointer-events: auto !important;
+}
+
+/* SVG 크기 통일 */
+.header .wl-info-btn svg,
+.wl-info-btn svg,
+button.wl-info-btn svg {
+  width: var(--info-btn-icon-size) !important;
+  height: var(--info-btn-icon-size) !important;
+  display: block;
+}
+
+/* 필요 시 위치 보정(상단 헤더에 붙이는 경우) */
+.header .wl-info-btn { position: relative; top: 0; right: 0; }
+
+/* 안전: 오버라이드가 필요한 다른 선택자들보다 더 높은 우선순위 필요하면 아래처럼 클래스명 추가 */
+/* .some-parent .wl-info-btn { ... } */

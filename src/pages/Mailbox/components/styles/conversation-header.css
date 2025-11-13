@@ -1,0 +1,81 @@
+/* ============================
+   CenterHub 전체 wrapper
+============================ */
+.centerhub-wrap {
+  margin-top: calc(env(safe-area-inset-top) + 90px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background: #FFFDF8; /* ✅ 배경색 완성본과 동일하게 */
+}
+
+/* 설명 텍스트 */
+.centerhub-title {
+  text-align: center;
+  color: #4A3428;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.centerhub-sub {
+  margin-top: 6px;
+  text-align: center;
+  color: #A48572;
+  font-size: 14px;
+}
+
+/* 중심 원 구역 */
+.centerhub-stage {
+  width: 300px;     /* 330px → 300px 로 축소 (완성본 비율과 동일) */
+  height: 300px;
+  margin-top: 40px; /* 24px → 40px: 소제목과 원 간격 */
+  position: relative;
+}
+
+/* 바깥 원 */
+.centerhub-circle-outer {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+
+  /* 크기가 줄었으므로 gradient 중심 크기도 줄임 */
+  background: radial-gradient(
+    120px 120px at center,          /* 135px → 120px */
+    rgba(255, 163, 163, 0.15),
+    transparent 60%
+  );
+
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* 친구 카드(노란 프로필) */
+.centerhub-friend {
+  width: 60px;  /* 64px → 60px: 원 축소에 맞게 자연스러운 비율 */
+  height: 60px;
+  position: absolute;
+  border-radius: 14px;
+  background: #FFF5C7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* 중앙 내 프로필 */
+.centerhub-me {
+  width: 110px;  /* 120px → 110px (비율 축소) */
+  height: 110px;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 95px;     /* 원 전체 크기가 줄었기 때문에 위치도 조정 */
+  left: 95px;
+  flex-direction: column;
+}

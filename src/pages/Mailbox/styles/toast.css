@@ -1,0 +1,33 @@
+.toast-banner{
+  position: fixed;
+  /* 상단바 바로 아래로 보이게: 프로젝트 변수 있으면 맞춰보세요 */
+  top: 10px; 
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 360px;
+  width: calc(100% - 32px);
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  border: 2px solid #2b4db6;
+  color: #1f2a44;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 1000;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.toast-banner .dot{
+  width:18px; height:18px; flex:0 0 18px;
+  border-radius:9999px;
+  background: #2b4db6;
+  position: relative;
+}
+.toast-banner .dot::after{
+  content:"";
+  position:absolute; inset:4px;
+  background:#fff; border-radius:9999px;
+}
+.toast-banner.ok{ border-color:#2b4db6; }

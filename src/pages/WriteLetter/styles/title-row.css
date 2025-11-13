@@ -1,0 +1,175 @@
+/* ===========================
+   전체 컨테이너
+=========================== */
+.wl-screen {
+  position: relative;
+  width: 393px;
+  height: 852px;
+  margin: 0 auto;
+  background: linear-gradient(180deg, #f3f8ff 0%, #eaf3ff 100%);
+  overflow: hidden;
+}
+
+/* ===========================
+   제목줄 (144px 절대위치)
+=========================== */
+.wl-title-row {
+  position: absolute;
+  top: 144px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;             /* ← 좌정렬 */
+  width: 100%;
+  max-width: 393px;
+  padding: 0 24px;                         /* 좌/우 24px */
+  box-sizing: border-box;                  /* ← 패딩 포함 (튀는 원인 차단) */
+  z-index: 10;
+}
+
+/* 제목: 그라디언트 + 오른쪽 예약 공간 확보
+   (61.15px 간격 + 아이콘 폭 26px 만큼 여유) */
+.wl-title {
+  margin: 0;
+  margin-right: calc(61.15px + 26px);      /* ✅ ? ↔ i 61.15px, i 폭 26px */
+  font-family: "Noto Sans KR", system-ui, -apple-system, Segoe UI;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 35.2px;
+  white-space: nowrap;                      /* 줄바꿈 방지 */
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* 물음표 */
+.wl-qmark {
+  display: inline-block;
+  margin-left: 6px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #1E3A8A 0%, #1E40AF 50%, #3B82F6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: q-bounce 1.4s ease-in-out infinite;
+}
+@keyframes q-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* ===========================
+   info 버튼 (우측 24px 절대 고정)
+=========================== */
+.wl-title-actions {
+  position: absolute;
+  right: 24px;                               /* ✅ i ↔ 오른쪽 24px */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  z-index: 11;
+}
+.wl-info-btn {
+  all: unset;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+}
+.wl-info-btn img { width: 20px; height: 20px; opacity: .75; }
+.wl-info-btn:active { transform: translateY(1px); }
+
+/* ===========================
+   툴팁 (i 우상단 꼬리 + 카드 위 노출)
+=========================== */
+.wl-tooltip {
+  position: absolute;
+  top: 36px;                                 /* 아이콘 아래 */
+  right: -4px;                               /* 살짝 우측으로 */
+  z-index: 20000;                            /* ✅ 프로필 카드보다 위 */
+  pointer-events: auto;
+}
+
+.wl-tooltip-card {
+  position: relative;
+  width: 250px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 16px 40px rgba(24,39,75,.18);
+  font-size: 11px;
+  color: #374151;
+}
+.wl-tooltip-card h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #4A3428;
+}
+.wl-tooltip-arrow {
+  position: absolute;
+  top: -7px;
+  right: 14px;                               /* 우상단 꼬리 */
+  width: 14px;
+  height: 14px;
+  transform: rotate(45deg);
+  background: #fff;
+  border-left: 1px solid #E5E7EB;
+  border-top: 1px solid #E5E7EB;
+}
+
+/* === 충돌 해결: 툴팁 안에서는 인라인 텍스트로 리셋 */
+.wl-tooltip-card p {
+  margin: 0;
+  line-height: 1.8;
+  letter-spacing: -0.2px;
+}
+.wl-tooltip-card .self,
+.wl-tooltip-card .friend,
+.wl-tooltip-card .plus {
+  all: unset;
+  display: inline !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  line-height: inherit;
+  cursor: inherit;
+  font-weight: 600;                /* 강조만 유지 */
+}
+/* 색상만 유지 */
+.wl-tooltip-card .self   { color:#E84855; }
+.wl-tooltip-card .friend { color:#5C8FFF; }
+.wl-tooltip-card .plus   { color:#E84855; }
+
+/* ===========================
+   FAB (이 파일에서는 참고용)
+=========================== */
+.wl-fab {
+  position: absolute;
+  top: 684px;
+  left: 24px;
+  width: 64px;
+  height: 64px;
+  border: none;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  background: linear-gradient(135deg,#1E3A8A,#2563EB);
+  color: #fff;
+  font-size: 36px;
+  line-height: 0;
+  box-shadow: 0 18px 32px rgba(37,99,235,.28);
+  z-index: 100;
+}
+.wl-fab:active { transform: translateY(1px); }

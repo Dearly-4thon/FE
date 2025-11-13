@@ -1,0 +1,62 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+
+/* ===== 전역 토큰 ===== */
+:root{
+  /* 기존 프로젝트 토큰 유지 */
+  --app-width: 393px;        /* 네가 쓰던 고정 앱 폭 */
+  --navbar-height: 78px;     /* 실제 네비 높이 */
+
+  /* 반응형 최대 폭(없으면 --app-width 사용) */
+  --max-app-width: var(--app-width);
+
+  /* Safe Area (미지원 기기는 0 폴백) */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* ===== FAB 관련 토큰 ===== */
+  --fab-right: 23px;               /* ✔️ 앱 오른쪽에서 23px */
+  --fab-gap-above-navbar: 34px;    /* 네비 위 여백(디자인 수치) */
+}
+
+/* ===== 앱 루트: 세로 100svh, 가로 min(100vw, maxW), 중앙정렬 ===== */
+/* ==== 기본 html/body/root 높이 세팅 ==== */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* ==== 앱 바깥 프레임 ==== */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: #f5f5f5; /* 바깥 회색 배경 (있으면 좋고, 아니면 수정 가능) */
+}
+
+/* ==== 393 x 100vh 고정 프레임 ==== */
+.app-frame {
+  width: 100%;
+  max-width: 393px;
+  height: 100vh;              /* 🔥 여기서 정확히 한 화면 높이 고정 */
+  display: flex;
+  flex-direction: column;
+  background: #fffaee;        /* 기본 노란 배경 */
+}
+
+/* ==== 실제 스크롤 담당 영역 ==== */
+.app-scroll {
+  flex: 1;                    /* 위에 헤더/네비 있으면 남은 영역 전부 */
+  overflow-y: auto;           /* 🔥 스크롤 켜기 */
+  overflow-x: hidden;
+
+  -ms-overflow-style: none;   /* IE/Edge 스크롤바 숨기기 */
+  scrollbar-width: none;      /* Firefox 스크롤바 숨기기 */
+}
+
+/* 크롬/사파리/엣지 스크롤바 숨기기 */
+.app-scroll::-webkit-scrollbar {
+  display: none;
+}
