@@ -1,6 +1,7 @@
-import React, { useMemo } from "react";
-import profileSvg from "../../../assets/profile.svg";
+import profileSvg from "../../../assets/icons/user.svg";
 import "./styles/center-hub.css";
+import React, { useMemo } from "react";
+
 
 export default function CenterHub({
   favorites = [],

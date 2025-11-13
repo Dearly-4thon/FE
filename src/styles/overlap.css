@@ -28,33 +28,43 @@ body,
   padding: 0;
 }
 
-/* ==== 앱 바깥 프레임 ==== */
+/* 앱 전체 틀 */
 .app-shell {
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  background: #f5f5f5; /* 바깥 회색 배경 (있으면 좋고, 아니면 수정 가능) */
+  background: #fff7e7;
 }
 
-/* ==== 393 x 100vh 고정 프레임 ==== */
 .app-frame {
-  width: 100%;
-  max-width: 393px;
-  height: 100vh;              /* 🔥 여기서 정확히 한 화면 높이 고정 */
+  width: 393px;            /* 피그마 기준이면 이 정도일 거라 가정 */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #fffaee;        /* 기본 노란 배경 */
+  position: relative;
+  background: #fff7e7;
 }
 
-/* ==== 실제 스크롤 담당 영역 ==== */
+/* 스크롤 영역은 “위쪽 컨텐츠만” 차지하게 */
 .app-scroll {
-  flex: 1;                    /* 위에 헤더/네비 있으면 남은 영역 전부 */
-  overflow-y: auto;           /* 🔥 스크롤 켜기 */
-  overflow-x: hidden;
-
-  -ms-overflow-style: none;   /* IE/Edge 스크롤바 숨기기 */
-  scrollbar-width: none;      /* Firefox 스크롤바 숨기기 */
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 88px;     /* 네비게이션 높이만큼 여유 */
+  position: relative;
+  z-index: 0;               /* 네비보다 아래 */
 }
+
+/* === 하단 네비가 항상 맨 위 레이어에 오도록 === */
+.navbar {
+  position: sticky;         /* 또는 fixed, 프로젝트 스타일에 맞게 */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;            /* app-scroll 위로 */
+  pointer-events: auto;     /* 혹시 몰라서 확실히 클릭 가능하게 */
+}
+
 
 /* 크롬/사파리/엣지 스크롤바 숨기기 */
 .app-scroll::-webkit-scrollbar {

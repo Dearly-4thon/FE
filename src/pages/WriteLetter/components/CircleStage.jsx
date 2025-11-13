@@ -1,7 +1,7 @@
 // src/pages/WriteLetter/components/CircleStage.jsx
 // WriteLetter_가운데_최종 (수정 반영)
 import React, { useMemo } from "react";
-import profileSvg from "../../../assets/profile.svg";
+import profileSvg from "../../../assets/icons/user.svg";
 import "../styles/circle-stage.css";
 
 export default function CircleStage({

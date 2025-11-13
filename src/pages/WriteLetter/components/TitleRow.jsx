@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import infoIcon from "../../../assets/info.svg";
+import infoIcon from "../../../assets/icons/info.svg";
 import "../styles/title-row.css"; // ✅ 정확한 상대 경로 (한 단계 위로 올라가서 styles 폴더로)
 
 export default function TitleRow({

@@ -1,7 +1,7 @@
 // src/pages/Mailbox/components/MailboxHeader.jsx
 import React, { useEffect, useRef, useState } from "react";
 import "../styles/MailboxHeader.css";
-import infoIcon from "../../../assets/info.svg";   // 진짜 svg
+import infoIcon from "../../../assets/icons/info.svg";
 
 export default function MailboxHeader() {
   const [open, setOpen] = useState(false);

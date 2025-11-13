@@ -1,6 +1,6 @@
 // src/pages/Mailbox/Mailbox.jsx
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import MailboxHeader from "./components/MailboxHeader.jsx";
 import MailboxTab from "./components/MailboxTab.jsx";
@@ -12,7 +12,6 @@ import "./styles/Mailbox.css";
 
 export default function Mailbox() {
   const { state } = useLocation();
-  const navigate = useNavigate();
 
   const [toast, setToast] = useState(null);
   const [tab, setTab] = useState(state?.focus ?? "received"); // 'received' | 'sent'
@@ -30,29 +29,22 @@ export default function Mailbox() {
   const HUB_GAP = 24;   // 허브와 탭 사이 여백(px)
   const HUB_TOP = 160;  // 상단 기준으로 허브가 위치하는 top 값
 
-  // ✅ 가운데 내 카드 → "나에게 보낸 편지" 화면으로 이동
+  // ✅ 가운데 내 카드 → 보낸편지 탭으로만 전환
   const handleSelectSelf = () => {
-    navigate("/mailbox/conversation/me", {
-      state: {
-        isSelf: true,
-        from: "mailbox-centerhub",
-      },
+    setTab("sent");
+    setToast({
+      type: "info",
+      message: "나에게 보낸 편지는 하단 '보낸편지'에서 확인할 수 있어요.",
     });
   };
 
-  // 친구 카드 → 친구와의 편지 화면
+  // ✅ 친구 카드 → 일단 수신함 탭 유지 + 안내만
   const handleSelectFriend = (friend) => {
-    const id = friend?.id ?? friend?.name ?? "";
-    const name = friend?.name ?? String(friend?.id ?? "");
-    const slug = encodeURIComponent(id);
-
-    navigate(`/mailbox/conversation/${slug}`, {
-      state: {
-        recipientId: id,
-        recipientName: name,
-        isSelf: false,
-        from: "mailbox-centerhub",
-      },
+    const name = friend?.name ?? "친구";
+    setTab("received");
+    setToast({
+      type: "info",
+      message: `${name}와의 개별 대화 화면은 추후 업데이트 예정이에요.`,
     });
   };
 

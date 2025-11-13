@@ -1,15 +1,14 @@
 // src/pages/WriteLetter/components/SealButton.jsx
 import React from "react";
-import "../styles/seal-button.css";
+import "../styles/compose.css";
 
-export default function SealButton({ onClick, disabled = false }) {
+export default function SealButton({ disabled, onClick }) {
   return (
     <button
       type="button"
-      className="seal-btn"
-      onClick={onClick}
+      className="wl-seal-btn"
       disabled={disabled}
-      aria-label="편지 봉인하기"
+      onClick={onClick}
     >
       편지 봉인하기
     </button>

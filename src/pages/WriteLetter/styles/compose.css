@@ -306,3 +306,49 @@
     );
   }
 }
+
+/* 전체 화면 스크롤 자연스럽게 */
+.compose-screen {
+  min-height: 100vh;
+  background: #FFFDF8;
+}
+
+/* 내용 영역 패딩 + 아래쪽 여유 (하단바 + 봉인버튼 공간) */
+.wl-compose-body {
+  padding: 0 24px 32px;
+  padding-top: 16px;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 120px);
+  box-sizing: border-box;
+}
+
+/* 섹션 공통 */
+.wl-section {
+  margin-bottom: 24px;
+}
+
+/* 봉인 버튼 감싸는 영역 - 스크롤하면 같이 올라가는 형태 */
+.wl-seal-wrap {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+/* 봉인 버튼 스타일(크기만 맞추면 됨) */
+.wl-seal-btn {
+  width: 100%;
+  max-width: 343px;
+  height: 52px;
+  border-radius: 999px;
+  border: none;
+  background: #ffcf8b;
+  color: #4A3428;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.wl-seal-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
