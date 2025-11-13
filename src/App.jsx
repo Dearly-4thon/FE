@@ -22,15 +22,13 @@ import Login from "./pages/Login/Login.jsx";
 import SignUp from "./pages/SignUp/SignUp.jsx";
 import KakaoCallback from "./pages/SignUp/KakaoCallback.jsx";
 
-// 토큰 확인
-import { getAccessToken } from "./api/auth.js";
 
 // 보호 라우트
 function RequireAuth() {
-  const has = !!getAccessToken();
-  const loc = useLocation();
-  return has ? <Outlet /> : <Navigate to="/login" replace state={{ from: loc }} />;
+  const has = !!localStorage.getItem("accessToken");
+  return has ? <Outlet /> : <Navigate to="/login" replace />;
 }
+
 
 /* --- 어댑터들 --- */
 function ProfilePage() {
