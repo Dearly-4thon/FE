@@ -1,0 +1,6 @@
+<svg width="16" height="14" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Yellow envelope -->
+  <rect x="1" y="2.5" width="12" height="8.5" rx="0.8" fill="#FFE680" stroke="#FFC933" stroke-width="0.8"/>
+  <path d="M1 2.5 L7 6.5 L13 2.5" fill="#FFF4CC" stroke="#FFC933" stroke-width="0.8"/>
+  <path d="M1 2.5 L7 6.5 L13 2.5" stroke="#FFC933" stroke-width="0.8" fill="none"/>
+</svg>

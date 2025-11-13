@@ -1,0 +1,262 @@
+/* src/components/mypage/EditProfile.css */
+
+/* 전체 배경 */
+.editpage-container {
+  background: linear-gradient(135deg, #fffeF5 0%, #fffbf0 50%, #fff9e8 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 실제 내용 영역 (아이폰 화면 폭 비슷하게) */
+.editpage-inner {
+  width: 100%;
+  max-width: 480px;
+  box-sizing: border-box;
+  padding: 18px 18px 80px;
+}
+
+/* 상단 제목 + 뒤로가기 */
+.edit-top-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.edit-back-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 4px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #4a3428;
+}
+
+.edit-back-btn:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.edit-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #4a3428;
+}
+
+/* 공통 카드 스타일 */
+.edit-card {
+  background: linear-gradient(180deg, #ffffff 0%, #fffbf8 100%);
+  border-radius: 24px;
+  border: 2px solid #f0d5cc;
+  padding: 18px 18px 20px;
+  box-shadow: 0 4px 8px rgba(255, 229, 220, 0.25);
+  margin-top: 16px;
+}
+
+.edit-section-label {
+  font-size: 13px;
+  color: #4a3428;
+  margin-bottom: 10px;
+}
+
+/* 아바타 영역 */
+.edit-avatar-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.edit-avatar-wrapper {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.edit-avatar-circle {
+  width: 120px;
+  height: 120px;
+  background: #fff4cc;
+  border-radius: 50%;
+  border: 4px solid #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.edit-avatar-icon {
+  width: 60px;
+  height: 60px;
+}
+
+/* 파란 연필 동그라미 버튼 */
+.edit-avatar-edit-btn {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 4px solid #ffffff;
+  background: linear-gradient(135deg, #adc1f7, #8eb0da);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(30, 58, 138, 0.35);
+  cursor: pointer;
+}
+
+.edit-pencil-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.edit-avatar-help {
+  font-size: 11px;
+  color: #9b8579;
+  text-align: center;
+}
+
+/* 입력 필드 공통 */
+.edit-field {
+  margin-top: 10px;
+}
+
+.edit-field-label {
+  font-size: 13px;
+  color: #4a3428;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.edit-field-sub-label {
+  font-size: 11px;
+  color: #9b8579;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.edit-input {
+  width: 100%;
+  height: 40px;
+  border-radius: 999px;
+  border: 1.5px solid #f0d5cc;
+  padding: 0 14px;
+  font-size: 13px;
+  box-sizing: border-box;
+  outline: none;
+  color: #4a3428;
+}
+
+.edit-input::placeholder {
+  color: #c4b5ab;
+}
+
+.edit-input:focus {
+  border-color: #e84855;
+  box-shadow: 0 0 0 2px rgba(232, 72, 85, 0.15);
+}
+
+.edit-field-hint {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #9b8579;
+}
+
+/* 아이디 안내 박스 */
+.edit-info-box {
+  margin-top: 16px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1px solid #f0d5cc;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 229, 220, 0.3),
+    rgba(255, 245, 240, 0.3)
+  );
+  font-size: 11px;
+  color: #9b8579;
+}
+
+.edit-info-strong {
+  color: #4a3428;
+}
+
+/* 저장 버튼 */
+.edit-save-btn {
+  width: 100%;
+  max-width: 480px;
+  margin: 18px auto 0;
+  height: 48px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(90deg, #1e3a8a, #60a5fa);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(30, 64, 175, 0.35);
+}
+
+.edit-save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 저장 완료 모달 */
+.edit-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 80;
+}
+
+.edit-modal {
+  width: 260px;
+  background: linear-gradient(135deg, #ffffff, #fffbf8);
+  border-radius: 24px;
+  border: 2px solid #f0d5cc;
+  padding: 18px 16px 16px;
+  text-align: center;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+}
+
+.edit-modal-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #4a3428;
+  margin-bottom: 6px;
+}
+
+.edit-modal-text {
+  font-size: 12px;
+  color: #9b8579;
+  margin-bottom: 14px;
+}
+
+.edit-modal-btn {
+  width: 100%;
+  height: 42px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(90deg, #1e3a8a, #60a5fa);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}

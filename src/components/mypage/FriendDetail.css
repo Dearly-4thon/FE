@@ -1,0 +1,274 @@
+/* ===Friend Detail (친구 상세)=== */
+
+.friend-detail-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fffef5 0%, #fffbf0 50%, #fff9e8 100%);
+  padding-bottom: 80px; /* 네비바 공간 */
+}
+
+.friend-detail-inner {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 12px 24px 32px;
+}
+
+/* 돌아가기 버튼 */
+
+.friend-detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+
+.friend-detail-back:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.friend-detail-back-arrow {
+  font-size: 18px;
+  color: #4a3428;
+}
+
+.friend-detail-back-text {
+  font-size: 14px;
+  color: #4a3428;
+}
+
+/* 친구 못 찾았을 때 */
+
+.friend-detail-not-found {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 14px;
+  color: #9b8579;
+}
+
+.friend-detail-back-btn-only {
+  display: block;
+  margin: 16px auto 0;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid #f0d5cc;
+  background: #fffaf3;
+  font-size: 13px;
+  color: #4a3428;
+  cursor: pointer;
+}
+
+/* 프로필 카드 */
+
+.friend-detail-card {
+  border-radius: 24px;
+  border: 1px solid #f0d5cc;
+  background: linear-gradient(135deg, #ffffff, #fffbf8);
+  padding: 24px 22px 18px;
+  box-shadow: 0 10px 20px rgba(240, 213, 204, 0.5);
+}
+
+.friend-detail-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.friend-detail-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: #fff4cc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+}
+
+.friend-detail-avatar img {
+  width: 46px;
+  height: 46px;
+}
+
+.friend-detail-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: #4a3428;
+  margin-bottom: 6px;
+}
+
+.friend-detail-id {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #fff5f0;
+  font-size: 12px;
+  color: #9b8579;
+}
+
+/* 카드 하단 버튼 */
+
+.friend-detail-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.friend-detail-btn {
+  height: 44px;
+  border-radius: 999px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.friend-detail-btn-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.friend-detail-btn-primary {
+  background: linear-gradient(90deg, #e84855, #ff9aa2);
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(232, 72, 85, 0.4);
+}
+
+.friend-detail-btn-primary:hover {
+  background: linear-gradient(90deg, #d43744, #ff8890);
+}
+
+.friend-detail-btn-outline {
+  background: #ffffff;
+  border: 2px solid #f0d5cc;
+  color: #e84855;
+}
+
+.friend-detail-btn-outline:hover {
+  background: #fff5f0;
+  border-color: #e84855;
+}
+
+/* 구분선 */
+
+.friend-detail-divider {
+  border: none;
+  border-top: 1px solid #f0d5cc;
+  margin: 18px 0;
+}
+
+/* 섹션 공통 */
+
+.friend-detail-section {
+  margin-bottom: 10px;
+}
+
+.friend-detail-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.friend-detail-section-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.friend-detail-section-icon-red {
+  background: linear-gradient(135deg, #e84855, #ff9aa2);
+}
+
+.friend-detail-section-icon-pink {
+  background: linear-gradient(135deg, #ff9aa2, #ffb5c1);
+}
+
+.friend-detail-section-icon-peach {
+  background: linear-gradient(135deg, #ffb5c1, #ffd4d4);
+}
+
+.friend-detail-section-icon-text {
+  font-size: 18px;
+}
+
+.friend-detail-section-title {
+  font-size: 15px;
+  color: #4a3428;
+}
+
+.friend-detail-section-sub {
+  font-size: 11px;
+  color: #9b8579;
+}
+
+/* 비어 있는 박스 */
+
+.friend-detail-empty-card {
+  padding: 24px 18px 20px;
+  border-radius: 24px;
+  border: 1px dashed #f0d5cc;
+  background: linear-gradient(135deg, #ffffff, #fffbf8);
+  text-align: center;
+}
+
+.friend-detail-empty-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #fff5f0;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+}
+
+.friend-detail-empty-text {
+  font-size: 14px;
+  color: #9b8579;
+  margin-bottom: 4px;
+}
+
+.friend-detail-empty-sub {
+  font-size: 11px;
+  color: #c4b5ab;
+}
+
+/* 작은 버튼 (첫 편지 쓰기) */
+
+.friend-detail-small-primary {
+  margin-top: 10px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(90deg, #e84855, #ff9aa2);
+  color: #ffffff;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* 간단 정보 박스 (비어있지 않을 때) */
+
+.friend-detail-info-box {
+  padding: 16px 16px 14px;
+  border-radius: 18px;
+  border: 1px solid #f0d5cc;
+  background: #fffdf8;
+  font-size: 13px;
+  color: #4a3428;
+}

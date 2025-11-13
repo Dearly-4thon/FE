@@ -1,0 +1,95 @@
+.dearly-logo-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding-left: 8px;
+}
+
+/* 공통 봉투 스타일 */
+.logo-envelope {
+  position: absolute;
+}
+
+.logo-envelope img {
+  display: block;
+  width: 16px;
+  height: auto;
+}
+
+/* 각 봉투 위치 + 애니메이션 */
+.logo-envelope-blue {
+  left: 0;
+  top: -4px;
+  animation: logoFloatBlue 3s ease-in-out infinite;
+}
+
+.logo-envelope-yellow {
+  right: -6px;
+  top: -2px;
+  animation: logoFloatYellow 2.5s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+.logo-envelope-navy {
+  right: 25%;
+  bottom: -4px;
+  animation: logoFloatNavy 2.8s ease-in-out infinite;
+  animation-delay: 1.2s;
+}
+
+/* Dearly 텍스트 */
+.dearly-logo-text {
+  position: relative;
+  z-index: 1;
+  font-family: "Pacifico", cursive;
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(30, 64, 175, 0.15);
+}
+
+.dearly-logo-text-light {
+  background: linear-gradient(135deg, #ffe680 0%, #fff4cc 50%, #fffaeb 100%);
+  text-shadow: 0 0 20px rgba(255, 230, 128, 0.3);
+}
+
+/* 애니메이션 keyframes */
+@keyframes logoFloatBlue {
+  0% {
+    transform: translateY(0) rotate(-8deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(8deg);
+  }
+  100% {
+    transform: translateY(0) rotate(-8deg);
+  }
+}
+
+@keyframes logoFloatYellow {
+  0% {
+    transform: translateY(0) rotate(10deg);
+  }
+  50% {
+    transform: translateY(6px) rotate(-10deg);
+  }
+  100% {
+    transform: translateY(0) rotate(10deg);
+  }
+}
+
+@keyframes logoFloatNavy {
+  0% {
+    transform: translate(0, 0) rotate(-12deg);
+  }
+  50% {
+    transform: translate(-2px, 5px) rotate(12deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(-12deg);
+  }
+}
