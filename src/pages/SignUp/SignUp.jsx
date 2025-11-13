@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SignUp.css";
 
-import eye from "../../assets/eye.svg";
-import eyeoff from "../../assets/eyeoff.svg";
+import eye from "../../assets/icons/eye.svg";
+import eyeoff from "../../assets/icons/eyeoff.svg";
 import Toast from "../../components/Toast/Toast.jsx";
 
 import { registerUser, checkUserId } from "../../api/auth.js";
