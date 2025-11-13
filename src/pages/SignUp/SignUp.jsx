@@ -4,7 +4,8 @@ import "./SignUp.css";
 import eye from "../../assets/eye.svg";
 import eyeoff from "../../assets/eyeoff.svg";
 import Toast from "../../components/Toast/Toast.jsx";
-import { BASE_URL } from "../../api/config.js";
+import { registerUser, checkUserId } from "../../api/auth.js";
+
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -19,7 +20,7 @@ export default function Signup() {
   const navigate = useNavigate();
   const showToast = (message, type = "info") => setToast({ message, type });
 
-  /** 아이디 중복 확인 */
+  /* 아이디 중복 확인 */
   const handleCheckUsername = async () => {
     if (!username) {
       showToast("아이디를 입력해주세요.", "error");
@@ -27,17 +28,16 @@ export default function Signup() {
     }
 
     try {
-      const res = await fetch(`${BASE_URL}/auth/check-user-id/?user_id=${username}`);
-      const data = await res.json();
+      const res = await checkUserId(username);
 
       if (res.ok) {
-        if (data.available) {
+        if (res.data.available) {
           showToast("사용 가능한 아이디입니다.", "success");
         } else {
           showToast("이미 사용 중인 아이디입니다.", "error");
         }
       } else {
-        showToast(data.message || "요청이 올바르지 않습니다.", "error");
+        showToast(res.data.message || "요청이 올바르지 않습니다.", "error");
       }
     } catch (err) {
       console.error("아이디 중복 확인 오류:", err);
@@ -46,10 +46,14 @@ export default function Signup() {
   };
 
 
-  /** 회원가입 */
+  /* 회원가입 */
   const handleSignup = async () => {
     if (!username || !password || !passwordCheck) {
       showToast("모든 필드를 입력해주세요.", "error");
+      return;
+    }
+    if (password.length < 8) {
+      showToast("비밀번호는 8자 이상이어야 합니다.", "error");
       return;
     }
     if (password !== passwordCheck) {
@@ -59,22 +63,18 @@ export default function Signup() {
 
     setLoading(true);
     try {
-      const res = await fetch(`${BASE_URL}/auth/register/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: username,
-          password: password,
-          password_confirm: passwordCheck,   // ✅ 스펙 반영
-        }),
+      const res = await registerUser({
+        username,
+        nickname,
+        password,
+        passwordCheck,
       });
-      const data = await res.json();
 
-      if (res.status === 201) {
-        showToast("회원가입 성공! 🎉", "success");
+      if (res.ok) {
+        showToast("회원가입 성공!", "success");
         setTimeout(() => navigate("/login"), 1200);
       } else {
-        showToast(data.message || "회원가입 실패 😢", "error");
+        showToast(res.data.message || "회원가입 실패", "error");
       }
     } catch (e) {
       console.error(e);

@@ -1,23 +1,25 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { handleKakaoCallback } from "../../api/auth.js";
 
 export default function KakaoCallback() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const access = params.get("access");
-    const refresh = params.get("refresh");
+    const process = async () => {
+      const result = await handleKakaoCallback();
 
-    if (access) {
-      localStorage.setItem("accessToken", access);
-      if (refresh) localStorage.setItem("refreshToken", refresh);
-      navigate("/letterroom"); // 로그인 후 페이지로 이동
-    } else {
-      console.error("카카오 토큰이 전달되지 않았습니다.");
-      navigate("/login");
-    }
+      setTimeout(() => {
+        if (result.success) {
+          navigate("/letterroom");
+        } else {
+          navigate("/login");
+        }
+      }, 50);
+    };
+
+    process();
   }, [navigate]);
 
-  return <p>카카오 로그인 중입니다... 🔄</p>;
+  return <p>카카오 로그인 중입니다... </p>;
 }
