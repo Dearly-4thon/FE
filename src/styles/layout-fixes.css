@@ -1,0 +1,52 @@
+:root{
+  --app-width: 393px;
+  --navbar-height: 72px;
+  --navbar-gap: 0px; /* 네비와 화면이 바로 붙도록 */
+}
+
+/* 전체 레이아웃 고정 높이 */
+html, body, #root { height: 100%; margin: 0; }
+.app-shell {
+  max-width: var(--app-width);
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* 메인 스크롤 영역: 고정 세로 852px */
+.app-scroll {
+  width: 100%;
+  max-width: var(--app-width);
+  height: 852px;                /* 고정 높이 요구사항 */
+  box-sizing: border-box;
+  overflow-y: auto;
+  padding-bottom: calc(var(--navbar-height) + 8px); /* 안전영역 */
+  position: relative;
+  background: transparent;
+}
+
+/* 네비와 콘텐츠가 시각적으로 붙도록 허용(겹침 가능) */
+.navbar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  width: var(--app-width);
+  height: var(--navbar-height);
+  border-radius: 12px 12px 0 0;
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+/* 오버레이 레이어가 클릭을 막지 않도록 기본 차단 */
+.app-scroll .wl-screen,
+.app-scroll .wl-bg,
+.app-scroll .stage-abs { pointer-events: none; }
+
+/* 인터랙티브 요소만 클릭 가능 */
+.app-scroll .wl-center,
+.app-scroll .wl-me-card,
+.app-scroll .wl-friend,
+.app-scroll .wl-fab,
+.app-scroll .wl-chooser-card,
+.app-scroll button,
+.app-scroll a { pointer-events: auto; z-index: 1010; }

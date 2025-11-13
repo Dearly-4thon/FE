@@ -1,0 +1,9 @@
+{
+  "name": "Dearly",
+  "short_name": "Dearly",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff4cc",
+  "theme_color": "#fff4cc",
+  "icons": []
+}

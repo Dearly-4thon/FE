@@ -1,0 +1,375 @@
+/* 전체 영역 */
+.mbx-tabs {
+  padding: 0 24px 40px;
+  font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic",
+    sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ===========================
+   위쪽 탭 레이아웃 (받은/보낸)
+=========================== */
+.mbx-switch {
+  display: flex;
+  height: 50.667px;
+  padding: 4px 4px 0 4px;
+  align-items: flex-start;
+  gap: 8px;
+  flex-shrink: 0;
+  align-self: stretch;
+  border-radius: 16px;
+  border: 1.333px solid #f0d5cc;
+  background: linear-gradient(180deg, #fff 0%, #fffbf8 100%);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
+    0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.mbx-switch-btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  border-radius: 12px;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: #9b8579;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease,
+    box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+.mbx-switch-btn.is-active {
+  background: #4d8bff; /* 파란 탭 */
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(77, 139, 255, 0.4);
+}
+
+/* ===========================
+   아래 내용 레이아웃 (패널)
+=========================== */
+.mbx-panel {
+  /* 고정 높이 제거 → 카드 개수에 따라 자동 높이 */
+  flex-shrink: 0;
+  align-self: stretch;
+  border-radius: 24px;
+  border: 1.589px solid #f0d5cc;
+  background: linear-gradient(180deg, #fff 0%, #fffbf8 100%);
+  padding: 20px 16px; /* 패널 안쪽 여백 살짝 줄임 */
+  box-sizing: border-box;
+}
+
+/* 비어 있을 때 */
+.mbx-empty-panel {
+  min-height: 215px;
+  border-radius: 24px;
+  border: 1.5px dashed #f7bfa3;
+  background: #fff8f2;
+  padding: 40px 16px 48px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.mbx-empty-icon-wrap {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 24px;
+  border-radius: 999px;
+  background: #ffe6de;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mbx-empty-icon {
+  color: #f08e7a;
+}
+
+.mbx-empty-main {
+  margin: 0 0 6px;
+  font-size: 16px;
+  line-height: 23px;
+  font-weight: 500;
+  color: #8b6d5c;
+}
+
+.mbx-empty-sub {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: #b3937e;
+}
+
+/* ===========================
+   카드 그리드
+=========================== */
+.mbx-mail-grid-wrap {
+  margin-top: 12px; /* 패널 상단과 카드 사이 간격 줄임 */
+}
+
+.mbx-mail-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 13.58px; /* 가운데만 gap */
+  row-gap: 10px;       /* 세로 간격 조금 줄임 */
+}
+
+/* ✅ 바깥 카드가 Figma 사이즈(173 x 157) */
+.mbx-mail-card {
+  box-sizing: border-box;
+  width: calc((100% - 13.58px) / 2);
+  max-width: 172.917px;
+  height: 156.515px;
+  border-radius: 16px;
+  border: 0.8px solid #f0d5cc;
+  background: linear-gradient(180deg, #fff 0%, #fffbf8 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1),
+    0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  padding: 8px 10px;          /* 카드 안 여백 줄임 */
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* 🔥 “편지 안에 편지” 제거 → inner는 레이아웃만 */
+.mbx-mail-card-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* LOCKED / OPEN 구분 */
+.mbx-mail-card-inner.is-locked {
+  align-items: stretch;
+}
+
+.mbx-mail-card-inner.is-open {
+  justify-content: flex-start;
+}
+
+/* ===== OPEN 카드 (제목 + 구분선 + 작성자) ===== */
+.mbx-mail-open-title-wrap {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 4px; /* 제목-선 사이 간격 줄임 */
+}
+
+.mbx-mail-open-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a3428;
+  line-height: 20px;
+  word-break: keep-all;
+}
+
+.mbx-mail-open-divider {
+  margin: 2px 0 4px;  /* 선 위/아래 간격 ↓ */
+  height: 1px;
+  background: #e2cbbb;
+}
+
+.mbx-mail-open-sender {
+  font-size: 12px;
+  color: #9b8579;
+}
+
+/* ===== LOCKED 카드 (D-day + 자물쇠 + 공개일) ===== */
+.mbx-mail-card-top {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.mbx-mail-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #ffefd4;
+  color: #e07a1f;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.mbx-badge-icon {
+  flex-shrink: 0;
+}
+
+.mbx-mail-locked-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mbx-mail-lock-icon {
+  color: #b4bce8;
+}
+
+.mbx-mail-open-date {
+  margin-top: 4px;
+  font-size: 11px;
+  text-align: center;
+  color: #9b8579;
+}
+
+/* ===========================
+   모달 공통
+=========================== */
+.mbx-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+}
+
+.mbx-modal {
+  width: 90%;
+  max-width: 360px;
+  border-radius: 24px;
+  background: #ffeeb7;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  padding: 24px 20px 24px;
+  box-sizing: border-box;
+}
+
+/* 헤더 */
+.mbx-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.mbx-modal-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #3b2b23;
+}
+
+.mbx-modal-close {
+  border: none;
+  background: transparent;
+  padding: 4px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* 🔒 잠긴 편지 모달 */
+.mbx-modal-locked {
+  text-align: center;
+  padding: 32px 8px 16px;
+}
+
+.mbx-modal-lock-icon-wrap {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 24px;
+  border-radius: 999px;
+  background: #ffd7e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mbx-modal-lock-icon {
+  color: #ff7d9d;
+}
+
+.mbx-modal-locked-main {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #4a3428;
+}
+
+.mbx-modal-locked-sub {
+  margin: 0;
+  font-size: 13px;
+  color: #9b8579;
+}
+
+/* 🔓 열린 편지 모달 */
+.mbx-modal-open {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mbx-modal-letter-box {
+  border-radius: 20px;
+  background: #ffffff;
+  padding: 16px 16px 18px;
+  box-sizing: border-box;
+  box-shadow: 0 0 0 1px #d5dff6;
+}
+
+.mbx-modal-letter-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.mbx-modal-letter-to {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b4a36;
+}
+
+.mbx-modal-letter-date {
+  font-size: 12px;
+  color: #a58c7a;
+}
+
+.mbx-modal-letter-divider {
+  height: 1px;
+  background: #cdd5ff;
+  margin: 6px 0 10px;
+}
+
+.mbx-modal-letter-body {
+  font-size: 14px;
+  line-height: 22px;
+  color: #3b2b23;
+  white-space: pre-wrap;
+}
+
+/* PDF 버튼 */
+.mbx-modal-pdf-btn {
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid #243b80;
+  background: #ffffff;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #243b80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.mbx-modal-pdf-icon {
+  font-size: 16px;
+}

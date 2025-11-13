@@ -1,0 +1,186 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap");
+
+/* ===== Overlay (블러 X, 회색 반투명) ===== */
+.wl-chooser-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.50);
+    /* ← 회색 반투명만 */
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    z-index: 10000;
+    backdrop-filter: none !important;
+    /* 블러 제거 */
+    -webkit-backdrop-filter: none !important;
+    /* iOS 대응 */
+}
+
+/* ===== Modal Box ===== */
+.wl-chooser {
+
+    width: 340px;
+    height: 570px;
+    flex-shrink: 0;
+    border-radius: 16px;
+    border: 1.333px solid #F0D5CC;
+    background: linear-gradient(135deg, #FFFEF5 0%, #FFFBF0 50%, #FFF9E8 100%);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding-top: 32px;
+
+    font-family: "Noto Sans KR", Pretendard, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* 닫기 버튼 */
+.wl-chooser-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+}
+
+/* 헤더 */
+.wl-chooser-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    /* 기존 12px → 8px로 간격 축소 */
+}
+
+.wl-chooser-floating {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: #FFF4CC;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.10);
+    display: grid;
+    place-items: center;
+}
+
+.wl-chooser-title {
+    color: #4A3428;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 18px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.wl-chooser-sub {
+    color: #9B8579;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    margin-bottom: 10px;
+}
+
+/* ===== 카드 리스트 컨테이너 ===== */
+.wl-chooser-body {
+    width: 100%;
+    margin-top: 24px;
+    /* 기존 30px → 살짝 줄임 */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    /* 카드 간 간격 축소 */
+}
+
+/* ===== 카드 ===== */
+.wl-option {
+    width: 287px;
+    height: 160px;
+    flex-shrink: 0;
+    background: #FFF;
+    border: 1.333px solid #1E3A8A;
+    border-radius: 16px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.wl-option:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 카드 내부 스택 (아이콘/제목/부제목) */
+.wl-option-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    /* 기존 10px → 아이콘~텍스트 간격 줄임 */
+}
+
+/* 아이콘 캡슐 */
+.wl-option-icon {
+    display: flex;
+    width: 48px;
+    /* 기존 56px → 축소 */
+    height: 48px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 14px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+.wl-option-icon svg {
+    color: #fff;
+}
+
+/* 색상 변형 */
+.wl-option-icon.red {
+    background: linear-gradient(180deg, #E84855 0%, #FF9AA2 100%);
+}
+
+.wl-option-icon.blue {
+    background: linear-gradient(180deg, #5C8FFF 0%, #7FB2FF 100%);
+}
+
+/* 제목 */
+.wl-option-title {
+    color: #4A3428;
+    text-align: center;
+    font-size: 15px;
+    /* 약간 작게 */
+    font-weight: 500;
+    line-height: 22px;
+    margin-top: 1px;
+    margin-bottom: 10px;
+}
+
+/* 부제목 */
+.wl-option-sub {
+    margin-top: 3px;
+    /* 기존 6px → 간격 축소 */
+    color: #9B8579;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+}

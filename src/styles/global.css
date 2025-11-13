@@ -1,0 +1,98 @@
+/* 기본 */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    color: #111;
+    background: #111;
+}
+
+:root {
+    --safe-top: env(safe-area-inset-top);
+    --safe-bottom: env(safe-area-inset-bottom);
+    --space: clamp(12px, 3.8vw, 20px);
+    /* iPhone16 기준 가변 여백 */
+    --radius: 16px;
+    --elev: 0 10px 30px rgba(0, 0, 0, .08);
+}
+
+/* 앱 프레임 */
+.app {
+    min-height: 100dvh;
+    /* 모바일 사파리 주소창 변동 대응 */
+    display: flex;
+    flex-direction: column;
+    background: #1a1a1a;
+}
+
+/* 데스크톱에서 가운데 한 장짜리로 보기(모바일에선 100%) */
+.preview {
+    width: min(100%, 430px);
+    /* iPhone16 근사 폭 */
+    margin: 0 auto;
+    background: #fff;
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+/* 상단 */
+.header {
+    position: sticky;
+    top: 0;
+    padding: max(12px, var(--safe-top)) var(--space) 12px;
+    color: #fff;
+    background: #111;
+    z-index: 10;
+    border-bottom: 1px solid rgba(255, 255, 255, .06);
+}
+
+/* 본문 스크롤 */
+.main {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: var(--space);
+    background: #fff;
+}
+
+/* 하단 탭바(홈 인디케이터 고려) */
+.tabbar {
+    position: sticky;
+    bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding: 10px var(--space) calc(10px + var(--safe-bottom));
+    background: #fff;
+    box-shadow: var(--elev);
+    border-top-left-radius: var(--radius);
+    border-top-right-radius: var(--radius);
+}
+
+.tab {
+    height: 48px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: #f6f6f6;
+    font-size: 13px;
+    border: none;
+}
+
+.tab.is-active {
+    background: #ffe89a;
+}
+
+@media (min-width: 768px) {
+    .main {
+        padding: calc(var(--space) * 1.25);
+    }
+}
