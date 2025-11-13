@@ -4,7 +4,9 @@ import "./Login.css";
 import eye from "../../assets/eye.svg";
 import eyeoff from "../../assets/eyeoff.svg";
 import Toast from "../../components/Toast/Toast.jsx";
-import { BASE_URL } from "../../api/config.js";
+import DearlyLogo from "../../components/DearlyLogo.jsx"; 
+import { loginUser, saveTokens, getKakaoLoginUrl } from "../../api/auth.js";
+
 
 export default function Login() {
   const navigate = useNavigate();
@@ -18,7 +20,7 @@ export default function Login() {
     setToast({ message, type });
   };
 
-  /** 일반 로그인 */
+  /* 일반 로그인 */
   const handleLogin = async () => {
     if (!username || !password) {
       showToast("아이디와 비밀번호를 입력해주세요.", "error");
@@ -26,45 +28,22 @@ export default function Login() {
     }
 
     setLoading(true);
-    try {
-      const response = await fetch(`${BASE_URL}/auth/login/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: username,
-          password,
-        }),
-      });
+    const res = await loginUser({ username, password });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        showToast("로그인 성공! 💌", "success");
-
-        // 토큰 저장 (백엔드에서 access/refresh 둘 다 주면 둘 다 저장)
-        if (data.access) {
-          localStorage.setItem("accessToken", data.access);
-        }
-        if (data.refresh) {
-          localStorage.setItem("refreshToken", data.refresh);
-        }
-
-        // 페이지 이동
-        setTimeout(() => navigate("/letterroom"), 1000);
-      } else {
-        showToast(data.message || "로그인 실패 😢", "error");
-      }
-    } catch (error) {
-      console.error("❌ 로그인 오류:", error);
-      showToast("서버 오류가 발생했습니다.", "error");
-    } finally {
-      setLoading(false);
+    if (res.ok) {
+      saveTokens(res.data.access, res.data.refresh);
+      showToast("로그인 성공!", "success");
+      setTimeout(() => navigate("/letterroom"), 1000);
+    } else {
+      showToast(res.data.message || "로그인 실패", "error");
     }
+
+    setLoading(false);
   };
 
-  /** 카카오 로그인 (선택사항: 콜백 연결 시 수정 가능) */
+  /* 카카오 로그인 */
   const handleKakaoLogin = () => {
-    window.location.href = "https://zihyuniz.shop/accounts/kakao/login/";
+    window.location.href = getKakaoLoginUrl();
   };
 
 
@@ -79,10 +58,8 @@ export default function Login() {
       )}
 
       {/* 로고 영역 */}
-      <div className="logo-section">
-        <span className="logo-icon">💌</span>
-        <h1 className="logo-text">Dearly</h1>
-        <span className="logo-icon">✉️</span>
+      <div className="login-logo">
+        <DearlyLogo />
       </div>
 
       <p className="subtitle">소중한 사람들과 함께하는 추억의 공간</p>

@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
 .login-container {
@@ -17,24 +18,17 @@
 }
 
 /* 濡쒓퀬 �곸뿭 */
-.logo-section {
+.login-logo {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
+  margin: 20px 0 85px;
+  transform: scale(2.5);
+  transform-origin: center top;
 }
-.logo-text {
-  font-size: 40px;
-  font-weight: 700;
-  background: linear-gradient(90deg, #4E95F6, #3A7AF2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.login-logo .dearly-logo-text {
+  font-weight: 900;
 }
-.logo-icon {
-  font-size: 22px;
-}
-.logo-icon:first-child { transform: rotate(-15deg); }
-.logo-icon:last-child { transform: rotate(15deg) translateY(-3px); }
 
 /* 遺��쒕ぉ */
 .subtitle {
