@@ -1,25 +1,50 @@
 // src/pages/Mypage/EditProfile.jsx
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Header from '../../components/Header';
-import { currentUser } from '../../utils/mockData';
 import '../../components/mypage/EditProfile.css';
 
 import userIcon from '../../assets/icons/user.svg';
 import pencilIcon from '../../assets/icons/pencil.svg';
+import { fetchMyProfile, updateMyProfile } from '../../api/users';
 
 export default function EditProfile({ onNavigate, onBack }) {
   const [profileImage, setProfileImage] = useState(() => {
     return localStorage.getItem('userProfileImage');
   });
-  const [displayName, setDisplayName] = useState(currentUser.displayName);
-  const [birthday, setBirthday] = useState(currentUser.birthday || '');
-  const [phoneNumber, setPhoneNumber] = useState('010-1234-5678');
+
+  const [displayName, setDisplayName] = useState('');
+  const [birthday, setBirthday] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [username, setUsername] = useState(''); // 아이디 표시용
+
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const fileInputRef = useRef(null);
+
+  // 처음 들어올 때 내 프로필 정보 불러오기
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const { ok, data } = await fetchMyProfile();
+
+        if (ok) {
+          setDisplayName(data.nickname ?? '');
+          setBirthday(data.birthday ?? '');
+          setPhoneNumber(data.phone_number ?? '');
+          setUsername(data.user_id ?? '');
+        } else {
+          console.error('프로필 조회 실패', data);
+        }
+      } catch (err) {
+        console.error('프로필 조회 중 에러', err);
+      }
+    };
+
+    loadProfile();
+  }, []);
 
   const handleProfileImageClick = () => {
     if (fileInputRef.current) {
@@ -44,14 +69,36 @@ export default function EditProfile({ onNavigate, onBack }) {
     reader.readAsDataURL(file);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    // 프로필 사진은 아직 로컬스토리지에만 저장 (백엔드 연동 X)
     if (profileImage) {
       localStorage.setItem('userProfileImage', profileImage);
     }
-    currentUser.displayName = displayName;
-    currentUser.birthday = birthday;
 
-    setShowSuccessModal(true);
+    try {
+      const { ok, data } = await updateMyProfile({
+        // 백엔드 필드 이름에 맞게 수정
+        nickname: displayName,
+        birthday,
+        phone_number: phoneNumber,
+      });
+
+      if (!ok) {
+        console.error('프로필 수정 실패', data);
+        alert('프로필 저장에 실패했어요. 다시 시도해 주세요 😢');
+        return;
+      }
+
+      // 비밀번호 변경은 /auth/password/change/랑 연결해야 해서 일단 TODO
+      if (currentPassword || newPassword || confirmPassword) {
+        alert('비밀번호 변경은 아직 API 연결 전이에요. (TODO)');
+      }
+
+      setShowSuccessModal(true);
+    } catch (err) {
+      console.error('프로필 수정 중 에러', err);
+      alert('프로필 저장 중 문제가 생겼어요 😢');
+    }
   };
 
   const handleModalClose = () => {
@@ -177,7 +224,7 @@ export default function EditProfile({ onNavigate, onBack }) {
           </div>
         </section>
 
-        {/* 비밀번호 변경 카드 */}
+        {/* 비밀번호 변경 카드 (API는 나중에) */}
         <section className="edit-card">
           <p className="edit-section-label">비밀번호 변경</p>
 
@@ -232,7 +279,7 @@ export default function EditProfile({ onNavigate, onBack }) {
 
         {/* 아이디 안내 박스 */}
         <section className="edit-info-box">
-          아이디 <span className="edit-info-strong">@{currentUser.username}</span>
+          아이디 <span className="edit-info-strong">@{username}</span>
           는 변경할 수 없어요
         </section>
 

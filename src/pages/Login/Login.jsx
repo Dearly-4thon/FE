@@ -1,13 +1,12 @@
-
+// src/pages/Login/Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import eye from "../../assets/icons/eye.svg";
 import eyeoff from "../../assets/icons/eyeoff.svg";
 import Toast from "../../components/Toast/Toast.jsx";
-import DearlyLogo from "../../components/DearlyLogo.jsx"; 
+import DearlyLogo from "../../components/DearlyLogo.jsx";
 import { loginUser, saveTokens, getKakaoLoginUrl } from "../../api/auth.js";
-
 
 export default function Login() {
   const navigate = useNavigate();
@@ -23,31 +22,45 @@ export default function Login() {
 
   /* 일반 로그인 */
   const handleLogin = async () => {
-    console.log("Login page rendered");
     if (!username || !password) {
       showToast("아이디와 비밀번호를 입력해주세요.", "error");
       return;
     }
 
     setLoading(true);
+
     const res = await loginUser({ username, password });
 
     if (res.ok) {
-      saveTokens(res.data.tokens.access, res.data.tokens.refresh);
+      // 1) 토큰 저장 (API 문서: access / refresh)
+      saveTokens(res.data.access, res.data.refresh);
 
-      const nicknameFromServer = res.data.user.profile?.nickname;
+      // 2) 서버에서 내려준 사용자 정보
+      const user = res.data.user || {};
+
+      // 로그인 아이디 (user_id)
+      const userId = user.user_id || username;
+
+      // 닉네임: 있으면 닉네임, 없으면 아이디
+      const nicknameFromServer = user.nickname;
       const finalNickname =
         nicknameFromServer && nicknameFromServer.trim() !== ""
           ? nicknameFromServer
-          : res.data.user.user_id;
+          : userId;
 
-      localStorage.setItem("user_id", res.data.user.user_id);
+      // 3) 로컬스토리지에 아이디 / 닉네임 저장
+      localStorage.setItem("user_id", userId);
       localStorage.setItem("nickname", finalNickname);
 
       showToast("로그인 성공!", "success");
       setTimeout(() => navigate("/letters"), 500);
     } else {
-      showToast(res.data.message || "로그인 실패", "error");
+      // 에러 메시지 우선순위: 서버에서 온 message / detail → 기본값
+      const errorMessage =
+        res.data?.message ||
+        res.data?.detail ||
+        "로그인에 실패했어요. 아이디와 비밀번호를 확인해 주세요.";
+      showToast(errorMessage, "error");
     }
 
     setLoading(false);
@@ -57,7 +70,6 @@ export default function Login() {
   const handleKakaoLogin = () => {
     window.location.href = getKakaoLoginUrl();
   };
-
 
   return (
     <div className="login-container">
