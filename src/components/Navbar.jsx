@@ -4,6 +4,7 @@ import { Mail, PenLine, Inbox, User } from "lucide-react";
 import "./Navbar.css";
 
 export default function Navbar() {
+  if (!localStorage.getItem("accessToken")) return null;
   const cx = ({ isActive }) => (isActive ? "nav-item active" : "nav-item");
 
   return (

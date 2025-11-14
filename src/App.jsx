@@ -218,10 +218,10 @@ export default function App() {
         <Route path="/notices" element={<NoticesPage />} />
         <Route path="/notices/:noticeId" element={<NoticeDetailPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
-      </Route>
 
-      {/* 없는 경로는 기본으로 */}
-      <Route path="*" element={<Navigate to="/letters" replace />} />
+        {/* 없는 경로는 기본으로 */}
+        <Route path="*" element={<Navigate to="/letters" replace />} />
+      </Route>
     </Routes>
   );
 }
