@@ -57,12 +57,15 @@ export default function LetterRoomOpen() {
         const lettersData = await getLettersInRoom(id);
         setLetters(lettersData || []);
 
-        // 2) 공유 링크 조회
+        // 2) share-link 조회
         const linkData = await getShareLink(id);
         const shareLink = linkData.share_link;
-        const shareCode = shareLink.split("/").pop();
 
-        // 3) 공유코드로 편지방 상세 조회
+        // 3) shareCode 추출
+        const parts = shareLink.split("/").filter(Boolean);
+        const shareCode = parts.pop();
+
+        // 4) 공유코드로 편지방 상세 조회
         const roomData = await getRoomByShareCode(shareCode);
 
         const dday = calcDday(roomData.open_at);
@@ -297,7 +300,13 @@ export default function LetterRoomOpen() {
         </div>
       </div>
 
-      <button className="floating-btn">+</button>
+      <button 
+        className="floating-btn" 
+        onClick={() => navigate(`/letterroom/${id}/write`)}
+        aria-label="편지 작성하기"
+      >
+        +
+      </button>
 
       {/* 편지 모달 */}
       {selectedLetter && (

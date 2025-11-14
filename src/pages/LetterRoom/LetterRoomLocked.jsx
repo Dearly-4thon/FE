@@ -62,28 +62,39 @@ export default function LetterRoomLocked() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 1) 편지 목록
+        // 1) 편지 목록 조회
         const lettersData = await getLettersInRoom(id);
         setLetters(lettersData || []);
 
-        // 2) 공유 링크 (share_link 받기)
+        // 2) share-link 조회
         const linkData = await getShareLink(id);
         const shareLink = linkData.share_link;
-        const shareCode = shareLink.split("/").pop();
 
-        // 3) 공유코드로 편지방 상세 조회 (public)
+        // 3) shareCode 추출
+        const parts = shareLink.split("/").filter(Boolean);
+        const shareCode = parts.pop();
+
+        // 4) 공유코드로 편지방 상세 조회
         const roomData = await getRoomByShareCode(shareCode);
 
         const dday = calcDday(roomData.open_at);
 
         setRoom({
           id: roomData.id,
-          title: roomData.title ?? "편지방",
-          coverImage: roomData.cover_image || null,
+          title: roomData.title,
+          isOpen: dday === 0,
           dday,
-          openAt: roomData.open_at,
+          coverImage: roomData.cover_image || null,
           shareLink,
         });
+
+        // 잠금 페이지로 이동
+        if (dday > 0) {
+          navigate(`/letterroom/locked/${id}`);
+          return;
+        }
+
+
       } catch (err) {
         console.error("❌ 편지방 데이터 불러오기 실패:", err);
       } finally {
@@ -93,6 +104,7 @@ export default function LetterRoomLocked() {
 
     fetchData();
   }, [id]);
+
 
   /* -----------------------------
       편지 카드 배치 계산 (UI용)
