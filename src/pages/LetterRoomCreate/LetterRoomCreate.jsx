@@ -14,6 +14,7 @@ export default function LetterRoomCreate() {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(null);
 
+  // 프론트 선택 값 (라디오 value)
   const [visibility, setVisibility] = useState("PUBLIC");
   const [writePermission, setWritePermission] = useState("ALL");
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -37,39 +38,54 @@ export default function LetterRoomCreate() {
       return;
     }
 
-    // 백엔드 명세서 기준 매핑
-    const visibilityValue =
-      visibility === "FRIEND" ? "PUBLIC_FRIENDS" : "PUBLIC_ALL";
-
-    const writePermissionValue =
-      writePermission === "FRIEND"
-        ? "WRITE_FRIENDS"
-        : writePermission === "INVITE"
-        ? "WRITE_INVITED"
-        : "WRITE_ALL";
-
     const formData = new FormData();
-    const ownerId = localStorage.getItem("user_id");
+    const ownerId = Number(localStorage.getItem("user_id")); 
 
     formData.append("title", title);
     formData.append("open_at", date.toISOString().split("T")[0]);
-    formData.append("visibility", visibilityValue);
-    formData.append("write_permission", writePermissionValue);
-    formData.append("allow_anonymous", String(isAnonymous));
     formData.append("owner", ownerId);
+
+    // visibility 매핑
+    const visibilityValue =
+      visibility === "FRIEND" ? "PUBLIC_FRIENDS" : "PUBLIC_ALL";
+    formData.append("visibility", visibilityValue);
+
+    // write_permission 매핑
+    let wp = "WRITE_ALL";
+    if (writePermission === "FRIEND") wp = "WRITE_FRIENDS";
+    if (writePermission === "INVITE") wp = "WRITE_INVITED";
+    formData.append("write_permission", wp);
+
+    // boolean
+    formData.append("allow_anonymous", isAnonymous ? "true" : "false");
 
     if (coverImage) formData.append("cover_image", coverImage);
 
+    /* ---------------------------
+        🚀 formData 내용 콘솔 출력
+       --------------------------- */
+    console.log("📌 [DEBUG] formData 요청 내용 ------------------");
+    for (const pair of formData.entries()) {
+      console.log(pair[0], ":", pair[1]);
+    }
+    console.log("--------------------------------------------------");
+
     try {
       await createLetterRoom(formData);
-
       alert("편지방이 성공적으로 생성되었습니다!");
       navigate("/letters");
     } catch (error) {
       console.error("❌ 편지방 생성 실패:", error);
+
+      if (error.response) {
+        console.log("🔍 서버 응답:", error.response.data);
+        console.log("🔍 상태 코드:", error.response.status);
+      }
+
       alert("편지방 생성 중 오류가 발생했습니다.");
     }
   };
+
 
   return (
     <div className="create-container">
