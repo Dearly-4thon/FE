@@ -11,6 +11,8 @@ import "./styles/base.css";
 import "./styles/title-row.css";
 import "./styles/circle-stage.css";
 
+import Header from "../../components/Header.jsx"; // Header 추가
+
 export default function WriteLetterForm() {
   const [open, setOpen] = useState(false);
   const nav = useNavigate();
@@ -45,6 +47,7 @@ export default function WriteLetterForm() {
    ========================== */
   return (
     <div className="wl-screen">
+      <Header title="편지 쓰기" />
       {/* 제목줄 */}
       <TitleRow title="누구에게 편지를 쓸까요" showQuestion />
 

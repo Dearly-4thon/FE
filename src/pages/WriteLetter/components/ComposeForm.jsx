@@ -1,11 +1,10 @@
-// src/pages/WriteLetter/components/ComposeForm.jsx
 import React, { useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "../../../lib/toast";
 import SealButton from "./SealButton";
-import { FONTS, FONT_FAMILIES, PAPERS } from '../js/font'
+import { FONTS, FONT_FAMILIES, PAPERS } from "../js/font";
+import { createLetter } from "../../../api/compose";
 import "../styles/compose.css";
-import axios from "axios";
 
 // ===== localStorage 유틸 =====
 const LS_KEY = "dearly-mailbox";
@@ -24,6 +23,7 @@ export default function ComposeForm() {
     const [paper, setPaper] = useState("white");
     const [text, setText] = useState("");
     const [openAt, setOpenAt] = useState("2025-12-31");
+
     const { handle } = useParams();
     const location = useLocation();
     const state = location.state || {};
@@ -42,7 +42,7 @@ export default function ComposeForm() {
         qsTo === "me" ||
         rawName === "나" ||
         rawName.toLowerCase?.() === "me";
-    const recipientName = isSelf ? "나" : (rawName || "나");
+    const recipientName = isSelf ? "나" : rawName || "나";
 
     // ===== 헤더 메타 =====
     const meta = useMemo(() => {
@@ -89,21 +89,59 @@ export default function ComposeForm() {
     const removeAt = (idx) =>
         setFiles((prev) => prev.filter((_, i) => i !== idx));
 
-    // ===== 봉인 로직 (이미지 useState 밑에 위치) =====
-    const onSeal = () => {
-        if (!text) {
-            alert("편지 내용을 모두 입력해주세요!")
-            return
+    // ===== 봉인 로직 =====
+    const onSeal = async () => {
+        if (!text.trim()) {
+            toast("편지내용을 입력해주세요", "error");
+            return;
         }
 
-        axios.post('https://zihyuniz.shop/letters',{})
-            .then((res) => {
-                console.log(res.status)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+        try {
+            // 스웨거 스펙에 맞는 JSON 구조로 변경
+            const requestBody = {
+                sender: {
+                    id: 1, // TODO: 실제 로그인한 사용자 ID로 변경 필요
+                    nickname: "", // TODO: 실제 사용자 닉네임으로 변경
+                    profile_image: null
+                },
+                receiver: isSelf ? null : {
+                    id: 2, // TODO: 실제 receiver_id로 변경 필요
+                    nickname: "", // TODO: 실제 receiver 닉네임으로 변경
+                    profile_image: null
+                },
+                font_style: fontKey.toUpperCase(), // "BASIC", "DUNGGEUN" 등
+                paper_theme: paper.toUpperCase(), // "WHITE", "LAVENDER" 등
+                content: text,
+                open_at: `${openAt}T00:00:00.000Z`, // ISO 형식으로 변환
+                image1: null, // TODO: 이미지 업로드 구현 필요
+                image2: null,
+                image3: null,
+                is_open: false,
+                is_self_letter: isSelf,
+                created_at: new Date().toISOString()
+            };
 
+            // letters.js의 createLetter 함수 사용
+            const receiverId = isSelf ? null : 2; // TODO: 실제 receiver_id로 변경
+            const res = await createLetter(requestBody, receiverId);
+
+            console.log("서버 응답:", res.data);
+            
+            if (isSelf) {
+                toast("나에게 쓴 편지가 성공적으로 봉인되었어요! 📮", "success");
+            } else {
+                toast(`${recipientName}님에게 편지가 성공적으로 전송되었어요! ✉️`, "success");
+            }
+
+            // 수신함으로 이동 + 보낸편 탭 포커스
+            nav("/mailbox", {
+                replace: true,
+                state: { toast: "편지를 봉인했어요 ✉️", focus: "sent" },
+            });
+        } catch (err) {
+            console.log(err);
+            toast("오류가 발생했어요 💦", "error");
+        }
     };
 
     // ===== 렌더링 =====
@@ -271,17 +309,13 @@ export default function ComposeForm() {
                 </div>
             </div>
 
-            {/* ✅ 하단 고정 “편지 봉인하기” 버튼 */}
+            {/* ✅ 하단 고정 "편지 봉인하기" 버튼 */}
             <div className="footer-fixed">
                 <div className="submit-button-area">
-                    <button
-                        type="button"
-                        className="seal-btn"
-                        aria-label="편지 봉인하기"
-                        onClick={() => { onSeal() }}
-                    >
-                        편지 봉인하기
-                    </button>
+                    <SealButton 
+                        onClick={onSeal} 
+                        disabled={!text.trim()} 
+                    />
                 </div>
             </div>
         </div>

@@ -136,5 +136,25 @@
 }
 
 .mbx-center-spacer {
-  height: 550px; /* 393x852 기준 정확히 허브 아래 + 여유 있는 위치 */
+  height: 240px; /* CenterHub와 MailboxTab 사이 적당한 간격 */
+}
+
+/* 반응형 - 작은 화면에서 스페이서 줄이기 */
+@media (max-width: 480px) {
+  .mbx-center-spacer {
+    height: 200px;
+  }
+  
+  .mailbox-screen {
+    max-width: 100%;
+    padding: 0 8px;
+  }
+  
+  .mbx-header {
+    margin-top: calc(env(safe-area-inset-top) + 56px + 24px);
+  }
+  
+  .mbx-title {
+    font-size: 18px;
+  }
 }

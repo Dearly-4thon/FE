@@ -173,7 +173,8 @@
 
 .chip {
   height: 80px;
-  width: 110px;
+  /* width: 110px; */  /* 반응형을 위해 제거 */
+  min-width: 0;  /* 그리드에서 축소 가능하도록 설정 */
   border: 1.5px solid #F0D5CC;
   border-radius: 16px;
   background: #FFF;
@@ -370,7 +371,7 @@
   position: static;
   /* ← 고정 해제 */
   width: 100%;
-  max-width: var(--app-width, 393px);
+  /* max-width 제거로 반응형 허용 */
   margin: 24px auto 16px;
   padding: 0 24px;
   background: transparent;

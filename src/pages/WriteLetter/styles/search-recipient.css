@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap");
 
 :root{
-  --app-width: 393px;
+  --app-width: 100%;  /* 393px → 100% 반응형으로 변경 */
   --navbar-height: 78px; /* 프로젝트에서 쓰는 값과 맞춤 */
   --paper: #FFF7ED;
   --peach-50: #FFFBF8;
@@ -11,10 +11,10 @@
   --card-stroke: #F0D5CC;
 }
 
-/* 화면 컨테이너 (앱 폭 고정 + 스크롤) */
+/* 화면 컨테이너 (반응형 + 스크롤) */
 .rcp-screen{
   position: relative;
-  width: var(--app-width);
+  width: 100%;  /* var(--app-width) → 100% 반응형으로 변경 */
   margin: 0 auto;
   min-height: 100vh;
   background: linear-gradient(180deg, #FFFEF5 0%, #FFF9E8 100%);

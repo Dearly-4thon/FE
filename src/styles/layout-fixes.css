@@ -25,7 +25,7 @@ html, body, #root { height: 100%; margin: 0; }
 }
 
 /* 네비와 콘텐츠가 시각적으로 붙도록 허용(겹침 가능) */
-.navbar {
+/* .navbar {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
@@ -35,7 +35,7 @@ html, body, #root { height: 100%; margin: 0; }
   border-radius: 12px 12px 0 0;
   z-index: 1000;
   pointer-events: auto;
-}
+} */
 
 /* 오버레이 레이어가 클릭을 막지 않도록 기본 차단 */
 .app-scroll .wl-screen,

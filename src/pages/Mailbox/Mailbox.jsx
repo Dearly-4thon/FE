@@ -1,11 +1,10 @@
 // src/pages/Mailbox/Mailbox.jsx
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import Header from "../../components/Header.jsx"; // Header 추가
 
 import MailboxHeader from "./components/MailboxHeader.jsx";
 import MailboxTab from "./components/MailboxTab.jsx";
-import ReceivedLetters from "./components/ReceivedLetters.jsx";
-import SentLetters from "./components/SentLetters.jsx";
 import CenterHub from "./components/CenterHub.jsx";
 
 import "./styles/Mailbox.css";
@@ -15,7 +14,6 @@ export default function Mailbox() {
   const navigate = useNavigate();
 
   const [toast, setToast] = useState(null);
-  const [tab, setTab] = useState(state?.focus ?? "received"); // 'received' | 'sent'
 
   useEffect(() => {
     if (state?.toast) {
@@ -46,7 +44,7 @@ export default function Mailbox() {
     const name = friend?.name ?? String(friend?.id ?? "");
     const slug = encodeURIComponent(id);
 
-    navigate(`/mailbox/me`, {
+    navigate(`/mailbox/${friend.id}`, {
       state: {
         recipientId: id,
         recipientName: name,
@@ -59,6 +57,7 @@ export default function Mailbox() {
   return (
     // 💛 PWA 393짜리 전체 배경용 래퍼
     <div className="mailbox-page">
+      <Header title="수신함" />
       <div
         className="mailbox-screen"
         style={{
@@ -94,11 +93,8 @@ export default function Mailbox() {
         {/* 허브 아래로 리스트를 밀어주는 스페이서 */}
         <div aria-hidden className="mbx-center-spacer" />
 
-        {/* 탭 */}
-        <MailboxTab tab={tab} setTab={setTab} />
-
-        {/* 리스트 (메인 수신함) */}
-        {tab === "received" ? <ReceivedLetters /> : <SentLetters />}
+        {/* 탭과 편지 목록 (통합) */}
+        <MailboxTab />
 
         {/* 하단 네비 여백 */}
         <div aria-hidden style={{ height: "var(--navbar-height, 78px)" }} />

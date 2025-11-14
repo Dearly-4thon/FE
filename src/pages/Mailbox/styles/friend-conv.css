@@ -1,5 +1,5 @@
 .fc-page {
-  max-width: var(--app-width, 393px);
+  /* max-width: var(--app-width, 393px); */  /* 반응형을 위해 제거 */
   margin: 0 auto;
 
   /* 💛 여기 색상을 변경! */
@@ -112,7 +112,7 @@
   align-items: center;
   justify-content: center;
   flex: 1 0 0;          /* 두 탭이 같은 넓이 */
-  padding: 8px 12px;    /* 기본 패딩 (활성일 때 덮어씀) */
+  padding: 8px 30px;    /* 기본 패딩 (활성일 때 덮어씀) */
 
   color: #9B8579;
   font-family: "Noto Sans KR";
@@ -129,7 +129,7 @@
 /* 활성 탭 (친구 → 나 또는 나 → 친구) */
 .fc-tab--active {
   display: flex;
-  padding: 5.996px 52.717px 9.998px 11.995px; /* ← 네가 준 값 그대로 */
+  padding: 5.996px 52.717px 9.998px 11.995px;
   align-items: center;
   flex: 1 0 0;
 

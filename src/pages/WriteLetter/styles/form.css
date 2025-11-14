@@ -13,7 +13,7 @@
 
 .wl-form {
     width: 100%;
-    max-width: 500px;
+    /* max-width: 500px; */  /* 반응형을 위해 제거 */
     margin: 8px auto 40px;
     padding: 0 16px;
 }

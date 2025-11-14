@@ -1,7 +1,7 @@
 /* src/pages/Mailbox/styles/sent-to-me.css */
 
 .stm-container {
-  max-width: 393px;
+  /* max-width: 393px; */  /* 반응형을 위해 제거 */
   margin: 0 auto;
   background: #fff9ec;
   min-height: calc(

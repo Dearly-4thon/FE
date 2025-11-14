@@ -9,29 +9,14 @@ import sendSvg from "../../../assets/send.svg";   // 나 → 친구
 import "../styles/friend-conv.css";
 
 export default function FriendConversation() {
+    const { friends } = useParams();
     const location = useLocation();
-    const state = location.state ?? null;
-    const params = useParams();
     const navigate = useNavigate();
 
-    // ===== 1) 라우트에서 넘어오는 id (파라미터 이름이 무엇이든 대응) =====
-    let routeId = null;
-    if (params && typeof params === "object") {
-        if (typeof params.id === "string") {
-            routeId = params.id;
-        } else if (typeof params.friendId === "string") {
-            routeId = params.friendId;
-        } else if (typeof params.userId === "string") {
-            routeId = params.userId;
-        } else if (typeof params.targetId === "string") {
-            routeId = params.targetId;
-        } else {
-            const values = Object.values(params);
-            if (values.length > 0) {
-                routeId = values[0];
-            }
-        }
-    }
+    const state = location.state ?? null;
+
+    // ===== 1) 라우트에서 넘어오는 id =====
+    const routeId = friends; // "/mailbox/:friends" 에서 온 값 (문자열)
 
     // ===== 2) CircleStage / CenterHub랑 맞춰둔 더미 데이터 =====
     const DUMMY = [
@@ -49,7 +34,7 @@ export default function FriendConversation() {
     let friendName = null;
 
     // 3-0. 나 자신(가운데 카드)인 경우
-    if (routeId === "me" || String(routeId) === "0") {
+    if (routeId === "me" || routeId === "0") {
         friendName = "나";
     }
 
@@ -59,6 +44,7 @@ export default function FriendConversation() {
             friendName = state;
         } else if (typeof state === "object") {
             friendName =
+                state.recipientName ??
                 state.name ??
                 state.friendName ??
                 state.nickname ??
@@ -68,14 +54,16 @@ export default function FriendConversation() {
         }
     }
 
-    // 3-2. state에 이름이 없으면 :id 로 더미에서 검색
+    // 3-2. state에 이름이 없으면 :friends 로 더미에서 검색
     if (!friendName && routeId != null) {
-        const found = DUMMY.find((f) => String(f.id) === String(routeId));
+        const found = DUMMY.find(
+            (f) => String(f.id) === String(routeId) || f.name === routeId
+        );
         if (found) friendName = found.name;
     }
 
-    // 3-3. 그래도 없으면 마지막으로 "친구" 사용
-    if (!friendName) friendName = params.friends;
+    // 3-3. 그래도 없으면 기본값
+    if (!friendName) friendName = routeId;
 
     // ===== 4) 탭 상태 =====
     const [tab, setTab] = useState("from"); // "from" = 친구 → 나, "to" = 나 → 친구
@@ -101,7 +89,7 @@ export default function FriendConversation() {
     const isEmpty = (tab === "from" ? fromCount : toCount) === 0;
 
     const handleBack = () => {
-        navigate('/mailbox');
+        navigate("/mailbox");
     };
 
     const handleWrite = () => {
@@ -113,13 +101,6 @@ export default function FriendConversation() {
                         : { id: routeId, name: friendName },
             },
         });
-    };
-
-    // 편지 카드 더미 (아직 진짜 데이터 없을 때 모양용)
-    const sampleCard = {
-        dday: 48,
-        openAt: "2025. 12. 31.",
-        locked: true,
     };
 
     const cards = tab === "from" ? fromLetters : toLetters;
@@ -172,24 +153,24 @@ export default function FriendConversation() {
 
             {/* ===== 내용 ===== */}
             <section className="fc-body">
-                {/* 내용 영역 */}
                 {isEmpty ? (
                     <div className="mbx-empty-panel">
                         <div className="mbx-empty-icon-wrap">
-                            {/* <Mail className="mbx-empty-icon" size={32} /> */}
+                            {/* <img src={mailSvg} alt="" /> 같은 아이콘 넣어도 됨 */}
                         </div>
                         <p className="mbx-empty-main">
-                            아직 {tab === "inbox" ? "받은 편지가" : "보낸 편지가"} 없어요.
+                            {tab === "from"
+                                ? `아직 ${friendName}님이 보낸 편지가 없어요.`
+                                : `아직 ${friendName}님에게 보낸 편지가 없어요.`}
                         </p>
                         <p className="mbx-empty-sub">
                             친구들과 편지방을 만들어보세요!
                         </p>
                     </div>
                 ) : (
-                    /* ✅ 여기서부터 카드 그리드 */
                     <div className="mbx-mail-grid-wrap">
                         <ul className="mbx-mail-grid">
-                            {list.map((item) => (
+                            {cards.map((item) => (
                                 <li key={item.id} className="mbx-mail-card">
                                     <div className="mbx-mail-card-inner">
                                         <div className="mbx-mail-card-top">

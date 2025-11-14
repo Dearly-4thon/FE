@@ -6,7 +6,7 @@
   top:244.67px;
   left:50%;
   transform:translateX(-50%);
-  width:360px; height:360px;
+  width: min(360px, 90vw); height: min(360px, 90vw); /* 반영형으로 변경 */
   margin:0 auto;
   /* 중앙 얕은 노란 라디얼 */
   background: radial-gradient(120px 120px at 50% 50%, rgba(255,244,204,.55), rgba(0,0,0,0) 60%);

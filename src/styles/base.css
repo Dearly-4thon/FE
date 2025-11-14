@@ -67,7 +67,7 @@ html, body {
 }
 
 /* ===== 하단 네비 ===== */
-.navbar {
+/* .navbar {
   position: fixed;
   bottom: 0;
   left: 50%;
@@ -82,7 +82,7 @@ html, body {
   grid-auto-columns: 1fr;
   align-items: center;
   z-index: 50;
-}
+} */
 
 /* ===== 네비 아이템 ===== */
 .nav-item {

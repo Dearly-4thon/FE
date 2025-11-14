@@ -1,0 +1,94 @@
+/* 받은편지 목록 스타일 */
+.received-loading, .received-error {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
+
+.received-error {
+  color: #e74c3c;
+}
+
+.received-list {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.letter-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f0f0f0;
+}
+
+.letter-card.locked {
+  background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+  border-color: #e0e6ff;
+}
+
+.letter-card.opened {
+  background: white;
+}
+
+.locked-content, .opened-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lock-header, .letter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sender-info, .sender-name {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.d-day {
+  background: #ff6b6b;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.lock-icon-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 0;
+  font-size: 24px;
+}
+
+.open-date {
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+}
+
+.letter-preview {
+  margin-top: 8px;
+}
+
+.letter-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 4px 0;
+}
+
+.letter-excerpt {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  line-height: 1.4;
+}

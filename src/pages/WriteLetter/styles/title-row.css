@@ -3,8 +3,8 @@
 =========================== */
 .wl-screen {
   position: relative;
-  width: 393px;
-  height: 852px;
+  width: 100%;  /* 393px → 100% 반응형으로 변경 */
+  min-height: 100vh;  /* height: 852px → min-height: 100vh로 변경 */
   margin: 0 auto;
   background: linear-gradient(180deg, #f3f8ff 0%, #eaf3ff 100%);
   overflow: hidden;
@@ -22,7 +22,7 @@
   align-items: center;
   justify-content: flex-start;             /* ← 좌정렬 */
   width: 100%;
-  max-width: 393px;
+  /* max-width: 393px; */  /* 반응형을 위해 제거 */
   padding: 0 24px;                         /* 좌/우 24px */
   box-sizing: border-box;                  /* ← 패딩 포함 (튀는 원인 차단) */
   z-index: 10;

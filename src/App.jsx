@@ -17,6 +17,16 @@ import LetterRoomCreate from "./pages/LetterRoomCreate/LetterRoomCreate.jsx";
 import LetterRoomOpen from "./pages/LetterRoom/LetterRoomOpen.jsx";
 import LetterRoomLocked from "./pages/LetterRoom/LetterRoomLocked.jsx";
 
+// 편지쓰기/수신함 추가
+import WriteLetterForm from "./pages/WriteLetter/WriteLetterForm.jsx";
+import ComposeForm from "./pages/WriteLetter/components/ComposeForm.jsx";
+import SearchRecipient from "./pages/WriteLetter/components/SearchRecipient.jsx";
+import MailboxTabs from "./pages/Mailbox/components/MailboxTab.jsx";
+import CenterHub from "./pages/Mailbox/components/CenterHub.jsx";
+import FriendConversation from "./pages/Mailbox/components/FriendConversation.jsx";
+import SentToMePage from "./pages/Mailbox/components/SentTomePage.jsx";
+import Mailbox from "./pages/Mailbox/Mailbox.jsx";
+
 // 로그인 페이지
 import Login from "./pages/Login/Login.jsx";
 import KakaoCallback from "./pages/SignUp/KakaoCallback.jsx";
@@ -158,6 +168,52 @@ function NotificationsPage() {
   );
 }
 
+// 편지쓰기/수신함 어댑터들
+function WriteLetterPage() {
+  return (
+    <>
+      <WriteLetterForm />
+      <Navbar currentPage="write" />
+    </>
+  );
+}
+
+function ComposeFormPage() {
+  return (
+    <>
+      <ComposeForm />
+      <Navbar currentPage="write" />
+    </>
+  );
+}
+
+function SearchRecipientPage() {
+  return (
+    <>
+      <SearchRecipient />
+      <Navbar currentPage="write" />
+    </>
+  );
+}
+
+function MailboxPage() {
+  return (
+    <>
+      <Mailbox />
+      <Navbar currentPage="mailbox" />
+    </>
+  );
+}
+
+function FriendConversationPage() {
+  return (
+    <>
+      <FriendConversation />
+      <Navbar currentPage="mailbox" />
+    </>
+  );
+}
+
 // 편지방 어댑터들
 function LetterRoomPage() {
   return (
@@ -200,25 +256,36 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/auth/kakao/callback" element={<KakaoCallback />} />
 
-      {/* 보호 라우트: 토큰 없으면 /login으로 */}
-      <Route element={<RequireAuth />}>
-        {/* 편지방 */}
-        <Route path="/letters" element={<LetterRoomPage />} />
-        <Route path="/letterroom/create" element={<LetterRoomCreatePage />} />
-        <Route path="/letterroom/open/:id" element={<LetterRoomOpenPage />} />
-        <Route path="/letterroom/locked/:id" element={<LetterRoomLockedPage />} />
+      {/* 보호 라우트: 토큰 없으면 /login으로 - 임시 우회 */}
+      {/* <Route element={<RequireAuth />}> */}
+      
+      {/* 편지방 */}
+      <Route path="/letters" element={<LetterRoomPage />} />
+      <Route path="/letterroom/create" element={<LetterRoomCreatePage />} />
+      <Route path="/letterroom/open/:id" element={<LetterRoomOpenPage />} />
+      <Route path="/letterroom/locked/:id" element={<LetterRoomLockedPage />} />
 
-        {/* 마이페이지 */}
-        <Route path="/mypage" element={<ProfilePage />} />
-        <Route path="/edit-profile" element={<EditProfilePage />} />
-        <Route path="/friends" element={<FriendManagementPage />} />
-        <Route path="/friends/:friendId" element={<FriendDetailPage />} />
+      {/* 마이페이지 */}
+      <Route path="/mypage" element={<ProfilePage />} />
+      <Route path="/edit-profile" element={<EditProfilePage />} />
+      <Route path="/friends" element={<FriendManagementPage />} />
+      <Route path="/friends/:friendId" element={<FriendDetailPage />} />
 
-        {/* 공지/알림 */}
-        <Route path="/notices" element={<NoticesPage />} />
-        <Route path="/notices/:noticeId" element={<NoticeDetailPage />} />
-        <Route path="/notifications" element={<NotificationsPage />} />
-      </Route>
+      {/* 공지/알림 */}
+      <Route path="/notices" element={<NoticesPage />} />
+      <Route path="/notices/:noticeId" element={<NoticeDetailPage />} />
+      <Route path="/notifications" element={<NotificationsPage />} />
+
+      {/* 편지쓰기/수신함 라우팅 추가 */}
+      <Route path="/write" element={<WriteLetterPage />} />
+      <Route path="/write/compose/:handle" element={<ComposeFormPage />} />
+      <Route path="/write/search" element={<SearchRecipientPage />} />
+      <Route path="/write/compose" element={<ComposeFormPage />} />
+      <Route path="/mailbox" element={<MailboxPage />} />
+      <Route path="/mailbox/:friends" element={<FriendConversationPage />} />
+      <Route path="/mailbox/me" element={<SentToMePage />} />
+      
+      {/* </Route> */}
 
       {/* 없는 경로는 기본으로 */}
       <Route path="*" element={<Navigate to="/letters" replace />} />
