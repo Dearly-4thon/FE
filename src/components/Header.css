@@ -11,15 +11,30 @@
   box-shadow: 0 2px 8px rgba(255, 200, 0, 0.2);
 }
 
-/* 안쪽 정렬용 래퍼 */
+/* 안쪽 정렬용 래퍼 - 반응형 개선 */
 .dearly-header-inner {
-  max-width: 480px;
+  max-width: 393px; /* 모바일 기본 */
   margin: 0 auto;
   height: 100%;
   padding: 0 16px 0 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+/* 반응형 헤더 */
+@media (min-width: 768px) {
+  .dearly-header-inner {
+    max-width: 600px;
+    padding: 0 24px 0 16px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .dearly-header-inner {
+    max-width: 800px;
+    padding: 0 40px 0 24px;
+  }
 }
 
 /* 왼쪽 로고 영역 */

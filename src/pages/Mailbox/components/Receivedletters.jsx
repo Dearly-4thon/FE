@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getInbox } from "../../../api/mailbox";
 import EmptyReceivedMessage from './EmptyReceivedMessage';
+import { getCurrentUserNickname } from "../../../utils/userInfo.js";
 import '../styles/received-letters.css'; // 받은편지 전용 CSS
 
 const ReceivedLetters = () => {
@@ -105,13 +106,13 @@ const ReceivedLetters = () => {
             <button className="modal-close-btn" onClick={closeModal}>×</button>
             
             <div className="modal-header">
-              <h2 className="modal-title">디어리의 편지</h2>
+              <h2 className="modal-title">{getCurrentUserNickname()}의 편지</h2>
             </div>
             
             <div className="modal-content">
               <div className="letter-paper">
                 <div className="paper-header">
-                  <span className="paper-sender">디어리</span>
+                  <span className="paper-sender">{getCurrentUserNickname()}</span>
                   <span className="paper-date">2025. 1. 8.</span>
                 </div>
                 <div className="paper-divider"></div>

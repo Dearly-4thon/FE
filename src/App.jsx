@@ -2,6 +2,8 @@
 import { Routes, Route, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import "./components/Navbar.css";
+import "./styles/global.css";
+
 
 import Profile from "./pages/Mypage/Profile";
 import EditProfile from "./pages/Mypage/EditProfile";
@@ -16,6 +18,7 @@ import LetterRoom from "./pages/LetterRoom/LetterRoom.jsx";
 import LetterRoomCreate from "./pages/LetterRoomCreate/LetterRoomCreate.jsx";
 import LetterRoomOpen from "./pages/LetterRoom/LetterRoomOpen.jsx";
 import LetterRoomLocked from "./pages/LetterRoom/LetterRoomLocked.jsx";
+import LetterRoomWrite from "./pages/LetterRoom/LetterRoomWrite.jsx";
 
 // 편지쓰기/수신함 추가
 import WriteLetterForm from "./pages/WriteLetter/WriteLetterForm.jsx";
@@ -258,12 +261,13 @@ export default function App() {
 
       {/* 보호 라우트: 토큰 없으면 /login으로 - 임시 우회 */}
       {/* <Route element={<RequireAuth />}> */}
-      
+
       {/* 편지방 */}
       <Route path="/letters" element={<LetterRoomPage />} />
       <Route path="/letterroom/create" element={<LetterRoomCreatePage />} />
       <Route path="/letterroom/open/:id" element={<LetterRoomOpenPage />} />
       <Route path="/letterroom/locked/:id" element={<LetterRoomLockedPage />} />
+      <Route path="/letterroom/:id/write" element={<LetterRoomWrite />} />
 
       {/* 마이페이지 */}
       <Route path="/mypage" element={<ProfilePage />} />
@@ -282,9 +286,14 @@ export default function App() {
       <Route path="/write/search" element={<SearchRecipientPage />} />
       <Route path="/write/compose" element={<ComposeFormPage />} />
       <Route path="/mailbox" element={<MailboxPage />} />
+      <Route path="/mailbox/me" element={
+        <>
+          <SentToMePage />
+          <Navbar currentPage="mailbox" />
+        </>
+      } />
       <Route path="/mailbox/:friends" element={<FriendConversationPage />} />
-      <Route path="/mailbox/me" element={<SentToMePage />} />
-      
+
       {/* </Route> */}
 
       {/* 없는 경로는 기본으로 */}

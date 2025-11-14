@@ -298,12 +298,12 @@ export default function LetterRoomOpen() {
       </div>
 
       <button 
-        className="floating-btn" 
+        className="floating-btn"
         onClick={() => navigate(`/letterroom/${id}/write`)}
-        aria-label="편지 작성하기"
       >
         +
       </button>
+
 
       {/* 편지 모달 */}
       {selectedLetter && (

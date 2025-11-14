@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import profileSvg from "../../../assets/profile.svg";
+import { getCurrentUserNickname } from "../../../utils/userInfo.js";
 import "./styles/center-hub.css";
 
 export default function CenterHub({
@@ -7,7 +8,7 @@ export default function CenterHub({
   demo = true,
   onSelectSelf,
   onSelectFriend,
-  top = 244.67,
+  top = 40, // 기본값을 40px로 조정하여 겹침 방지
 }) {
   const DUMMY = [
     { id: 1, name: "조대현" },
@@ -103,7 +104,7 @@ export default function CenterHub({
             <img src={profileSvg} alt="나" className="wl-me-img" />
           </div>
         </div>
-        <div className="wl-name">디어리</div>
+        <div className="wl-name">{getCurrentUserNickname()}</div>
       </button>
 
       {/* 친구 카드 */}

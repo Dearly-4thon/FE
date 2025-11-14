@@ -108,7 +108,7 @@ export default function Notifications({ onNavigate, onBack }) {
     // 이미 읽은 알림이어도 API는 한 번 더 보내도 상관 없음
     if (!notification.isRead) {
       const { ok } = await markNotificationRead(notification.id);
-      if (오케이) {
+      if (ok) {
         // 로컬 상태 업데이트 (읽음 표시)
         setNotifications((prev) =>
           prev.map((n) =>

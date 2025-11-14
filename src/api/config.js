@@ -1,7 +1,5 @@
-// src/api/config.js
 export const API_BASE_URL = 'https://zihyuniz.shop';
 
-// CORS 설정을 위한 기본 헤더
 export const DEFAULT_HEADERS = {
   'Content-Type': 'application/json',
   'Accept': 'application/json',
@@ -28,7 +26,7 @@ export const API_ENDPOINTS = {
   }
 };
 
-// 레거시 지원
-export const BASE_URL = API_BASE_URL;
-export const API_PREFIX = "/api";
+// src/api/config.js
+export const BASE_URL = "https://zihyuniz.shop";
+export const API_PREFIX = ""; // 지금은 /api 없음
 export const API_BASE = `${BASE_URL}${API_PREFIX}`;

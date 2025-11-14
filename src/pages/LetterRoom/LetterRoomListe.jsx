@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import "./LetterRoom.css";
+import "import "./LetterRoomCard.css";
+import { getCurrentUserNickname } from "../../utils/userInfo.js";";
 
 export default function LetterRoomListe() {
   const navigate = useNavigate();
@@ -20,8 +21,8 @@ export default function LetterRoomListe() {
         className="wl-center"
         role="button"
         tabIndex={0}
-        onClick={(e) => openComposeFor(e, { id: "me", name: "디어리" })}
-        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") openComposeFor(e, { id: "me", name: "디어리" }); }}
+        onClick={(e) => openComposeFor(e, { id: "me", name: getCurrentUserNickname() })}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") openComposeFor(e, { id: "me", name: getCurrentUserNickname() }); }}
       >
         {/* 카드 내용 */}
       </div>

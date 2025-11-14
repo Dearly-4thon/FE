@@ -1,6 +1,7 @@
 // src/components/mypage/ProfileCard.jsx
 import './Mypage.css';
 import userIcon from '../../assets/icons/user.svg';
+import { getCurrentUserNickname } from '../../utils/userInfo.js';
 
 export default function ProfileCard({ user, onEditProfile, onFriendManage }) {
   return (
@@ -22,7 +23,7 @@ export default function ProfileCard({ user, onEditProfile, onFriendManage }) {
         )}
       </div>
 
-      <h1 className="profile-name">{user?.displayName || '디어리'}</h1>
+      <h1 className="profile-name">{user?.displayName || getCurrentUserNickname()}</h1>
       <p className="profile-username">@{user?.username || 'myusername'}</p>
 
       <button onClick={onEditProfile} className="profile-btn">

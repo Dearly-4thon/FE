@@ -69,18 +69,57 @@ export default function MailboxTab() {
         console.log('현재 사용자 ID:', currentUserId);
         console.log('메일박스 데이터:', mailboxData);
         
+        // 편지 데이터 정규화 (배열 또는 객체 모두 처리)
+        let lettersArray = [];
+        if (mailboxData.letters) {
+          if (Array.isArray(mailboxData.letters)) {
+            lettersArray = mailboxData.letters;
+          } else {
+            lettersArray = Object.values(mailboxData.letters);
+          }
+        }
+        
+        console.log('정규화된 편지 배열:', lettersArray);
+        
         // 받은편지: 현재 사용자가 receiver인 편지들
-        const inboxLetters = Object.values(mailboxData.letters || {}).filter(letter => 
-          letter.receiverId === currentUserId || letter.receiverId === parseInt(currentUserId)
-        );
+        const inboxLetters = lettersArray.filter(letter => {
+          const currentUserIdNum = parseInt(currentUserId, 10);
+          const letterReceiverIdNum = parseInt(letter.receiverId || letter.receiver_id, 10);
+          
+          const match = letterReceiverIdNum === currentUserIdNum;
+          
+          console.log(`📬 편지 ${letter.id} 받은편지 필터링:`, {
+            letterReceiverId: letter.receiverId,
+            letterReceiver_id: letter.receiver_id,
+            letterReceiverIdNum: letterReceiverIdNum,
+            currentUserId: currentUserId,
+            currentUserIdNum: currentUserIdNum,
+            match: match
+          });
+          return match;
+        });
         
         // 보낸편지: 현재 사용자가 sender인 편지들
-        const sentLetters = Object.values(mailboxData.letters || {}).filter(letter => 
-          letter.senderId === currentUserId || letter.senderId === parseInt(currentUserId)
-        );
+        const sentLetters = lettersArray.filter(letter => {
+          const currentUserIdNum = parseInt(currentUserId, 10);
+          const letterSenderIdNum = parseInt(letter.senderId || letter.sender_id, 10);
+          
+          const match = letterSenderIdNum === currentUserIdNum;
+          
+          console.log(`📧 편지 ${letter.id} 보낸편지 필터링:`, {
+            letterSenderId: letter.senderId,
+            letterSender_id: letter.sender_id,
+            letterSenderIdNum: letterSenderIdNum,
+            currentUserId: currentUserId,
+            currentUserIdNum: currentUserIdNum,
+            match: match
+          });
+          return match;
+        });
         
-        console.log('받은편지:', inboxLetters);
-        console.log('보낸편지:', sentLetters);
+        console.log('📬 받은편지 총', inboxLetters.length, '개:', inboxLetters);
+        console.log('📧 보낸편지 총', sentLetters.length, '개:', sentLetters);
+        console.log('💾 localStorage 전체 편지 수:', lettersArray.length);
         
         setInbox(inboxLetters);
         setSent(sentLetters);

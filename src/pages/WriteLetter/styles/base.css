@@ -36,11 +36,10 @@
   z-index: 50;
 }
 
-/* ▼ FAB: 앱 컨테이너 기준 위치 (편지방과 동일) */
+/* ▼ FAB: 반응형 위치 조정 */
 .wl-fab{
   position: fixed;
   bottom: calc(var(--navbar-height) + var(--fab-gap-above-navbar));
-  right: calc(50% - var(--app-width)/2 + var(--fab-right));
   width: var(--fab-size); height: var(--fab-size);
   border: none; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
@@ -51,7 +50,14 @@
 }
 .wl-fab:active{ transform: scale(.98); }
 
-/* 모바일에서는 기존 방식 유지 */
+/* 데스크톱/태블릿: 중앙 정렬된 앱 영역 내에서 오른쪽 하단 */
+@media (min-width: 768px) {
+  .wl-fab {
+    right: calc(50% - var(--app-width)/2 + var(--fab-right));
+  }
+}
+
+/* 모바일: 화면 오른쪽 하단 */
 @media (max-width: 767px) {
   .wl-screen {
     display: block;

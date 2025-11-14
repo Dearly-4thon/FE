@@ -100,7 +100,7 @@
   }
 }
 
-/* �뺣젹 (理쒖떊,�ㅻ옒�쒖닚) */
+/* �뺣젹 (理쒖떊,�ㅻ옒�쒖닚) */
 .letterroom-right {
   position: relative;
 }
@@ -189,17 +189,25 @@
 }
 
 .bottom-modal {
+  position: fixed;                 
+  left: 50%;
+  transform: translateX(-50%);     
+
+  /* iOS 홈 인디케이터 + 네비 높이만큼 위에 붙이기 */
+  bottom: calc(var(--safe-bottom) + var(--navbar-height));
+
   background: #ffffff;
   border-radius: 24px 24px 0 0;
 
   width: 100%;
-  max-width: 393px;
-  margin: 0 auto;
+  max-width: var(--app-width, 393px);
 
   padding: 20px 24px;
-  box-shadow: 0 -4px 16px rgba(0,0,0,0.15);
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
   animation: slideUp 0.25s ease;
+  z-index: 9999;
 }
+
 
 
 

@@ -1,19 +1,20 @@
 // src/pages/Mypage/EditProfile.jsx
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Header from '../../components/Header';
-import { currentUser } from '../../utils/mockData';
 import '../../components/mypage/EditProfile.css';
 
 import userIcon from '../../assets/icons/user.svg';
 import pencilIcon from '../../assets/icons/pencil.svg';
+import { fetchMyProfile, updateMyProfile } from '../../api/users';
 
 export default function EditProfile({ onNavigate, onBack }) {
   const [profileImage, setProfileImage] = useState(() => {
     return localStorage.getItem('userProfileImage');
   });
-  const [displayName, setDisplayName] = useState(currentUser.displayName);
-  const [birthday, setBirthday] = useState(currentUser.birthday || '');
-  const [phoneNumber, setPhoneNumber] = useState('010-1234-5678');
+
+  const [displayName, setDisplayName] = useState('');
+  const [username, setUsername] = useState(''); // 아이디 표시용
+
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -21,10 +22,28 @@ export default function EditProfile({ onNavigate, onBack }) {
 
   const fileInputRef = useRef(null);
 
+  // 처음 들어올 때 내 프로필 정보 불러오기
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const { ok, data } = await fetchMyProfile();
+
+        if (오케이) {
+          setDisplayName(data.nickname ?? '');
+          setUsername(data.user_id ?? '');
+        } else {
+          console.error('프로필 조회 실패', data);
+        }
+      } catch (err) {
+        console.error('프로필 조회 중 에러', err);
+      }
+    };
+
+    loadProfile();
+  }, []);
+
   const handleProfileImageClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
+    fileInputRef.current?.click();
   };
 
   const handleImageUpload = (e) => {
@@ -44,14 +63,34 @@ export default function EditProfile({ onNavigate, onBack }) {
     reader.readAsDataURL(file);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    // 프로필 사진은 아직 로컬스토리지에만 저장 (백엔드 연동 X)
     if (profileImage) {
       localStorage.setItem('userProfileImage', profileImage);
     }
-    currentUser.displayName = displayName;
-    currentUser.birthday = birthday;
 
-    setShowSuccessModal(true);
+    try {
+      const { ok, data } = await updateMyProfile({
+        // ✅ 닉네임만 서버로 전송
+        nickname: displayName,
+      });
+
+      if (!ok) {
+        console.error('프로필 수정 실패', data);
+        alert('프로필 저장에 실패했어요. 다시 시도해 주세요 😢');
+        return;
+      }
+
+      // 비밀번호 변경은 /auth/password/change/ 연결 예정
+      if (currentPassword || newPassword || confirmPassword) {
+        alert('비밀번호 변경은 아직 API 연결 전이에요. (TODO)');
+      }
+
+      setShowSuccessModal(true);
+    } catch (err) {
+      console.error('프로필 수정 중 에러', err);
+      alert('프로필 저장 중 문제가 생겼어요 😢');
+    }
   };
 
   const handleModalClose = () => {
@@ -123,7 +162,7 @@ export default function EditProfile({ onNavigate, onBack }) {
           </div>
         </section>
 
-        {/* 닉네임 + 생일 카드 */}
+        {/* 닉네임 카드 */}
         <section className="edit-card">
           <div className="edit-field">
             <label htmlFor="displayName" className="edit-field-label">
@@ -141,98 +180,11 @@ export default function EditProfile({ onNavigate, onBack }) {
               {displayName.length}/20자
             </div>
           </div>
-
-          <div className="edit-field">
-            <label htmlFor="birthday" className="edit-field-label">
-              생일
-            </label>
-            <input
-              id="birthday"
-              className="edit-input"
-              value={birthday}
-              onChange={(e) => setBirthday(e.target.value)}
-              placeholder="2005.04.02"
-              maxLength={10}
-            />
-            <div className="edit-field-hint">
-              YYYY.MM.DD 형식으로 입력해주세요
-            </div>
-          </div>
-        </section>
-
-        {/* 휴대폰 번호 카드 */}
-        <section className="edit-card">
-          <div className="edit-field">
-            <label htmlFor="phoneNumber" className="edit-field-label">
-              휴대폰 번호
-            </label>
-            <input
-              id="phoneNumber"
-              className="edit-input"
-              type="tel"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              placeholder="010-0000-0000"
-            />
-          </div>
-        </section>
-
-        {/* 비밀번호 변경 카드 */}
-        <section className="edit-card">
-          <p className="edit-section-label">비밀번호 변경</p>
-
-          <div className="edit-field">
-            <label
-              htmlFor="currentPassword"
-              className="edit-field-sub-label"
-            >
-              현재 비밀번호
-            </label>
-            <input
-              id="currentPassword"
-              className="edit-input"
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="현재 비밀번호를 입력하세요"
-            />
-          </div>
-
-          <div className="edit-field">
-            <label htmlFor="newPassword" className="edit-field-sub-label">
-              새 비밀번호
-            </label>
-            <input
-              id="newPassword"
-              className="edit-input"
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="새 비밀번호를 입력하세요"
-            />
-          </div>
-
-          <div className="edit-field">
-            <label
-              htmlFor="confirmPassword"
-              className="edit-field-sub-label"
-            >
-              새 비밀번호 확인
-            </label>
-            <input
-              id="confirmPassword"
-              className="edit-input"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="새 비밀번호를 다시 입력하세요"
-            />
-          </div>
         </section>
 
         {/* 아이디 안내 박스 */}
         <section className="edit-info-box">
-          아이디 <span className="edit-info-strong">@{currentUser.username}</span>
+          아이디 <span className="edit-info-strong">@{username}</span>
           는 변경할 수 없어요
         </section>
 

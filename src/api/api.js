@@ -1,11 +1,11 @@
 import axios from "axios";
 import { API_BASE } from "./config";
 
-// ---- 토큰 키 ----
+console.log("💡 API_BASE = ", API_BASE);
+
 const ACCESS_KEY = "accessToken";
 const REFRESH_KEY = "refreshToken";
 
-// ---- 토큰 유틸 ----
 const stripBearer = (v = "") => v.replace(/^Bearer\s+/i, "");
 const bearify = (raw = "") => (raw ? `Bearer ${stripBearer(raw)}` : "");
 
@@ -18,17 +18,14 @@ export const setAccess = (raw = "") =>
 export const setRefresh = (raw = "") =>
   localStorage.setItem(REFRESH_KEY, stripBearer(raw));
 
-// ---- axios 인스턴스 ----
 export const api = axios.create({
   baseURL: API_BASE,
   timeout: 10000,
 });
 
-// ---- 요청 인터셉터: Access 자동 부착 ----
 api.interceptors.request.use((config) => {
   const url = String(config.url || "");
 
-  // 로그인/리프레시 요청은 토큰 제외
   if (/\/auth\/(login|refresh)\/?$/i.test(url)) return config;
 
   const access = getAccess();
@@ -39,7 +36,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// ---- 응답 인터셉터: 401 → refresh 재발급 후 재요청 ----
 let refreshing = null;
 
 api.interceptors.response.use(
@@ -76,7 +72,6 @@ api.interceptors.response.use(
   }
 );
 
-// ---- 편의 메소드 ----
 export const get = (url, cfg) => api.get(url, cfg);
 export const post = (url, body, cfg) => api.post(url, body, cfg);
 export const patch = (url, body, cfg) => api.patch(url, body, cfg);

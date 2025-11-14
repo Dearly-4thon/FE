@@ -105,7 +105,8 @@
 }
 
 .mbx-subtitle {
-  margin-top: 6px;
+  margin-top: 2px; /* 소제목과 CenterHub 간격 줄임 */
+  margin-bottom: 0; /* CenterHub와 더 가깝게 */
   color: #9B8579;
   font-size: 14px;
   line-height: 20px;
@@ -114,58 +115,79 @@
 
 /* 허브 아래 여백 - CenterHub와 MailboxTab 겹침 방지 */
 .mbx-center-spacer {
-  height: 500px; /* CenterHub 완전히 끌어내리기 위해 고정 높이 */
+  height: 420px; /* 더 큰 간격으로 겹침 완전 방지 */
 }
 
-/* 화면 전체 배경 (편지방과 동일한 반응형 구조) */
+/* 화면 전체 배경 - 완전 반응형 구조 */
 .mailbox-page {
-  width: 100%;
+  width: 100vw;
   min-height: 100vh;
   background: #FFFAEE;
-  display: flex;
-  justify-content: center;
+  overflow-x: hidden;
 }
 
-/* 앱 컨텐츠 영역 (편지방과 동일) */
+/* 앱 컨텐츠 영역 - 완전 반응형 */
 .mailbox-screen {
-  width: 393px;
-  background: inherit;
-  margin-top: 0;
-  padding: 0;
+  width: 100%;
+  min-width: 0;
+  background: #FFFAEE;
+  margin: 0;
+  padding: 0 16px;
   box-sizing: border-box;
   min-height: 100vh;
   position: relative;
 }
 
-/* 모바일에서는 전체 너비 사용 */
+/* 태블릿 화면 */  
+@media (min-width: 768px) {
+  .mailbox-page {
+    background: #FFFAEE;
+  }
+  
+  .mailbox-screen {
+    max-width: none;
+    width: 100%;
+    padding: 0 32px;
+    background: #FFFAEE;
+  }
+}
+
+/* 데스크톱 화면 */
+@media (min-width: 1024px) {
+  .mailbox-screen {
+    padding: 0 10%;
+  }
+}
+
+/* 대형 화면 */
+@media (min-width: 1440px) {
+  .mailbox-screen {
+    padding: 0 15%;
+  }
+}
+
+/* 모바일 미세 조정 */
 @media (max-width: 767px) {
   .mailbox-page {
-    display: block;
     background: #FFFAEB;
   }
   
   .mailbox-screen {
-    width: 100%;
-    padding: 0 16px;
     background: #FFFAEB;
+    padding: 0 16px;
   }
-}
-
-.mbx-center-spacer {
-  height: calc(var(--hub-size, 360px) / 2 + var(--hub-gap, 24px) + 40px);
-}
-
-/* 반응형 - 작은 화면에서 스페이서 줄이기 */
-@media (max-width: 767px) {
+  
   .mbx-center-spacer {
-    height: calc(var(--hub-size, 360px) / 2 + var(--hub-gap, 24px) + 20px);
+    height: 380px; /* 모바일에서도 더 큰 간격으로 겹침 방지 */
   }
   
   .mbx-header {
-    margin-top: calc(env(safe-area-inset-top) + 80px + 20px);
+    margin-top: calc(env(safe-area-inset-top) + 80px + 16px); /* 패딩 줄임 */
   }
   
   .mbx-title {
     font-size: 18px;
   }
 }
+
+

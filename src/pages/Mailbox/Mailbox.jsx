@@ -26,7 +26,7 @@ export default function Mailbox() {
   // ===== 배치 상수 (허브 높이 + 간격) =====
   const HUB_SIZE = 360; // CenterHub의 실제 높이(px)
   const HUB_GAP = 24;   // 허브와 탭 사이 여백(px)
-  const HUB_TOP = 160;  // 상단 기준으로 허브가 위치하는 top 값
+  const HUB_TOP = 40;   // CenterHub 위치를 더 위로 올림
 
   // ✅ 가운데 내 카드 → "나에게 보낸 편지" 화면으로 이동
   const handleSelectSelf = () => {
@@ -92,6 +92,8 @@ export default function Mailbox() {
           top={HUB_TOP}
         />
 
+
+
         {/* 허브 아래로 리스트를 밀어주는 스페이서 */}
         <div aria-hidden className="mbx-center-spacer" />
 
@@ -101,16 +103,6 @@ export default function Mailbox() {
         {/* 하단 네비 여백 */}
         <div aria-hidden style={{ height: "var(--navbar-height, 78px)" }} />
       </div>
-      
-      {/* + 버튼 (편지쓰기로 이동) */}
-      <button
-        className="mailbox-fab"
-        onClick={() => navigate("/write")}
-        aria-label="편지 쓰기"
-        type="button"
-      >
-        +
-      </button>
     </div>
   );
 }

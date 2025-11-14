@@ -2,6 +2,7 @@
 // WriteLetter_가운데_최종 (수정 반영)
 import React, { useMemo } from "react";
 import profileSvg from "../../../assets/profile.svg";
+import { getCurrentUserNickname } from "../../../utils/userInfo.js";
 import "../styles/circle-stage.css";
 
 export default function CircleStage({
@@ -69,7 +70,7 @@ export default function CircleStage({
   };
 
   // self payload 표준화
-  const SELF_PAYLOAD = { id: "me", type: "self", name: "디어리", isSelf: true };
+  const SELF_PAYLOAD = { id: "me", type: "self", name: getCurrentUserNickname(), isSelf: true };
 
   // friend payload 표준화(Compose에서 필요한 최소 키 확정: id/name/handle)
   const toFriendPayload = (f) => ({
@@ -121,7 +122,7 @@ export default function CircleStage({
             <img src={profileSvg} alt="나" className="wl-me-img" />
           </div>
         </div>
-        <div className="wl-name">디어리</div>
+        <div className="wl-name">{getCurrentUserNickname()}</div>
       </button>
 
       {/* 친구들 (64×64 프레임 + 58×58 내부) */}

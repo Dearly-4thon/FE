@@ -45,13 +45,31 @@ export default function SentToMePage() {
         console.log('나에게 보낸 편지 조회 - 현재 사용자:', currentUser);
         
         // 나에게 보낸 편지: sender와 receiver가 모두 현재 사용자인 편지들
-        const selfLetters = Object.values(mailboxData.letters || {}).filter(letter => {
+        let lettersArray = [];
+        if (mailboxData.letters) {
+          if (Array.isArray(mailboxData.letters)) {
+            lettersArray = mailboxData.letters;
+          } else {
+            lettersArray = Object.values(mailboxData.letters);
+          }
+        }
+        
+        const selfLetters = lettersArray.filter(letter => {
           try {
-            const letterSenderId = parseInt(letter.senderId) || letter.senderId;
-            const letterReceiverId = parseInt(letter.receiverId) || letter.receiverId;
-            const userIdNum = parseInt(currentUserId) || currentUserId;
+            const currentUserIdNum = parseInt(currentUserId, 10);
+            const letterSenderIdNum = parseInt(letter.senderId || letter.sender_id, 10);
+            const letterReceiverIdNum = parseInt(letter.receiverId || letter.receiver_id, 10);
             
-            return (letterSenderId === userIdNum && letterReceiverId === userIdNum);
+            const isSelfLetter = letterSenderIdNum === currentUserIdNum && letterReceiverIdNum === currentUserIdNum;
+            
+            console.log(`📝 편지 ${letter.id} 나에게 보낸 편지 필터링:`, {
+              letterSenderId: letter.senderId,
+              letterReceiverId: letter.receiverId,
+              currentUserId: currentUserId,
+              isSelfLetter: isSelfLetter
+            });
+            
+            return isSelfLetter;
           } catch (err) {
             console.error('편지 필터링 오류:', err, letter);
             return false;
@@ -86,9 +104,6 @@ export default function SentToMePage() {
         
         setSelfLetters(sortedData);
         setError(null);
-        
-        setSelfLetters(mockData);
-        setError(null); // 에러 상태 해제
       } finally {
         setLoading(false);
       }

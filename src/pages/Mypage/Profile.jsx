@@ -13,19 +13,59 @@ import {
 
 import '../../components/mypage/Mypage.css';
 import megaphoneIcon from '../../assets/icons/megaphone.svg'; // 공지 아이콘
+import { fetchMyProfile } from '../../api/users';
 
 export default function Profile({ onNavigate }) {
   const [profileImage, setProfileImage] = useState(null);
+  const [myProfile, setMyProfile] = useState(null);
 
-  // 로컬스토리지에 저장된 프로필 이미지 불러오기
+  // 1) 로컬스토리지에 저장된 프로필 이미지 불러오기
   useEffect(() => {
     const stored = localStorage.getItem('userProfileImage');
     if (stored) setProfileImage(stored);
   }, []);
 
-  const user = { ...currentUser, profileImage };
+  // 2) 서버에서 내 프로필 불러오기 /users/me/
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const { ok, data } = await fetchMyProfile();
+        if (ok) {
+          setMyProfile(data);
+        } else {
+          console.error('내 프로필 조회 실패', data);
+        }
+      } catch (err) {
+        console.error('내 프로필 조회 중 에러', err);
+      }
+    };
 
+    loadProfile();
+  }, []);
+
+  // 3) 로그인 시 저장해 둔 아이디 / 닉네임 불러오기
+  const storedUserId = localStorage.getItem('user_id');     // Login.jsx에서 set한 값
+  const storedNickname = localStorage.getItem('nickname');  // Login.jsx에서 set한 값
+
+  // 4) 최종 user 객체 만들기 (우선순위: 서버 -> 로컬스토리지 -> mockData)
+  const user = {
+    ...currentUser,
+    id: myProfile?.id ?? currentUser.id,
+    username:
+      myProfile?.user_id ??
+      myProfile?.username ??
+      storedUserId ??
+      currentUser.username,
+    displayName:
+      myProfile?.nickname ??
+      storedNickname ??
+      currentUser.displayName,
+    profileImage,
+  };
+
+  // 아래는 기존 mock 통계 로직 그대로 유지
   const friendCount = mockFriends.filter((f) => f.status === 'accepted').length;
+
   const publicRooms = rooms.filter(
     (r) => r.hostId === currentUser.id && r.visibility === 'public'
   );
@@ -37,8 +77,17 @@ export default function Profile({ onNavigate }) {
   );
 
   const handleLogout = () => {
-    // 진짜 로그아웃 로직은 나중에 연결
-    alert('로그아웃 되었습니다 (데모 동작) 😊');
+    if (window.confirm('정말 로그아웃 하시겠습니까?')) {
+      // localStorage 정리
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user_id');
+      localStorage.removeItem('user_name');
+      localStorage.removeItem('nickname');
+      
+      alert('로그아웃 되었습니다.');
+      window.location.href = '/login';
+    }
   };
 
   return (

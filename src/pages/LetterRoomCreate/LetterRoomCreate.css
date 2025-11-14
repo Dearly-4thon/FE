@@ -160,6 +160,13 @@ select:focus {
   gap: 10px;
   margin: 0;
 }
+.radio-group input[type="radio"] {
+  appearance: auto !important;
+  opacity: 1 !important;
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+}
 
 .radio-option {
   border: 0.8px solid #1E3A8A;

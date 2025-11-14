@@ -1,7 +1,5 @@
 import { BASE_URL } from "./config";
 
-
-// 토큰 관리 유틸
 export const saveTokens = (access, refresh) => {
   if (access) localStorage.setItem("accessToken", access);
   if (refresh) localStorage.setItem("refreshToken", refresh);
@@ -13,10 +11,12 @@ export const getRefreshToken = () => localStorage.getItem("refreshToken");
 export const logout = () => {
   localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
+  localStorage.removeItem("user_id");
+  localStorage.removeItem("user_name");
+  localStorage.removeItem("nickname");
 };
 
 
-// 일반 로그인
 export const loginUser = async ({ username, password }) => {
   const res = await fetch(`${BASE_URL}/auth/login/`, {
     method: "POST",
@@ -32,7 +32,6 @@ export const loginUser = async ({ username, password }) => {
 };
 
 
-// 회원가입
 export const registerUser = async ({ username, nickname, password, passwordCheck }) => {
   const res = await fetch(`${BASE_URL}/auth/register/`, {
     method: "POST",
@@ -50,7 +49,6 @@ export const registerUser = async ({ username, nickname, password, passwordCheck
 };
 
 
-// 아이디 중복 확인
 export const checkUserId = async (username) => {
   const res = await fetch(
     `${BASE_URL}/auth/check-user-id/?user_id=${username}`
@@ -61,13 +59,11 @@ export const checkUserId = async (username) => {
 };
 
 
-// 카카오 로그인 URL
 export const getKakaoLoginUrl = () => {
   return `${BASE_URL}/accounts/kakao/login/`;
 };
 
 
-// 카카오 로그인 콜백 처리
 export const handleKakaoCallback = async () => {
   const params = new URLSearchParams(window.location.search);
   const access = params.get("access");

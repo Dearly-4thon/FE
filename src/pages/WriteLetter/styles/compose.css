@@ -100,27 +100,27 @@
 
 /* === Compose 전용 폰트 클래스 === */
 .font-basic {
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
 }
 
 .font-rounded {
-  font-family: "Cafe24Surround", sans-serif;
+  font-family: "Cafe24Surround", "Noto Sans KR", sans-serif !important;
 }
 
 .font-soft {
-  font-family: "OngleipParkDahyeon", cursive;
+  font-family: "OngleipParkDahyeon", "Noto Sans KR", cursive !important;
 }
 
 .font-elegant {
-  font-family: "JoseonGulim", serif;
+  font-family: "JoseonGulim", "Noto Serif KR", serif !important;
 }
 
 .font-modern {
-  font-family: "Suit", sans-serif;
+  font-family: "Suit", "Inter", "Noto Sans KR", sans-serif !important;
 }
 
 .font-warm {
-  font-family: "GowoonDodum", sans-serif;
+  font-family: "GowoonDodum", "Gowun Dodum", "Noto Sans KR", sans-serif !important;
 }
 
 .option {
@@ -217,7 +217,7 @@
   background: #FFECE5;
 }
 
-.editor-container {}
+
 
 .editor {
   border-radius: 16px;

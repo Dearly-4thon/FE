@@ -5,6 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./LetterRoomCreate.css";
 
 import { createLetterRoom } from "../../api/LetterRoom.js";
+import { toast } from "../../lib/toast.js";
 
 import backIcon from "../../assets/icons/arrowBack.svg";
 import addImageIcon from "../../assets/icons/addImage.svg";
@@ -14,6 +15,7 @@ export default function LetterRoomCreate() {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(null);
 
+  // 프론트 선택 값 (라디오 value)
   const [visibility, setVisibility] = useState("PUBLIC");
   const [writePermission, setWritePermission] = useState("ALL");
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -33,43 +35,78 @@ export default function LetterRoomCreate() {
     e.preventDefault();
 
     if (!title || !date) {
-      alert("제목과 날짜는 필수 입력 항목입니다.");
+      toast("제목과 날짜는 필수 입력 항목입니다.", "error");
       return;
     }
 
-    // 백엔드 명세서 기준 매핑
-    const visibilityValue =
-      visibility === "FRIEND" ? "PUBLIC_FRIENDS" : "PUBLIC_ALL";
-
-    const writePermissionValue =
-      writePermission === "FRIEND"
-        ? "WRITE_FRIENDS"
-        : writePermission === "INVITE"
-        ? "WRITE_INVITED"
-        : "WRITE_ALL";
-
     const formData = new FormData();
-    const ownerId = localStorage.getItem("user_id");
+    const ownerId = Number(localStorage.getItem("user_id"));
+    
+    // 사용자 ID 검증
+    if (!ownerId || isNaN(ownerId)) {
+      toast("로그인 정보가 올바르지 않습니다. 다시 로그인해주세요.", "error");
+      navigate("/login");
+      return;
+    } 
 
     formData.append("title", title);
     formData.append("open_at", date.toISOString().split("T")[0]);
-    formData.append("visibility", visibilityValue);
-    formData.append("write_permission", writePermissionValue);
-    formData.append("allow_anonymous", String(isAnonymous));
     formData.append("owner", ownerId);
+
+    // visibility 매핑
+    const visibilityValue =
+      visibility === "FRIEND" ? "PUBLIC_FRIENDS" : "PUBLIC_ALL";
+    formData.append("visibility", visibilityValue);
+
+    // write_permission 매핑
+    let wp = "WRITE_ALL";
+    if (writePermission === "FRIEND") wp = "WRITE_FRIENDS";
+    if (writePermission === "INVITE") wp = "WRITE_INVITED";
+    formData.append("write_permission", wp);
+
+    // boolean
+    formData.append("allow_anonymous", isAnonymous ? "true" : "false");
 
     if (coverImage) formData.append("cover_image", coverImage);
 
-    try {
-      await createLetterRoom(formData);
+    /* ---------------------------
+        🚀 formData 내용 콘솔 출력
+       --------------------------- */
+    console.log("📌 [DEBUG] formData 요청 내용 ------------------");
+    for (const pair of formData.entries()) {
+      console.log(pair[0], ":", pair[1]);
+    }
+    console.log("--------------------------------------------------");
 
-      alert("편지방이 성공적으로 생성되었습니다!");
-      navigate("/letters");
+    try {
+      console.log("📤 편지방 생성 요청 시작...");
+      const result = await createLetterRoom(formData);
+      console.log("✅ 편지방 생성 성공:", result);
+      
+      toast("편지방이 성공적으로 생성되었습니다!", "success");
+      setTimeout(() => navigate("/letters"), 1000);
     } catch (error) {
       console.error("❌ 편지방 생성 실패:", error);
-      alert("편지방 생성 중 오류가 발생했습니다.");
+
+      if (error.response) {
+        console.log("🔍 서버 응답:", error.response.data);
+        console.log("🔍 상태 코드:", error.response.status);
+        console.log("🔍 전체 response:", error.response);
+        
+        const errorMsg = error.response.data?.detail || 
+                        error.response.data?.message || 
+                        `서버 오류 (${error.response.status})`;
+        toast(errorMsg, "error");
+      } else if (error.request) {
+        console.log("🔍 요청 정보:", error.request);
+        toast("서버와의 연결에 문제가 발생했습니다.", "error");
+      } else {
+        console.log("🔍 에러 메시지:", error.message);
+        toast("편지방 생성 중 오류가 발생했습니다.", "error");
+      }
     }
   };
+
 
   return (
     <div className="create-container">
