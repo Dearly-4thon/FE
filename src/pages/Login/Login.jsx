@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
@@ -22,6 +23,7 @@ export default function Login() {
 
   /* 일반 로그인 */
   const handleLogin = async () => {
+    console.log("Login page rendered");
     if (!username || !password) {
       showToast("아이디와 비밀번호를 입력해주세요.", "error");
       return;
@@ -31,9 +33,19 @@ export default function Login() {
     const res = await loginUser({ username, password });
 
     if (res.ok) {
-      saveTokens(res.data.access, res.data.refresh);
+      saveTokens(res.data.tokens.access, res.data.tokens.refresh);
+
+      const nicknameFromServer = res.data.user.profile?.nickname;
+      const finalNickname =
+        nicknameFromServer && nicknameFromServer.trim() !== ""
+          ? nicknameFromServer
+          : res.data.user.user_id;
+
+      localStorage.setItem("user_id", res.data.user.user_id);
+      localStorage.setItem("nickname", finalNickname);
+
       showToast("로그인 성공!", "success");
-      setTimeout(() => navigate("/letters"), 1000);
+      setTimeout(() => navigate("/letters"), 500);
     } else {
       showToast(res.data.message || "로그인 실패", "error");
     }

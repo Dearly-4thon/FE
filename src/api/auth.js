@@ -1,4 +1,5 @@
-import { BASE_URL } from "./config.js";
+import { BASE_URL } from "./config";
+
 
 // 토큰 관리 유틸
 export const saveTokens = (access, refresh) => {
@@ -68,94 +69,14 @@ export const getKakaoLoginUrl = () => {
 
 // 카카오 로그인 콜백 처리
 export const handleKakaoCallback = async () => {
-  try {
-    const params = new URLSearchParams(window.location.search);
-    const access = params.get("access");
-    const refresh = params.get("refresh");
-    const user_id = params.get("user_id");
+  const params = new URLSearchParams(window.location.search);
+  const access = params.get("access");
+  const refresh = params.get("refresh");
 
-    if (!access || !refresh || !user_id) {
-      console.error(" 카카오에서 받은 토큰 또는 유저 ID 없음");
-      return { success: false };
-    }
-
-    localStorage.setItem("access_token", access);  
-    localStorage.setItem("refresh_token", refresh);
-    localStorage.setItem("user_id", user_id);
-
+  if (access) {
+    saveTokens(access, refresh);
     return { success: true };
-  } catch (e) {
-    console.error(" 카카오 콜백 처리 오류:", e);
-    return { success: false };
   }
+
+  return { success: false };
 };
-
-
-// Authorization 헤더 생성(로컬 토큰 사용)
-const authHeader = () => {
-  const at = getAccessToken();
-  return at ? { Authorization: `Bearer ${at}` } : {};
-};
-
-/** 서버 로그아웃
- * POST /auth/logout
- * 성공하면 로컬 토큰도 지움
- */
-export const logoutServer = async () => {
-  const res = await fetch(`${BASE_URL}/auth/logout/`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...authHeader(),
-    },
-  });
-
-  let data = null;
-  try { data = await res.json(); } catch (_) {}
-
-  if (res.ok) {
-    // 서버에서 세션/토큰 정리가 완료됐으니 로컬도 정리
-    logout();
-  }
-  return { ok: res.ok, data };
-};
-
-/** 비밀번호 재설정(변경)
- * POST /auth/change-password
- * 기본 필드: current_password, new_password, new_password_confirm
- * 백엔드가 다른 키를 쓰면 payload에 추가로 넘긴 값(rest)이 그대로 병합됨.
- *
- * 예)
- * changePassword({
- *   currentPassword: 'old1234',
- *   newPassword: 'new1234!',
- *   newPasswordConfirm: 'new1234!'
- * })
- */
-export const changePassword = async ({
-  currentPassword,
-  newPassword,
-  newPasswordConfirm,
-  ...rest // 서버가 password/password_confirm 등을 요구하는 경우 대응
-}) => {
-  const body = {
-    current_password: currentPassword,
-    new_password: newPassword,
-    new_password_confirm: newPasswordConfirm,
-    ...rest,
-  };
-
-  const res = await fetch(`${BASE_URL}/auth/change-password/`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...authHeader(),
-    },
-    body: JSON.stringify(body),
-  });
-
-  const data = await res.json();
-  return { ok: res.ok, data };
-};
-// ==== 추가 끝 ====
-

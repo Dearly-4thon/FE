@@ -29,17 +29,16 @@ import Mailbox from "./pages/Mailbox/Mailbox.jsx";
 
 // 로그인 페이지
 import Login from "./pages/Login/Login.jsx";
+import SignUp from "./pages/SignUp/SignUp.jsx";
 import KakaoCallback from "./pages/SignUp/KakaoCallback.jsx";
 
-// 토큰 확인
-import { getAccessToken } from "./api/auth.js";
 
 // 보호 라우트
 function RequireAuth() {
-  const has = !!getAccessToken();
-  const loc = useLocation();
-  return has ? <Outlet /> : <Navigate to="/login" replace state={{ from: loc }} />;
+  const has = !!localStorage.getItem("accessToken");
+  return has ? <Outlet /> : <Navigate to="/login" replace />;
 }
+
 
 /* --- 어댑터들 --- */
 function ProfilePage() {
@@ -254,6 +253,7 @@ export default function App() {
     <Routes>
       {/* 로그인은 가드 밖 */}
       <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
       <Route path="/auth/kakao/callback" element={<KakaoCallback />} />
 
       {/* 보호 라우트: 토큰 없으면 /login으로 - 임시 우회 */}
@@ -289,6 +289,7 @@ export default function App() {
 
       {/* 없는 경로는 기본으로 */}
       <Route path="*" element={<Navigate to="/letters" replace />} />
+      </Route>
     </Routes>
   );
 }

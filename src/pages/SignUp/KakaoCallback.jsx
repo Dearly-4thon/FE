@@ -11,7 +11,7 @@ export default function KakaoCallback() {
 
       setTimeout(() => {
         if (result.success) {
-          navigate("/letterroom");
+          navigate("/letters");
         } else {
           navigate("/login");
         }

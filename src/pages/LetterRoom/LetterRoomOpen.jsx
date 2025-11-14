@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import "./LetterRoomOpen.css";
+
 import {
   getLettersInRoom,
   getShareLink,
@@ -26,14 +27,18 @@ export default function LetterRoomOpen() {
   const [room, setRoom] = useState(null);
   const [letters, setLetters] = useState([]);
   const [selectedLetter, setSelectedLetter] = useState(null);
+
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   const [loading, setLoading] = useState(true);
 
   const handleBack = () => navigate(-1);
 
-  // D-day 계산
+  /* -----------------------------
+      D-day 계산
+  ----------------------------- */
   const calcDday = (openDate) => {
     if (!openDate) return 0;
     const today = new Date();
@@ -42,23 +47,27 @@ export default function LetterRoomOpen() {
     return diff > 0 ? diff : 0;
   };
 
-  // 편지 목록 + 공유 링크 + 편지방 상세 조회 통합
+  /* -----------------------------
+      데이터 로딩 (axios 기반 API)
+  ----------------------------- */
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 편지 목록 조회
+        // 1) 편지 목록
         const lettersData = await getLettersInRoom(id);
         setLetters(lettersData || []);
 
-        // 공유 링크 조회
+        // 2) 공유 링크 조회
         const linkData = await getShareLink(id);
-        const shareCode = linkData.share_link.split("/").pop();
+        const shareLink = linkData.share_link;
+        const shareCode = shareLink.split("/").pop();
 
-        // 편지방 상세 조회 (public)
+        // 3) 공유코드로 편지방 상세 조회
         const roomData = await getRoomByShareCode(shareCode);
-        console.log("🏠 편지방 정보:", roomData);
 
         const dday = calcDday(roomData.open_at);
+
+        // 🔒 공개일 전이면 잠금 페이지로 이동
         if (dday > 0) {
           navigate(`/letterroom/locked/${id}`);
           return;
@@ -68,9 +77,9 @@ export default function LetterRoomOpen() {
           id: roomData.id,
           title: roomData.title,
           isOpen: true,
-          dday,
+          dday: 0,
           coverImage: roomData.cover_image || null,
-          shareLink: linkData.share_link,
+          shareLink,
         });
       } catch (err) {
         console.error("❌ 편지방 데이터 불러오기 실패:", err);
@@ -82,22 +91,23 @@ export default function LetterRoomOpen() {
     fetchData();
   }, [id]);
 
-  // 편지방 삭제
+  /* -----------------------------
+      편지방 삭제
+  ----------------------------- */
   const handleDeleteRoom = async () => {
     try {
       await deleteLetterRoom(id);
       alert("편지방이 삭제되었습니다.");
       navigate("/letters");
     } catch (error) {
-      console.error("편지방 삭제 실패:", error);
+      console.error("삭제 실패:", error);
       alert("삭제 중 오류가 발생했습니다.");
     }
   };
 
-  // 메뉴 토글
-  const toggleMoreMenu = () => setIsMoreOpen((prev) => !prev);
-
-  // 편지 카드 배치 계산
+  /* -----------------------------
+      편지 카드 배치
+  ----------------------------- */
   const generateLetterPositions = (count) => {
     const positions = [];
     const radius = 150;
@@ -105,35 +115,36 @@ export default function LetterRoomOpen() {
 
     for (let i = 0; i < mainCount; i++) {
       const angle = (i / mainCount) * 2 * Math.PI;
-      const x = radius * Math.cos(angle);
-      const y = radius * Math.sin(angle);
-      const rotate = (Math.random() - 0.5) * 10;
-      positions.push({ x, y, rotate });
+      positions.push({
+        x: radius * Math.cos(angle),
+        y: radius * Math.sin(angle),
+        rotate: (Math.random() - 0.5) * 10,
+      });
     }
 
+    // 7개 이상일 때 위/아래 추가 배치
     if (count > 6) {
       const extraCount = count - 6;
       const gapX = 70;
       const startX = -((Math.min(extraCount, 4) - 1) / 2) * gapX;
 
       for (let i = 0; i < extraCount; i++) {
-        const isTop = i % 2 === 0;
-        const x = startX + (i % 4) * gapX;
-        const y = isTop ? -220 : 200;
-        const rotate = (Math.random() - 0.5) * 5;
-        positions.push({ x, y, rotate });
+        positions.push({
+          x: startX + (i % 4) * gapX,
+          y: i % 2 === 0 ? -220 : 200,
+          rotate: (Math.random() - 0.5) * 5,
+        });
       }
     }
+
     return positions;
   };
 
-  const letterPositions = generateLetterPositions(letters?.length || 0);
+  const letterPositions = generateLetterPositions(letters.length);
 
-  // 편지 클릭 → 모달 열기
-  const handleLetterClick = (letter) => setSelectedLetter(letter);
-  const handleCloseModal = () => setSelectedLetter(null);
-
-  //  PDF 저장
+  /* -----------------------------
+      PDF 저장
+  ----------------------------- */
   const handleDownloadPDF = () => {
     const target = document.querySelector(".modal-content");
     if (!target) return;
@@ -141,32 +152,35 @@ export default function LetterRoomOpen() {
     html2canvas(target, { scale: 2 }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
+
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-      if (!selectedLetter) return;
-
-      const writer = selectedLetter.is_anonymous
+      const writer = selectedLetter?.is_anonymous
         ? "익명"
-        : selectedLetter.sender?.nickname || "작성자";
+        : selectedLetter?.sender?.nickname || "작성자";
 
       pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
       pdf.save(`${writer}_편지.pdf`);
     });
   };
 
-  // 공유 관련
-  const handleCloseShare = () => setIsShareOpen(false);
-
+  /* -----------------------------
+      공유 모달
+  ----------------------------- */
   const handleCopyLink = async () => {
-    if (!room?.shareLink) return;
-    await navigator.clipboard.writeText(room.shareLink);
-    alert("링크가 복사되었습니다!");
+    if (room?.shareLink) {
+      await navigator.clipboard.writeText(room.shareLink);
+      alert("링크가 복사되었습니다!");
+    }
   };
 
   const handleKakaoShare = () =>
     alert("카카오톡 공유 기능은 추후 연동 예정입니다!");
 
+  /* -----------------------------
+      렌더링
+  ----------------------------- */
   if (loading) return <div className="loading">로딩 중...</div>;
   if (!room) return <div>편지방 정보를 불러올 수 없습니다 😢</div>;
 
@@ -179,10 +193,8 @@ export default function LetterRoomOpen() {
         </button>
 
         <div className="header-center">
-          <h2 className="header-title">{room?.title}</h2>
-          <span className="open-badge">
-            {room?.isOpen ? "open" : `D-${room?.dday}`}
-          </span>
+          <h2 className="header-title">{room.title}</h2>
+          <span className="open-badge">open</span>
         </div>
 
         <div className="header-actions">
@@ -196,8 +208,9 @@ export default function LetterRoomOpen() {
             src={moreIcon}
             alt="더보기"
             className="more-icon"
-            onClick={toggleMoreMenu}
+            onClick={() => setIsMoreOpen((prev) => !prev)}
           />
+
           {isMoreOpen && (
             <div className="more-menu">
               <button
@@ -221,9 +234,11 @@ export default function LetterRoomOpen() {
           <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
             <h3>편지방 삭제</h3>
             <p>
-              이 편지방을 삭제하시겠습니까?<br />
+              이 편지방을 삭제하시겠습니까?
+              <br />
               삭제된 편지방은 복구할 수 없습니다.
             </p>
+
             <div className="delete-modal-buttons">
               <button className="confirm-delete" onClick={handleDeleteRoom}>
                 삭제
@@ -245,13 +260,12 @@ export default function LetterRoomOpen() {
           <div
             className="cover-image"
             style={{
-              backgroundImage: room?.coverImage ? `url(${room.coverImage})` : "none",
-              backgroundColor: room?.coverImage ? "transparent" : "#fff",
+              backgroundImage: room.coverImage ? `url(${room.coverImage})` : "none",
+              backgroundColor: room.coverImage ? "transparent" : "#fff",
             }}
           />
-          <p className="letter-count center-count">
-            편지 {letters.length}개
-          </p>
+
+          <p className="letter-count center-count">편지 {letters.length}개</p>
 
           {letters.length === 0 && (
             <div className="no-letters">
@@ -262,7 +276,7 @@ export default function LetterRoomOpen() {
 
           {letters.map((letter, i) => {
             const pos = letterPositions[i];
-            const writerName = letter.is_anonymous
+            const writer = letter.is_anonymous
               ? "익명"
               : letter.sender?.nickname || "작성자";
 
@@ -273,10 +287,10 @@ export default function LetterRoomOpen() {
                 style={{
                   transform: `translate(${pos.x}px, ${pos.y}px) rotate(${pos.rotate}deg)`,
                 }}
-                onClick={() => handleLetterClick(letter)}
+                onClick={() => setSelectedLetter(letter)}
               >
                 <img src={defaultUserIcon} alt="편지" className="letter-thumb" />
-                <p className="writer-name">{writerName}</p>
+                <p className="writer-name">{writer}</p>
               </div>
             );
           })}
@@ -287,33 +301,42 @@ export default function LetterRoomOpen() {
 
       {/* 편지 모달 */}
       {selectedLetter && (
-        <div className="letter-modal-overlay" onClick={handleCloseModal}>
+        <div className="letter-modal-overlay" onClick={() => setSelectedLetter(null)}>
           <div className="letter-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>
                 {selectedLetter.is_anonymous
                   ? "익명"
-                  : selectedLetter.sender?.nickname || "작성자"}
+                  : selectedLetter.sender?.nickname}
                 의 편지
               </h3>
-              <button className="modal-close" onClick={handleCloseModal}>
+              <button className="modal-close" onClick={() => setSelectedLetter(null)}>
                 ✕
               </button>
             </div>
 
             <div
-              className={`modal-content paper-${selectedLetter.paper_theme?.toLowerCase() || "white"}`}
+              className={`modal-content paper-${
+                selectedLetter.paper_theme?.toLowerCase() || "white"
+              }`}
             >
               <p className="modal-writer">
                 {selectedLetter.is_anonymous
                   ? "익명"
-                  : selectedLetter.sender?.nickname || "작성자"}
+                  : selectedLetter.sender?.nickname}
               </p>
+
               <p className="modal-date">
                 {new Date(selectedLetter.created_at).toLocaleDateString()}
               </p>
+
               <hr />
-              <p className={`modal-text font-${selectedLetter.font_style?.toLowerCase() || "basic"}`}>
+
+              <p
+                className={`modal-text font-${
+                  selectedLetter.font_style?.toLowerCase() || "basic"
+                }`}
+              >
                 {selectedLetter.content}
               </p>
             </div>
@@ -328,11 +351,11 @@ export default function LetterRoomOpen() {
 
       {/* 공유 모달 */}
       {isShareOpen && (
-        <div className="share-modal-overlay" onClick={handleCloseShare}>
+        <div className="share-modal-overlay" onClick={() => setIsShareOpen(false)}>
           <div className="share-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>{room?.title} 공유하기</h3>
-              <button className="modal-close" onClick={handleCloseShare}>
+              <h3>{room.title} 공유하기</h3>
+              <button className="modal-close" onClick={() => setIsShareOpen(false)}>
                 ✕
               </button>
             </div>
@@ -341,7 +364,7 @@ export default function LetterRoomOpen() {
 
             <div className="share-link-box">
               <p className="share-label">공유 링크</p>
-              <p className="share-url">{room?.shareLink}</p>
+              <p className="share-url">{room.shareLink}</p>
             </div>
 
             <button className="share-copy-btn" onClick={handleCopyLink}>

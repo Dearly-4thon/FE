@@ -23,13 +23,31 @@ export default function LetterRoom() {
   const tooltipRef = useRef(null);
   const navigate = useNavigate();
 
-  // 로그인 사용자 닉네임
+  /* -----------------------------
+      로그인 사용자 정보 로드
+  ----------------------------- */
   useEffect(() => {
     const storedNickname = localStorage.getItem("nickname");
-    if (storedNickname) setNickname(storedNickname);
-  }, []);
+    const storedUserId = localStorage.getItem("user_id");
 
-  // D-day 계산 함수
+    if (!storedUserId) {
+      console.error("❌ user_id 없음 → 재로그인 필요");
+      navigate("/login");
+      return;
+    }
+
+    // nickname이 비어있으면 user_id 사용
+    if (storedNickname && storedNickname.trim() !== "") {
+      setNickname(storedNickname);
+    } else {
+      setNickname(storedUserId);
+    }
+  }, [navigate]);
+
+
+  /* -----------------------------
+      D-day 계산
+  ----------------------------- */
   const calculateDday = (openAt) => {
     if (!openAt) return 0;
     const today = new Date();
@@ -38,7 +56,9 @@ export default function LetterRoom() {
     return diff > 0 ? diff : 0;
   };
 
-  // 편지방 목록 불러오기
+  /* -----------------------------
+      편지방 목록 불러오기 (axios 기반)
+  ----------------------------- */
   useEffect(() => {
     const fetchLetterRooms = async () => {
       try {
@@ -57,11 +77,9 @@ export default function LetterRoom() {
         }));
 
         const sortedRooms = [...formattedRooms].sort((a, b) => {
-          if (sortOrder === "최신순") {
-            return new Date(b.openAt) - new Date(a.openAt);
-          } else {
-            return new Date(a.openAt) - new Date(b.openAt);
-          }
+          return sortOrder === "최신순"
+            ? new Date(b.openAt) - new Date(a.openAt)
+            : new Date(a.openAt) - new Date(b.openAt);
         });
 
         setLetterRooms(sortedRooms);
@@ -73,31 +91,22 @@ export default function LetterRoom() {
     fetchLetterRooms();
   }, [sortOrder]);
 
-  // 정렬 드롭다운
-  const handleSortClick = () => setIsDropdownOpen(!isDropdownOpen);
+  /* -----------------------------
+      정렬
+  ----------------------------- */
   const handleSortSelect = (option) => {
     setSortOrder(option);
     setIsDropdownOpen(false);
-
-    setLetterRooms((prevRooms) => {
-      const sorted = [...prevRooms].sort((a, b) => {
-        if (option === "최신순") {
-          return new Date(b.openAt) - new Date(a.openAt);
-        } else {
-          return new Date(a.openAt) - new Date(b.openAt);
-        }
-      });
-      return sorted;
-    });
   };
 
-  const toggleTooltip = () => setShowTooltip(!showTooltip);
   const handleCreateClick = () => {
     setIsModalOpen(false);
     navigate("/letterroom/create");
   };
 
-  // 편지방 클릭 → open/locked 이동
+  /* -----------------------------
+      편지방 클릭 처리
+  ----------------------------- */
   const handleRoomClick = (room) => {
     if (room.dday === 0 || room.isOpen) {
       navigate(`/letterroom/open/${room.id}`);
@@ -112,7 +121,7 @@ export default function LetterRoom() {
       <div className="letterroom-container">
         <div className="letterroom-content">
           <h1 className="letterroom-title">
-            <span className="nickname">{nickname || "Dearly"}</span>님의 편지방
+            <span className="nickname">{nickname}</span>님의 편지방
           </h1>
 
           <div className="letterroom-subtitle">
@@ -122,7 +131,7 @@ export default function LetterRoom() {
                 src={infoIcon}
                 alt="정보"
                 className="info-icon"
-                onClick={toggleTooltip}
+                onClick={() => setShowTooltip(!showTooltip)}
               />
               {showTooltip && (
                 <div className="tooltip-box">
@@ -137,7 +146,7 @@ export default function LetterRoom() {
             </div>
 
             <div className="letterroom-right" ref={dropdownRef}>
-              <div className="sort-toggle" onClick={handleSortClick}>
+              <div className="sort-toggle" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
                 <img src={sortIcon} alt="정렬" className="sort-icon" />
                 <span className="sort-text">{sortOrder}</span>
               </div>
@@ -146,9 +155,7 @@ export default function LetterRoom() {
                   {["최신순", "오래된순"].map((option) => (
                     <div
                       key={option}
-                      className={`sort-option ${
-                        sortOrder === option ? "selected" : ""
-                      }`}
+                      className={`sort-option ${sortOrder === option ? "selected" : ""}`}
                       onClick={() => handleSortSelect(option)}
                     >
                       <span>{option}</span>
@@ -205,31 +212,26 @@ export default function LetterRoom() {
         )}
       </div>
 
-        {/* 생성 모달 */}
+      {/* 생성 모달 */}
       {isModalOpen && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="bottom-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-               <span>무엇을 만들까요?</span>
-              <button
-                className="modal-close"
-                onClick={() => setIsModalOpen(false)}
-              >
+              <span>무엇을 만들까요?</span>
+              <button className="modal-close" onClick={() => setIsModalOpen(false)}>
                 ✕
-            </button>
+              </button>
             </div>
 
             <div className="modal-item" onClick={handleCreateClick}>
               <div className="modal-icon">
                 <img src={mailIcon} alt="편지" />
-               </div>
-             <div className="modal-text">
+              </div>
+              <div className="modal-text">
                 <p className="modal-title">편지방 만들기</p>
-                <p className="modal-sub">
-                  디데이에 열리는 편지방을 만들어보세요!
-                </p>
+                <p className="modal-sub">디데이에 열리는 편지방을 만들어보세요!</p>
               </div>
-              </div>
+            </div>
           </div>
         </div>
       )}

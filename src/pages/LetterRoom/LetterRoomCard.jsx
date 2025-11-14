@@ -2,10 +2,10 @@ import React from "react";
 import "./LetterRoomCard.css";
 
 export default function LetterRoomCard({
-  title,
-  coverImage,
-  dday,
-  isOpen,
+  title = "",
+  coverImage = "",
+  dday = 0,
+  isOpen = false,
   onClick,
 }) {
   return (
@@ -14,7 +14,7 @@ export default function LetterRoomCard({
         {coverImage ? (
           <img src={coverImage} alt={title} className="card-image" />
         ) : (
-          <div className="card-placeholder" /> // 기본 배경 
+          <div className="card-placeholder" />
         )}
 
         <div className={`card-badge ${isOpen ? "open" : "dday"}`}>

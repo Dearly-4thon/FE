@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./LetterRoomCreate.css";
-import { createLetterRoom } from "../../api/LetterRoom.js"; 
+
+import { createLetterRoom } from "../../api/LetterRoom.js";
 
 import backIcon from "../../assets/icons/arrowBack.svg";
 import addImageIcon from "../../assets/icons/addImage.svg";
@@ -12,9 +13,11 @@ import calendarIcon from "../../assets/icons/calendar.svg";
 export default function LetterRoomCreate() {
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(null);
-  const [visibility, setVisibility] = useState("PUBLIC"); 
+
+  const [visibility, setVisibility] = useState("PUBLIC");
   const [writePermission, setWritePermission] = useState("ALL");
   const [isAnonymous, setIsAnonymous] = useState(false);
+
   const [coverImage, setCoverImage] = useState(null);
 
   const navigate = useNavigate();
@@ -34,6 +37,7 @@ export default function LetterRoomCreate() {
       return;
     }
 
+    // 백엔드 명세서 기준 매핑
     const visibilityValue =
       visibility === "FRIEND" ? "PUBLIC_FRIENDS" : "PUBLIC_ALL";
 
@@ -46,13 +50,14 @@ export default function LetterRoomCreate() {
 
     const formData = new FormData();
     const ownerId = localStorage.getItem("user_id");
-    
+
     formData.append("title", title);
     formData.append("open_at", date.toISOString().split("T")[0]);
     formData.append("visibility", visibilityValue);
     formData.append("write_permission", writePermissionValue);
-    formData.append("allow_anonymous", isAnonymous);
+    formData.append("allow_anonymous", String(isAnonymous));
     formData.append("owner", ownerId);
+
     if (coverImage) formData.append("cover_image", coverImage);
 
     try {
@@ -61,7 +66,8 @@ export default function LetterRoomCreate() {
       alert("편지방이 성공적으로 생성되었습니다!");
       navigate("/letters");
     } catch (error) {
-      console.error("편지방 생성 실패:", error);
+      console.error("❌ 편지방 생성 실패:", error);
+      alert("편지방 생성 중 오류가 발생했습니다.");
     }
   };
 
@@ -149,8 +155,16 @@ export default function LetterRoomCreate() {
         <div className="radio-group">
           {[
             { key: "ALL", label: "모두", desc: "누구나 편지를 쓸 수 있어요" },
-            { key: "FRIEND", label: "친구만", desc: "친구만 편지를 쓸 수 있어요" },
-            { key: "INVITE", label: "초대만", desc: "초대한 사람만 쓸 수 있어요" },
+            {
+              key: "FRIEND",
+              label: "친구만",
+              desc: "친구만 편지를 쓸 수 있어요",
+            },
+            {
+              key: "INVITE",
+              label: "초대만",
+              desc: "초대한 사람만 쓸 수 있어요",
+            },
           ].map((item) => (
             <label
               key={item.key}
