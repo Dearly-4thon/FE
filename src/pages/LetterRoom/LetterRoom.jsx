@@ -36,8 +36,14 @@ export default function LetterRoom() {
       return;
     }
 
-    setNickname(storedNickname || "Dearly");
+    // nickname이 비어있으면 user_id 사용
+    if (storedNickname && storedNickname.trim() !== "") {
+      setNickname(storedNickname);
+    } else {
+      setNickname(storedUserId);
+    }
   }, [navigate]);
+
 
   /* -----------------------------
       D-day 계산

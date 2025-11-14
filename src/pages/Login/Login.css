@@ -17,7 +17,7 @@
   font-family: 'Noto Sans KR', sans-serif;
 }
 
-/* 濡쒓퀬  곸뿭 */
+/* 濡쒓퀬 �곸뿭 */
 .login-logo {
   display: flex;
   align-items: center;
@@ -30,7 +30,7 @@
   font-weight: 900;
 }
 
-/* 遺  쒕ぉ */
+/* 遺��쒕ぉ */
 .subtitle {
   font-size: 16px;
   color: #9B8579;
@@ -39,7 +39,7 @@
   text-align: center;
 }
 
-/* 濡쒓렇   諛뺤뒪 */
+/* 濡쒓렇�� 諛뺤뒪 */
 .login-form-box {
   width: 345px;
   max-width: 94vw;
@@ -50,7 +50,7 @@
   box-sizing: border-box;
 }
 
-/*  낅젰  꾨뱶 */
+/* �낅젰 �꾨뱶 */
 .input-group {
   width: 100%;
   margin-bottom: 20px;
@@ -78,7 +78,7 @@
   opacity: 0.6;
 }
 
-/* 鍮꾨 踰덊샇  꾩씠肄  */
+/* 鍮꾨�踰덊샇 �꾩씠肄� */
 .password-wrapper {
   position: relative;
   display: flex;
@@ -99,7 +99,7 @@
   opacity: 1;
 }
 
-/* 濡쒓렇   踰꾪듉  */
+/* 濡쒓렇�� 踰꾪듉  */
 .login-button {
   width: 100%;
   height: 48px;
@@ -114,7 +114,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/*  섎떒 留곹겕 */
+/* �섎떒 留곹겕 */
 .out-link {
   margin-top: 20px;
   color: #9B8579;
@@ -148,7 +148,7 @@
 }
 .social-login-divider span { padding: 0 8px; }
 
-/* 移댁뭅   濡쒓렇   */
+/* 移댁뭅�� 濡쒓렇�� */
 .kakao-login-button {
   width: 100%;
   height: 48px;

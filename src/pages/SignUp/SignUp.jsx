@@ -1,31 +1,27 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SignUp.css";
-
 import eye from "../../assets/icons/eye.svg";
 import eyeoff from "../../assets/icons/eyeoff.svg";
 import Toast from "../../components/Toast/Toast.jsx";
-
 import { registerUser, checkUserId } from "../../api/auth.js";
+
 
 export default function Signup() {
   const [username, setUsername] = useState("");
   const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordCheck, setShowPasswordCheck] = useState(false);
-
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
 
   const navigate = useNavigate();
   const showToast = (message, type = "info") => setToast({ message, type });
 
-  /* ---------------------------
-        아이디 중복 확인
-  --------------------------- */
+  /* 아이디 중복 확인 */
   const handleCheckUsername = async () => {
     if (!username) {
       showToast("아이디를 입력해주세요.", "error");
@@ -33,23 +29,25 @@ export default function Signup() {
     }
 
     try {
-      const data = await checkUserId(username);
+      const res = await checkUserId(username);
 
-      if (data.available) {
-        showToast("사용 가능한 아이디입니다.", "success");
+      if (res.ok) {
+        if (res.data.available) {
+          showToast("사용 가능한 아이디입니다.", "success");
+        } else {
+          showToast("이미 사용 중인 아이디입니다.", "error");
+        }
       } else {
-        showToast("이미 사용 중인 아이디입니다.", "error");
+        showToast(res.data.message || "요청이 올바르지 않습니다.", "error");
       }
     } catch (err) {
       console.error("아이디 중복 확인 오류:", err);
-      const msg = err.response?.data?.message || "서버 오류가 발생했습니다.";
-      showToast(msg, "error");
+      showToast("서버 오류가 발생했습니다.", "error");
     }
   };
 
-  /* ---------------------------
-          회원가입 처리
-  --------------------------- */
+
+  /* 회원가입 */
   const handleSignup = async () => {
     if (!username || !password || !passwordCheck) {
       showToast("모든 필드를 입력해주세요.", "error");
@@ -73,18 +71,15 @@ export default function Signup() {
         passwordCheck,
       });
 
-      // 서버가 보내는 성공 여부 체크
-      // 예: status: "success", message: "회원가입 완료", user: {...}
-      if (res.user || res.message || res.status === "success") {
+      if (res.ok) {
         showToast("회원가입 성공!", "success");
         setTimeout(() => navigate("/login"), 1200);
       } else {
-        showToast(res.message || "회원가입 실패", "error");
+        showToast(res.data.message || "회원가입 실패", "error");
       }
-    } catch (err) {
-      console.error("회원가입 오류:", err);
-      const msg = err.response?.data?.message || "서버 오류가 발생했습니다.";
-      showToast(msg, "error");
+    } catch (e) {
+      console.error(e);
+      showToast("서버 오류가 발생했습니다.", "error");
     } finally {
       setLoading(false);
     }
@@ -181,7 +176,6 @@ export default function Signup() {
           </div>
         </div>
 
-        {/* 회원가입 버튼 */}
         <button
           className="signup-button"
           onClick={handleSignup}

@@ -1,76 +1,63 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-
 import eye from "../../assets/icons/eye.svg";
 import eyeoff from "../../assets/icons/eyeoff.svg";
 import Toast from "../../components/Toast/Toast.jsx";
-import DearlyLogo from "../../components/DearlyLogo.jsx";
+import DearlyLogo from "../../components/DearlyLogo.jsx"; 
+import { loginUser, saveTokens, getKakaoLoginUrl } from "../../api/auth.js";
 
-import { loginUser, getKakaoLoginUrl } from "../../api/auth.js";
 
 export default function Login() {
   const navigate = useNavigate();
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const [toast, setToast] = useState(null);
 
   const showToast = (message, type = "info") => {
     setToast({ message, type });
   };
 
-  /* -----------------------------
-        일반 로그인
-  ----------------------------- */
+  /* 일반 로그인 */
   const handleLogin = async () => {
+    console.log("Login page rendered");
     if (!username || !password) {
       showToast("아이디와 비밀번호를 입력해주세요.", "error");
       return;
     }
 
     setLoading(true);
+    const res = await loginUser({ username, password });
 
-    try {
-      const res = await loginUser({ username, password });
+    if (res.ok) {
+      saveTokens(res.data.tokens.access, res.data.tokens.refresh);
 
-      // res = 백엔드가 보내는 JSON 그 자체
-      // res.access, res.refresh, res.user 등
-      
-      if (res.access && res.refresh) {
-        // 토큰 저장
-        localStorage.setItem("accessToken", res.access);
-        localStorage.setItem("refreshToken", res.refresh);
+      const nicknameFromServer = res.data.user.profile?.nickname;
+      const finalNickname =
+        nicknameFromServer && nicknameFromServer.trim() !== ""
+          ? nicknameFromServer
+          : res.data.user.user_id;
 
-        if (res.user) {
-          localStorage.setItem("user_id", res.user.id);
-          localStorage.setItem("nickname", res.user.nickname);
-        }
+      localStorage.setItem("user_id", res.data.user.user_id);
+      localStorage.setItem("nickname", finalNickname);
 
-        showToast("로그인 성공!", "success");
-        setTimeout(() => navigate("/letters"), 700);
-      } else {
-        showToast(res.message || "로그인 실패", "error");
-      }
-    } catch (err) {
-      console.error("로그인 오류:", err);
-      const msg = err.response?.data?.message || "로그인 실패";
-      showToast(msg, "error");
-    } finally {
-      setLoading(false);
+      showToast("로그인 성공!", "success");
+      setTimeout(() => navigate("/letters"), 500);
+    } else {
+      showToast(res.data.message || "로그인 실패", "error");
     }
+
+    setLoading(false);
   };
 
-
-  /* -----------------------------
-        카카오 로그인
-  ----------------------------- */
+  /* 카카오 로그인 */
   const handleKakaoLogin = () => {
     window.location.href = getKakaoLoginUrl();
   };
+
 
   return (
     <div className="login-container">
@@ -82,7 +69,7 @@ export default function Login() {
         />
       )}
 
-      {/* 로고 */}
+      {/* 로고 영역 */}
       <div className="login-logo">
         <DearlyLogo />
       </div>
