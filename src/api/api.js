@@ -1,6 +1,8 @@
 import axios from "axios";
 import { API_BASE } from "./config";
 
+console.log("💡 API_BASE = ", API_BASE);
+
 // ---- 토큰 키 ----
 const ACCESS_KEY = "accessToken";
 const REFRESH_KEY = "refreshToken";
