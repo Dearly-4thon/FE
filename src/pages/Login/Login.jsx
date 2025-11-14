@@ -41,7 +41,8 @@ export default function Login() {
           ? nicknameFromServer
           : res.data.user.user_id;
 
-      localStorage.setItem("user_id", res.data.user.user_id);
+      localStorage.setItem("user_id", res.data.user.id); 
+      localStorage.setItem("user_name", res.data.user.user_id);
       localStorage.setItem("nickname", finalNickname);
 
       showToast("로그인 성공!", "success");
