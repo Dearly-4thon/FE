@@ -1,10 +1,10 @@
-/* 상단바(56px) + 여백(44px) 고려해서 내려놓기 */
+/* 상단바 + 여백 조정 */
 .mbx-header {
-  margin-top: calc(env(safe-area-inset-top) + 56px + 44px);
+  margin-top: calc(env(safe-area-inset-top) + 80px + 32px);
   text-align: center;
   position: relative;
   z-index: 500;
-  /* 허브(200) 위로만 띄우되, 화면 전체 오버레이는 사용 안 함 */
+  padding: 0 16px;
   font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 }
 
@@ -112,51 +112,60 @@
   font-weight: 400;
 }
 
-/* 허브 아래 여백 (너무 멀지 않게) */
+/* 허브 아래 여백 - CenterHub와 MailboxTab 겹침 방지 */
 .mbx-center-spacer {
-  height: calc(var(--hub-size, 360px) / 2 + var(--hub-gap, 24px));
+  height: 500px; /* CenterHub 완전히 끌어내리기 위해 고정 높이 */
 }
 
-/* 화면 전체 배경 (노란 PWA 느낌) */
-/* 화면 전체 배경 (노란 PWA 느낌) */
+/* 화면 전체 배경 (편지방과 동일한 반응형 구조) */
 .mailbox-page {
+  width: 100%;
+  min-height: 100vh;
   background: #FFFAEE;
+  display: flex;
+  justify-content: center;
 }
 
-/* 실제 앱 프레임 (393 고정) */
+/* 앱 컨텐츠 영역 (편지방과 동일) */
 .mailbox-screen {
-  max-width: var(--app-width, 393px);
-  margin: 0 auto;
-
-  /* 네비까지 꽉 채우되, 세로는 스크롤 가능하게 */
-  min-height: calc(
-    100vh - env(safe-area-inset-top) - var(--navbar-height, 78px)
-  );
-  padding-bottom: calc(env(safe-area-inset-bottom) + 24px);
+  width: 393px;
+  background: inherit;
+  margin-top: 0;
+  padding: 0;
+  box-sizing: border-box;
+  min-height: 100vh;
+  position: relative;
 }
 
-.mbx-center-spacer {
-  height: 580px; /* HUB_TOP(160px) + HUB_SIZE(360px) + 여백(60px) = 580px */
-}
-
-/* 반응형 - 작은 화면에서 스페이서 조정 */
-@media (max-width: 480px) {
-  .mbx-center-spacer {
-    height: 540px; /* 작은 화면에서도 완전 분리 */
+/* 모바일에서는 전체 너비 사용 */
+@media (max-width: 767px) {
+  .mailbox-page {
+    display: block;
+    background: #FFFAEB;
   }
   
   .mailbox-screen {
-    max-width: 100%;
-    padding: 0 8px;
+    width: 100%;
+    padding: 0 16px;
+    background: #FFFAEB;
+  }
+}
+
+.mbx-center-spacer {
+  height: calc(var(--hub-size, 360px) / 2 + var(--hub-gap, 24px) + 40px);
+}
+
+/* 반응형 - 작은 화면에서 스페이서 줄이기 */
+@media (max-width: 767px) {
+  .mbx-center-spacer {
+    height: calc(var(--hub-size, 360px) / 2 + var(--hub-gap, 24px) + 20px);
   }
   
   .mbx-header {
-    margin-top: calc(env(safe-area-inset-top) + 56px + 24px);
+    margin-top: calc(env(safe-area-inset-top) + 80px + 20px);
   }
   
   .mbx-title {
     font-size: 18px;
   }
 }
-
-

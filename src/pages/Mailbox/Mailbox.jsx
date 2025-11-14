@@ -30,7 +30,9 @@ export default function Mailbox() {
 
   // ✅ 가운데 내 카드 → "나에게 보낸 편지" 화면으로 이동
   const handleSelectSelf = () => {
+    console.log('나 버튼 클릭 - SentTomePage로 이동');
     navigate("/mailbox/me", {
+      replace: false,
       state: {
         isSelf: true,
         from: "mailbox-centerhub",
@@ -99,6 +101,16 @@ export default function Mailbox() {
         {/* 하단 네비 여백 */}
         <div aria-hidden style={{ height: "var(--navbar-height, 78px)" }} />
       </div>
+      
+      {/* + 버튼 (편지쓰기로 이동) */}
+      <button
+        className="mailbox-fab"
+        onClick={() => navigate("/write")}
+        aria-label="편지 쓰기"
+        type="button"
+      >
+        +
+      </button>
     </div>
   );
 }

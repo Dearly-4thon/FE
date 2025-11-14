@@ -47,19 +47,21 @@ export default function WriteLetterForm() {
    ========================== */
   return (
     <div className="wl-screen">
-      <Header title="편지 쓰기" />
-      {/* 제목줄 */}
-      <TitleRow title="누구에게 편지를 쓸까요" showQuestion />
+      <div className="wl-content">
+        <Header title="편지 쓰기" />
+        {/* 제목줄 */}
+        <TitleRow title="누구에게 편지를 쓸까요" showQuestion />
 
-      {/* 친구 원형 스테이지 */}
-      <CircleStage
-        demoFriends={true}
-        onSelectRecipient={(t) =>
-          t?.id === "me" || t?.type === "self" || t?.isSelf ? goSelf() : goFriend(t)
-        }
-        onSelectSelf={goSelf}
-        onSelectFriend={goFriend}
-      />
+        {/* 친구 원형 스테이지 */}
+        <CircleStage
+          demoFriends={true}
+          onSelectRecipient={(t) =>
+            t?.id === "me" || t?.type === "self" || t?.isSelf ? goSelf() : goFriend(t)
+          }
+          onSelectSelf={goSelf}
+          onSelectFriend={goFriend}
+        />
+      </div>
 
       {/* + 버튼 (친구목록 선택 모달) */}
       <button

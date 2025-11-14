@@ -289,7 +289,6 @@ export default function App() {
 
       {/* 없는 경로는 기본으로 */}
       <Route path="*" element={<Navigate to="/letters" replace />} />
-      </Route>
     </Routes>
   );
 }

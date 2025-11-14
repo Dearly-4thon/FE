@@ -1,31 +1,52 @@
 // src/api/notifications.js
-import { get, post } from "./api";
+import { API_BASE } from "./config";
+import { getAccessToken } from "./auth";
 
-export const getNotifications = (params = {}) => {
-  const q = new URLSearchParams();
-  if (params.unread_only === true) q.set("unread_only", "true");
-  if (params.page) q.set("page", params.page);
-  if (params.page_size) q.set("page_size", params.page_size);
-  const qs = q.toString();
-  return get(`/notifications${qs ? `?${qs}` : ""}`);
+// 공통 헤더
+const getAuthHeaders = () => {
+  const token = getAccessToken();
+
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
 };
 
-export const getUnreadNotifications = () =>
-  get("/notifications?unread_only=true");
-
-// 이름을 markAsRead로 export (별칭도 같이 내보내면 더 편함)
-export const markAsRead = (id) =>
-  post(`/notifications/${encodeURIComponent(id)}/read`, {});
-
-// 선택: 기존 이름도 유지하고 싶다면 아래 한 줄 추가
-export const readNotification = markAsRead;
-
-// 서버 500일때 빈 목록 뜨게
-export const safeGetNotifications = async (params = {}) => {
+/**
+ * GET /notifications/
+ * 전체 알림 목록 조회
+ */
+export const getNotifications = async () => {
   try {
-    return await getNotifications(params);
-  } catch (e) {
-    if (e?.response?.status === 500) return []; // 빈 목록로 폴백
-    throw e;
+    const res = await fetch(`${API_BASE}/notifications/`, {
+      method: "GET",
+      headers: getAuthHeaders(),
+    });
+
+    const data = await res.json().catch(() => null);
+    return { ok: res.ok, data };
+  } catch (error) {
+    console.error("알림 목록 조회 중 에러:", error);
+    return { ok: false, data: null };
+  }
+};
+
+/**
+ * POST /notifications/{id}/read/
+ * 특정 알림 읽음 처리
+ */
+export const markNotificationRead = async (id) => {
+  try {
+    const res = await fetch(`${API_BASE}/notifications/${id}/read/`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify({}), // 보낼 데이터 없으면 빈 객체
+    });
+
+    const data = await res.json().catch(() => null);
+    return { ok: res.ok, data };
+  } catch (error) {
+    console.error("알림 읽음 처리 중 에러:", error);
+    return { ok: false, data: null };
   }
 };

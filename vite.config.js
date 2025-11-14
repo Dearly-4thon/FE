@@ -6,5 +6,18 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    strictPort: true,
+    cors: true,
+    proxy: {
+      '/api': {
+        target: 'https://zihyuniz.shop',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
   },
+  define: {
+    global: 'globalThis',
+  }
 })

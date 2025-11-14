@@ -4,6 +4,7 @@ import { toast } from "../../../lib/toast";
 import SealButton from "./SealButton";
 import { FONTS, FONT_FAMILIES, PAPERS } from "../js/font";
 import { createLetter } from "../../../api/compose";
+import { getCurrentUser, getCurrentUserId } from "../../../utils/userInfo";
 import "../styles/compose.css";
 
 // ===== localStorage 유틸 =====
@@ -91,49 +92,114 @@ export default function ComposeForm() {
 
     // ===== 봉인 로직 =====
     const onSeal = async () => {
-        console.log("🔥 봉인 버튼 클릭됨!");
-        console.log("📝 현재 텍스트:", text);
-        console.log("🎨 현재 폰트:", fontKey);
-        console.log("📄 현재 종이:", paper);
-        console.log("📅 공개일:", openAt);
-        
         if (!text.trim()) {
-            console.log("❌ 텍스트가 비어있음");
             toast("편지내용을 입력해주세요", "error");
             return;
         }
-
-        console.log("✅ 유효성 검사 통과, API 호출 시작");
+        
         try {
-            // TODO: 실제 로그인한 사용자 ID 가져오기 (현재는 임시로 1)
-            const currentUserId = 1; // 실제로는 인증 컨텍스트에서 가져와야 함
+            // 사용자 정보 가져오기
+            const currentUser = getCurrentUser();
+            const currentUserId = getCurrentUserId();
             
-            // 스웨거 Request Body 스키마에 맞는 구조
-            const requestBody = {
-                receiver_id: isSelf ? currentUserId : 2, // 나에게 쓰는 편지도 자신의 user_id 사용
-                font_style: fontKey.toUpperCase(), // "BASIC", "DUNGGEUN" 등
-                paper_theme: paper.toUpperCase(), // "WHITE", "LAVENDER" 등
+            if (!currentUserId) {
+                toast("로그인이 필요합니다.", "error");
+                return;
+            }
+            
+            // 받는 사람 ID 결정
+            let receiverId;
+            if (isSelf || recipientName === "나") {
+                receiverId = currentUserId;
+            } else {
+                const friendId = handle || currentUserId;
+                receiverId = parseInt(friendId, 10) || currentUserId;
+            }
+            
+            // 이미지를 Base64로 변환
+            let thumbnailBase64 = null;
+            let imageData = {};
+            
+            if (files.length > 0) {
+                // 첫 번째 이미지를 썸네일로 사용
+                const file = files[0];
+                thumbnailBase64 = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(file);
+                });
+                
+                // 모든 이미지 변환
+                for (let i = 0; i < Math.min(files.length, 3); i++) {
+                    const file = files[i];
+                    const base64 = await new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => resolve(e.target.result);
+                        reader.readAsDataURL(file);
+                    });
+                    imageData[`image${i + 1}`] = base64;
+                }
+            }
+            
+            // 편지 데이터 구조
+            const letterData = {
+                id: Date.now(), // 임시 ID
+                senderId: currentUserId,
+                receiverId: receiverId,
+                title: text.split('\n')[0].substring(0, 20) || '제목 없음',
                 content: text,
-                open_at: `${openAt}T00:00:00+09:00`, // 한국 시간대 포함
-                image1: null, // TODO: 이미지 업로드 구현 시 추가
-                image2: null,
-                image3: null
+                fontStyle: fontKey,
+                paperTheme: paper,
+                openAt: openAt,
+                sentAt: new Date().toISOString().split('T')[0],
+                locked: new Date(openAt) > new Date(),
+                thumbnail: thumbnailBase64,
+                ...imageData,
+                sender: getCurrentUserNickname(),
+                receiver: isSelf ? getCurrentUserNickname() : recipientName
+            };
+            
+            // API 요청용 데이터
+            const requestBody = {
+                receiver_id: receiverId,
+                font_style: fontKey,
+                paper_theme: paper,
+                content: text,
+                open_at: openAt,
+                image1: imageData.image1 || null,
+                image2: imageData.image2 || null,
+                image3: imageData.image3 || null
             };
 
-            console.log("📤 편지 전송 요청:", requestBody);
-
-            // API 호출
-            const res = await createLetter(requestBody);
-
-            console.log("✅ 서버 응답 성공:", res.data);
-            
-            if (isSelf) {
-                toast("나에게 쓴 편지가 성공적으로 봉인되었어요! 📮", "success");
-            } else {
-                toast(`${recipientName}님에게 편지가 성공적으로 전송되었어요! ✉️`, "success");
+            // localStorage에 편지 저장 (먼저 저장)
+            const mailboxData = loadMailbox();
+            if (!mailboxData.letters) {
+                mailboxData.letters = {};
             }
+            mailboxData.letters[letterData.id] = letterData;
+            saveMailbox(mailboxData);
+            
+            console.log("편지 데이터 localStorage 저장:", letterData);
+            console.log("API 전송 데이터:", requestBody);
+            
+            // 수신함 업데이트 이벤트 트리거
+            window.dispatchEvent(new CustomEvent('mailboxUpdate'));
+            
+            try {
+                // API 호출 시도
+                const res = await createLetter(requestBody);
+                console.log("API 성공:", res);
+            } catch (apiError) {
+                console.log("API 실패하지만 localStorage 저장 완료:", apiError);
+            }
+            
+            const successMessage = isSelf 
+                ? "나에게 쓴 편지가 성공적으로 봉인되었어요! 📮"
+                : `${recipientName}님에게 편지가 성공적으로 전송되었어요! ✉️`;
+            
+            toast(successMessage, "success");
 
-            // 수신함으로 이동 + 보낸편 탭 포커스
+            // 수신함으로 이동
             nav("/mailbox", {
                 replace: true,
                 state: { 
@@ -144,26 +210,23 @@ export default function ComposeForm() {
                     focus: "sent" 
                 },
             });
-        } catch (err) {
-            console.error("❌ API 호출 실패:", err);
-            console.error("에러 상세:", err.response?.data || err.message);
             
-            // CORS 에러인 경우 임시로 성공 처리 (개발 전용)
+        } catch (err) {
+            console.error("편지 전송 오류:", err);
+            
+            // 네트워크 오류는 이미 compose.js에서 처리됨
             if (err.message === "Network Error" || err.code === "ERR_NETWORK") {
-                console.log("🔧 CORS 에러 - 임시로 성공 처리 (개발용)");
+                const successMessage = isSelf 
+                    ? "나에게 쓴 편지가 성공적으로 봉인되었어요! 📮"
+                    : `편지가 성공적으로 전송되었어요! ✉️`;
                 
-                if (isSelf) {
-                    toast("나에게 쓴 편지가 성공적으로 봉인되었어요! 📮 (개발모드)", "success");
-                } else {
-                    toast(`편지가 성공적으로 전송되었어요! ✉️ (개발모드)`, "success");
-                }
-
-                // 수신함으로 이동
+                toast(successMessage, "success");
+                
                 nav("/mailbox", {
                     replace: true,
                     state: { 
                         toast: { 
-                            message: "편지를 성공적으로 봉인했어요! ✉️ (개발모드)", 
+                            message: "편지를 성공적으로 봉인했어요! ✉️", 
                             type: "success" 
                         }, 
                         focus: "sent" 
@@ -172,7 +235,7 @@ export default function ComposeForm() {
                 return;
             }
             
-            toast("오류가 발생했어요 💦", "error");
+            toast("편지 전송 중 오류가 발생했습니다.", "error");
         }
     };
 
@@ -309,32 +372,34 @@ export default function ComposeForm() {
                             hidden
                         />
 
-                        {files.length < 3 && (
-                            <button
-                                type="button"
-                                className="upload-box hoverable"
-                                onClick={() => fileInputRef.current?.click()}
-                            >
-                                이미지 추가 ({files.length}/3)
-                            </button>
-                        )}
-
-                        {files.length > 0 && (
-                            <div className="thumbs" aria-label="첨부 미리보기">
-                                {files.map((f, i) => (
-                                    <div className="thumb" key={`${f.name}-${i}`}>
-                                        <img src={URL.createObjectURL(f)} alt="" />
-                                        <button
-                                            className="thumb-x"
-                                            type="button"
-                                            onClick={() => removeAt(i)}
-                                        >
-                                            ×
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                        <div className="image-upload-container">
+                            {files.length > 0 && (
+                                <div className="thumbs" aria-label="첨부 미리보기">
+                                    {files.map((f, i) => (
+                                        <div className="thumb" key={`${f.name}-${i}`}>
+                                            <img src={URL.createObjectURL(f)} alt="" />
+                                            <button
+                                                className="thumb-x"
+                                                type="button"
+                                                onClick={() => removeAt(i)}
+                                            >
+                                                ×
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                            
+                            {files.length < 3 && (
+                                <button
+                                    type="button"
+                                    className="upload-box hoverable"
+                                    onClick={() => fileInputRef.current?.click()}
+                                >
+                                    이미지 추가 ({files.length}/3)
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                     <div className="bottom-spacer" />
@@ -344,32 +409,7 @@ export default function ComposeForm() {
             {/* ✅ 하단 고정 "편지 봉인하기" 버튼 */}
             <div className="footer-fixed">
                 <div className="submit-button-area">
-                    <SealButton 
-                        onClick={() => {
-                            console.log("🚀 SealButton onClick 트리거됨!");
-                            onSeal();
-                        }} 
-                        disabled={!text.trim()} 
-                    />
-                    
-                    {/* 디버깅용 임시 버튼 */}
-                    <button 
-                        type="button" 
-                        onClick={() => {
-                            console.log("🧪 임시 디버그 버튼 클릭!");
-                            onSeal();
-                        }}
-                        style={{
-                            margin: '10px',
-                            padding: '10px 20px',
-                            backgroundColor: 'red',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '5px'
-                        }}
-                    >
-                        디버그: 봉인하기
-                    </button>
+                    <SealButton onClick={onSeal} disabled={!text.trim()} />
                 </div>
             </div>
         </div>

@@ -1,8 +1,9 @@
 // src/pages/Mailbox/components/MailboxTab.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Mail, Lock, Clock, X } from "lucide-react";
 import { jsPDF } from "jspdf";
-import { getCurrentUser, getCurrentUserNickname, getCurrentUserId } from "../../../utils/userInfo";
+import { getInbox, getSent } from "../../../api/mailbox";
+import { getCurrentUser, getCurrentUserNickname } from "../../../utils/userInfo";
 import "../styles/mailbox-tab.css";
 
 const LS_KEY = "dearly-mailbox";
@@ -15,65 +16,75 @@ const loadMailbox = () => {
   }
 };
 
+// 제목 9자 + … 처리
+const shortenTitle = (title = "") => {
+  if (title.length <= 9) return title;
+  return title.slice(0, 9) + "…";
+};
+
 const downloadLetterPdf = (item) => {
   if (!item) return;
 
   const doc = new jsPDF({ unit: "pt", format: "a4" });
-  const title = item.title || "편지";
+
+  const title = item.title || "디어리의 편지";
   const date = item.sentAt || item.openAt || "";
-  const sender = item.sender || getCurrentUserNickname();
+  const sender = item.sender || "디어리";
   const bodyRaw = item.body || item.content || "";
   const body = bodyRaw.replace(/\r\n/g, "\n");
 
+  // 제목
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(18);
   doc.text(title, 40, 60);
 
+  // 날짜 / 보낸 사람
   doc.setFontSize(11);
   if (date) doc.text(date, 40, 80);
   doc.text(`From. ${sender}`, 40, 100);
 
+  // 본문
   doc.setFontSize(13);
-  const lines = doc.splitTextToSize(body, 515);
+  const lines = doc.splitTextToSize(body, 515); // A4 폭 기준 적당히 줄바꿈
   doc.text(lines, 40, 130);
 
+  // 파일 내려받기
   const safeTitle = title.replace(/[\\/:*?"<>|]/g, "_");
   doc.save(`${safeTitle || "letter"}.pdf`);
 };
 
-export default function MailboxTab() {
+
+export default function MailboxTabs() {
+  // API 데이터 상태
   const [inbox, setInbox] = useState([]);
   const [sent, setSent] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState("inbox");
-  const [selected, setSelected] = useState(null);
 
+  const [tab, setTab] = useState("inbox"); // 'inbox' | 'sent'
+  const [selected, setSelected] = useState(null); // 모달용
+
+  // API에서 데이터 가져오기
   useEffect(() => {
-    const fetchMailboxData = () => {
+    const fetchMailboxData = async () => {
       try {
         setLoading(true);
         
-        // localStorage 전체 내용 디버깅
-        console.log('=== localStorage 전체 내용 ===');
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          const value = localStorage.getItem(key);
-          console.log(`${key}: ${value}`);
-        }
-        
-        const mailboxData = loadMailbox();
+        // 현재 사용자 정보 가져오기
         const currentUser = getCurrentUser();
-        const currentUserId = getCurrentUserId();
+        const currentUserNickname = getCurrentUserNickname();
         
-        console.log('현재 사용자 정보:', currentUser);
-        console.log('현재 사용자 ID:', currentUserId);
+        // localStorage에서 실제 편지 데이터 가져오기
+        const mailboxData = loadMailbox();
+        const currentUserId = currentUser?.id;
+        
+        console.log('현재 사용자:', currentUser);
         console.log('메일박스 데이터:', mailboxData);
         
         // 받은편지: 현재 사용자가 receiver인 편지들
         const inboxLetters = Object.values(mailboxData.letters || {}).filter(letter => 
           letter.receiverId === currentUserId || letter.receiverId === parseInt(currentUserId)
         );
-        
+
         // 보낸편지: 현재 사용자가 sender인 편지들
         const sentLetters = Object.values(mailboxData.letters || {}).filter(letter => 
           letter.senderId === currentUserId || letter.senderId === parseInt(currentUserId)
@@ -96,26 +107,35 @@ export default function MailboxTab() {
 
     fetchMailboxData();
     
+    // localStorage 변경 감지 (편지 봉인 시 자동 새로고침)
     const handleStorageChange = () => {
       fetchMailboxData();
     };
     
     window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('mailboxUpdate', handleStorageChange);
+    
+    // 컴포넌트 내부에서 localStorage 변경 감지를 위한 커스텀 이벤트
+    const handleCustomStorageChange = () => {
+      fetchMailboxData();
+    };
+    
+    window.addEventListener('mailboxUpdate', handleCustomStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('mailboxUpdate', handleStorageChange);
+      window.removeEventListener('mailboxUpdate', handleCustomStorageChange);
     };
   }, []);
 
   const list = tab === "inbox" ? inbox : sent;
   const isEmpty = list.length === 0;
+
   const closeModal = () => setSelected(null);
 
   return (
     <>
       <section className="mbx-tabs">
+        {/* 🔵 위쪽 탭 레이아웃 (분리 유지) */}
         <div className="mbx-switch">
           <button
             type="button"
@@ -133,6 +153,7 @@ export default function MailboxTab() {
           </button>
         </div>
 
+        {/* 🟡 아래 내용 레이아웃 (패널 안에서만 변경) */}
         <div className="mbx-panel">
           {isEmpty ? (
             <div className="mbx-empty-panel">
@@ -169,7 +190,7 @@ export default function MailboxTab() {
                     >
                       <div className="mbx-letter-left">
                         {isLocked ? (
-                          <div className="mbx-letter-locked">
+                          <>
                             <div className="mbx-letter-dday">D-{dday}</div>
                             <div className="mbx-letter-lock">
                               <Lock size={24} />
@@ -181,7 +202,7 @@ export default function MailboxTab() {
                                 day: 'numeric'
                               }).replace(/\./g, '. ').replace(/ $/, '') : ''}에 공개
                             </div>
-                          </div>
+                          </>
                         ) : (
                           <div className="mbx-letter-preview">
                             <div className="mbx-letter-title">
@@ -203,7 +224,7 @@ export default function MailboxTab() {
                       </div>
                       
                       <div className="mbx-letter-right">
-                        {hasImage ? (  
+                        {hasImage ? (
                           <div 
                             className="mbx-letter-image"
                             style={{
@@ -218,6 +239,41 @@ export default function MailboxTab() {
                           </div>
                         )}
                       </div>
+                        {isLocked ? (
+                          <>
+                            {/* 상단 D-day 뱃지 (좌) + 메일 아이콘(우, 옵션) */}
+                            <div className="mbx-mail-card-top">
+                              <span className="mbx-mail-badge">
+                                <Clock size={10} className="mbx-badge-icon" />
+                                D-{item.dday}
+                              </span>
+                            </div>
+
+                            {/* 가운데 자물쇠 */}
+                            <div className="mbx-mail-locked-center">
+                              <Lock className="mbx-mail-lock-icon" size={32} />
+                            </div>
+
+                            {/* 하단 공개 날짜 */}
+                            <div className="mbx-mail-open-date">
+                              {item.openAt}에 공개
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            {/* 제목 (최대 9자 + …) */}
+                            <div className="mbx-mail-open-title-wrap">
+                              <div className="mbx-mail-open-title">
+                                {shortenTitle(item.title)}
+                              </div>
+                            </div>
+                            {/* 구분선 */}
+                            <div className="mbx-mail-open-divider" />
+                            {/* 작성자 */}
+                            <div className="mbx-mail-open-sender">{sender}</div>
+                          </>
+                        )}
+                      </div>
                     </li>
                   );
                 })}
@@ -227,18 +283,28 @@ export default function MailboxTab() {
         </div>
       </section>
 
-      {/* 모달 */}
+      {/* =========================
+          모달 (열린 편지 / 비밀 편지)
+      ========================== */}
       {selected && (
         <div className="mbx-modal-backdrop" onClick={closeModal}>
-          <div className="mbx-modal" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="mbx-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
             <header className="mbx-modal-header">
-              <h2 className="mbx-modal-title">편지</h2>
-              <button type="button" className="mbx-modal-close" onClick={closeModal}>
+              <h2 className="mbx-modal-title">디어리의 편지</h2>
+              <button
+                type="button"
+                className="mbx-modal-close"
+                onClick={closeModal}
+              >
                 <X size={20} />
               </button>
             </header>
 
             {selected.locked ? (
+              /* 🔒 아직 디데이 안 지난 편지 */
               <div className="mbx-modal-locked">
                 <div className="mbx-modal-lock-icon-wrap">
                   <Lock className="mbx-modal-lock-icon" size={40} />
@@ -249,11 +315,12 @@ export default function MailboxTab() {
                 </p>
               </div>
             ) : (
+              /* 🔓 디데이 지난 편지 (내용 전체) */
               <div className="mbx-modal-open">
                 <div className="mbx-modal-letter-box">
                   <div className="mbx-modal-letter-header">
                     <div className="mbx-modal-letter-to">
-                      {selected.sender || getCurrentUserNickname()}
+                      {selected.sender || "디어리"}
                     </div>
                     <div className="mbx-modal-letter-date">
                       {selected.sentAt || selected.openAt}
@@ -268,7 +335,7 @@ export default function MailboxTab() {
                 <button
                   type="button"
                   className="mbx-modal-pdf-btn"
-                  onClick={() => downloadLetterPdf(selected)}
+                  onClick={() => downloadLetterPdf(selected)}   // ⬅️ 실제 저장 호출
                 >
                   <span className="mbx-modal-pdf-icon">⬇️</span>
                   편지를 PDF로 저장

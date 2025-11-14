@@ -1,12 +1,11 @@
 /* 전체 영역 */
 .mbx-tabs {
-  padding: 24px 24px 40px;
+  padding: 0 24px 40px;
   font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic",
     sans-serif;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  /* margin-top 제거 - 스페이서로 충분한 간격 확보됨 */
 }
 
 /* ===========================
@@ -59,6 +58,7 @@
   border: 1.589px solid #f0d5cc;
   background: linear-gradient(180deg, #fff 0%, #fffbf8 100%);
   padding: 20px 16px; /* 패널 안쪽 여백 살짝 줄임 */
+  margin-top: 32px; /* CenterHub와의 간격 넉넉하게 */
   box-sizing: border-box;
 }
 
@@ -104,40 +104,141 @@
 }
 
 /* ===========================
-   카드 그리드
+   편지 리스트 (첨부 이미지와 같은 레이아웃)
 =========================== */
-.mbx-mail-grid-wrap {
-  margin-top: 12px; /* 패널 상단과 카드 사이 간격 줄임 */
+.mbx-mail-list-wrap {
+  margin-top: 16px;
 }
 
-.mbx-mail-grid {
+.mbx-mail-list {
   list-style: none;
   margin: 0;
   padding: 0;
-
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 13.58px; /* 가운데만 gap */
-  row-gap: 10px;       /* 세로 간격 조금 줄임 */
-}
-
-/* ✅ 바깥 카드가 Figma 사이즈(173 x 157) */
-.mbx-mail-card {
-  box-sizing: border-box;
-  width: calc((100% - 13.58px) / 2);
-  max-width: 172.917px;
-  height: 156.515px;
-  border-radius: 16px;
-  border: 0.8px solid #f0d5cc;
-  background: linear-gradient(180deg, #fff 0%, #fffbf8 100%);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1),
-    0 1px 2px -1px rgba(0, 0, 0, 0.1);
-  padding: 8px 10px;          /* 카드 안 여백 줄임 */
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
-  cursor: pointer;
+  gap: 12px;
 }
+
+/* ✅ 편지 아이템 (큰 카드 형태) */
+.mbx-letter-item {
+  display: flex;
+  align-items: stretch;
+  background: #FFFFFF;
+  border-radius: 20px;
+  border: 1px solid #E2CBBB;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 120px;
+}
+
+.mbx-letter-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* 왼쪽 텍스트 영역 */
+.mbx-letter-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 16px;
+}
+
+/* 오른쪽 이미지/아이콘 영역 */
+.mbx-letter-right {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 잠긴 편지 스타일 */
+.mbx-letter-dday {
+  background: #FFE4CC;
+  color: #E07A1F;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  align-self: flex-start;
+  margin-bottom: 8px;
+}
+
+.mbx-letter-lock {
+  color: #B4BCE8;
+  margin-bottom: 8px;
+}
+
+.mbx-letter-open-info {
+  font-size: 14px;
+  color: #9B8579;
+  line-height: 1.4;
+}
+
+/* 열린 편지 스타일 */
+.mbx-letter-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mbx-letter-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #4A3428;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+
+.mbx-letter-sender {
+  font-size: 14px;
+  color: #2563EB;
+  font-weight: 500;
+}
+
+.mbx-letter-content {
+  font-size: 13px;
+  color: #9B8579;
+  line-height: 1.4;
+  margin: 4px 0;
+}
+
+.mbx-letter-date {
+  font-size: 12px;
+  color: #B3937E;
+  margin-top: auto;
+}
+
+/* 이미지 스타일 */
+.mbx-letter-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  border: 1px solid #E2CBBB;
+}
+
+/* 종이 테마 스타일 */
+.mbx-letter-paper {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #E2CBBB;
+}
+
+.mbx-letter-paper.white { background: #FFFFFF; color: #9B8579; }
+.mbx-letter-paper.lavender { background: #E6E6FA; color: #6B46C1; }
+.mbx-letter-paper.pink-heart { background: #FFE4E1; color: #EC4899; }
+.mbx-letter-paper.sky { background: #E0F2FE; color: #0EA5E9; }
+.mbx-letter-paper.clover { background: #DCFCE7; color: #16A34A; }
+.mbx-letter-paper.peach { background: #FED7AA; color: #EA580C; }
 
 /* 🔥 “편지 안에 편지” 제거 → inner는 레이아웃만 */
 .mbx-mail-card-inner {
@@ -175,7 +276,6 @@
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
-  line-clamp: 2;  /* 표준 속성 추가 */
   -webkit-box-orient: vertical;
   color: #4a3428;
   line-height: 20px;
@@ -381,15 +481,4 @@
 
 .mbx-modal-pdf-icon {
   font-size: 16px;
-}
-
-/* 나에게 보낸 편지 구분 스타일 */
-.mbx-mail-card.self-letter {
-  border: 2px solid #4d8bff;
-  background: linear-gradient(180deg, #f8fbff 0%, #fff 100%);
-}
-
-.mbx-mail-card.self-letter .mbx-mail-open-sender {
-  color: #4d8bff;
-  font-weight: 600;
 }

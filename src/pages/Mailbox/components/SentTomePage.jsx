@@ -3,7 +3,18 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ArrowUpDown, Send, Mail } from "lucide-react";
 import { getSelfLetters } from "../../../api/mailbox";
+import { getCurrentUser, getCurrentUserNickname, getCurrentUserId } from "../../../utils/userInfo";
 import "../styles/sent-to-me.css";
+
+const LS_KEY = "dearly-mailbox";
+
+const loadMailbox = () => {
+  try {
+    return JSON.parse(localStorage.getItem(LS_KEY) || "{}");
+  } catch {
+    return {};
+  }
+};
 
 export default function SentToMePage() {
   const navigate = useNavigate();
@@ -21,60 +32,60 @@ export default function SentToMePage() {
     navigate("/write");
   };
 
-  // 임시 목업 데이터로 테스트 (백엔드 서버 연결 안될 때)
+  // localStorage에서 나에게 보낸 편지 가져오기
   useEffect(() => {
-    const fetchSelfLetters = async () => {
+    const fetchSelfLetters = () => {
       try {
         setLoading(true);
         
-        // 백엔드 서버 연결 시도
-        const response = await getSelfLetters(sort === "latest" ? "latest" : "oldest");
-        console.log("나에게 쓴 편지 API 응답:", response.data);
+        const currentUser = getCurrentUser();
+        const currentUserId = getCurrentUserId();
+        const mailboxData = loadMailbox();
         
-        // API 응답 데이터를 UI에 맞게 변환
-        const transformedData = (response.data || []).map(letter => ({
+        console.log('나에게 보낸 편지 조회 - 현재 사용자:', currentUser);
+        
+        // 나에게 보낸 편지: sender와 receiver가 모두 현재 사용자인 편지들
+        const selfLetters = Object.values(mailboxData.letters || {}).filter(letter => {
+          try {
+            const letterSenderId = parseInt(letter.senderId) || letter.senderId;
+            const letterReceiverId = parseInt(letter.receiverId) || letter.receiverId;
+            const userIdNum = parseInt(currentUserId) || currentUserId;
+            
+            return (letterSenderId === userIdNum && letterReceiverId === userIdNum);
+          } catch (err) {
+            console.error('편지 필터링 오류:', err, letter);
+            return false;
+          }
+        });
+        
+        console.log('나에게 보낸 편지 목록:', selfLetters);
+        
+        // localStorage 데이터를 UI에 맞게 변환
+        const transformedData = selfLetters.map(letter => ({
           id: letter.id,
-          title: letter.content?.slice(0, 20) || "제목 없음",
+          title: letter.title || letter.content?.slice(0, 20) || "제목 없음",
           content: letter.content,
-          isLocked: !letter.is_open,
-          openDate: letter.open_at ? new Date(letter.open_at).toLocaleDateString() : "",
-          daysLeft: letter.is_open ? 0 : Math.max(0, Math.ceil((new Date(letter.open_at) - new Date()) / (1000 * 60 * 60 * 24))),
-          font: letter.font_style?.toLowerCase() || "basic",
-          paper: letter.paper_theme?.toLowerCase() || "white",
-          createdAt: letter.created_at
+          isLocked: letter.locked || (letter.openAt && new Date(letter.openAt) > new Date()),
+          openDate: letter.openAt ? new Date(letter.openAt).toLocaleDateString('ko-KR').replace(/\./g, '. ').replace(/ $/, '') : "",
+          daysLeft: letter.openAt ? Math.max(0, Math.ceil((new Date(letter.openAt) - new Date()) / (1000 * 60 * 60 * 24))) : 0,
+          font: letter.fontStyle?.toLowerCase() || "basic",
+          paper: letter.paperTheme?.toLowerCase() || "white",
+          createdAt: letter.sentAt || letter.createdAt,
+          thumbnail: letter.thumbnail,
+          image1: letter.image1
         }));
         
-        setSelfLetters(transformedData);
-        setError(null);
-      } catch (err) {
-        console.error("❌ 나에게 쓴 편지 API 에러:", err);
-        
-        // 임시 목업 데이터로 대체 (개발/테스트용)
-        console.log("🔄 임시 목업 데이터 사용 중...");
-        const mockData = [
-          {
-            id: 1,
-            title: "2024년 말의 나에게",
-            content: "안녕, 미래의 나야. 지금은 2024년 12월이야. 새해가 되면 너는 어떤 모습일까?",
-            isLocked: true,
-            openDate: "2025.01.01",
-            daysLeft: 18,
-            font: "cute",
-            paper: "pink",
-            createdAt: "2024-12-14"
-          },
-          {
-            id: 2,
-            title: "취업 준비하는 나에게",
-            content: "힘내자! 지금은 힘들지만 분명히 좋은 결과가 있을 거야.",
-            isLocked: false,
-            openDate: "2024.12.01",
-            daysLeft: 0,
-            font: "handwriting",
-            paper: "beige",
-            createdAt: "2024-11-01"
+        // 정렬 적용
+        const sortedData = transformedData.sort((a, b) => {
+          if (sort === "latest") {
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          } else {
+            return new Date(a.createdAt) - new Date(b.createdAt);
           }
-        ];
+        });
+        
+        setSelfLetters(sortedData);
+        setError(null);
         
         setSelfLetters(mockData);
         setError(null); // 에러 상태 해제
@@ -95,7 +106,7 @@ export default function SentToMePage() {
         </button>
 
         <div className="stm-titles">
-          <h1 className="stm-title">나에게 보낸 편지</h1>
+          <h1 className="stm-title">{getCurrentUserNickname()}에게 보낸 편지</h1>
           <p className="stm-count">
             {loading ? "불러오는 중..." : `총 ${selfLetters.length}개`}
           </p>

@@ -1,18 +1,29 @@
 :root{
-  --app-width: 100%;  /* 393px → 100% 반응형으로 변경 */
+  --app-width: 393px;  /* 앱 너비 고정 */
   --navbar-height: 78px;
   --fab-right: 23px;
   --fab-gap-above-navbar: 34px;
   --fab-size: 64px;
 }
 
-/* 앱 프레임(반응형으로 변경) */
-.app-shell{
-  position: relative;
-  width: 100%;  /* var(--app-width) → 100% 직접 설정 */
-  max-width: none;  /* 최대 너비 제한 제거 */
-  margin: 0 auto;
+/* 편지쓰기 화면 컨테이너 (편지방과 동일한 구조) */
+.wl-screen {
+  width: 100%;
   min-height: 100vh;
+  display: flex;
+  background: #FFFAEB; /* 수신함과 동일한 배경색 */
+  justify-content: center;
+}
+
+/* 앱 컨텐츠 영역 */
+.wl-content {
+  width: var(--app-width);
+  background: inherit;
+  margin-top: 0;
+  padding: 0;
+  box-sizing: border-box;
+  min-height: 100vh;
+  position: relative;
 }
 
 /* ▼ 네비: viewport 하단에 '고정', 전체 너비 */
@@ -25,11 +36,11 @@
   z-index: 50;
 }
 
-/* ▼ FAB: viewport 기준 고정 + 오른쪽에서 23px */
+/* ▼ FAB: 앱 컨테이너 기준 위치 (편지방과 동일) */
 .wl-fab{
   position: fixed;
-  right: 23px;  /* 오른쪽 고정 위치로 수정 */
   bottom: calc(var(--navbar-height) + var(--fab-gap-above-navbar));
+  right: calc(50% - var(--app-width)/2 + var(--fab-right));
   width: var(--fab-size); height: var(--fab-size);
   border: none; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
@@ -39,6 +50,24 @@
   z-index: 100;
 }
 .wl-fab:active{ transform: scale(.98); }
+
+/* 모바일에서는 기존 방식 유지 */
+@media (max-width: 767px) {
+  .wl-screen {
+    display: block;
+    background: #FFFAEB; /* 수신함과 동일한 배경색 */
+  }
+  
+  .wl-content {
+    width: 100%;
+    margin-top: 0;
+    background: #FFFAEB;
+  }
+  
+  .wl-fab {
+    right: var(--fab-right);
+  }
+}
 
 /* ▼ 모달 오버레이(네비까지 함께 어둡게) */
 .wl-overlay{

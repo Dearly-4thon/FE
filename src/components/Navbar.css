@@ -30,7 +30,7 @@
   background: var(--navbar-bg);
   border-top: 1px solid var(--navbar-border);
   /* border-radius: 12px 12px 0 0; */  /* 둥근 효과 제거 */
-  box-shadow: var(--navbar-shadow);
+  /* box-shadow: var(--navbar-shadow); */ /* 그림자 제거 */
   -webkit-tap-highlight-color: transparent;
   overflow: clip;
 }
@@ -81,7 +81,7 @@
 
 /* 다크 모드 톤 조정(선택) */
 @media (prefers-color-scheme: dark){
-  .navbar{ box-shadow: 0 -6px 24px rgba(0,0,0,.25); }
+  /* .navbar{ box-shadow: 0 -6px 24px rgba(0,0,0,.25); } */ /* 다크모드 그림자도 제거 */
   .nav-item{ opacity: .72; }
   .nav-item.active{ opacity: 1; }
 }
