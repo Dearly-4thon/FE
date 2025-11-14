@@ -136,13 +136,13 @@
 }
 
 .mbx-center-spacer {
-  height: 240px; /* CenterHub와 MailboxTab 사이 적당한 간격 */
+  height: 580px; /* HUB_TOP(160px) + HUB_SIZE(360px) + 여백(60px) = 580px */
 }
 
-/* 반응형 - 작은 화면에서 스페이서 줄이기 */
+/* 반응형 - 작은 화면에서 스페이서 조정 */
 @media (max-width: 480px) {
   .mbx-center-spacer {
-    height: 200px;
+    height: 540px; /* 작은 화면에서도 완전 분리 */
   }
   
   .mailbox-screen {
@@ -158,3 +158,5 @@
     font-size: 18px;
   }
 }
+
+

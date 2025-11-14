@@ -1,11 +1,10 @@
 /* src/pages/LetterRoom/LetterRoom.css */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
 .wl-room {
   background: #fff;
   min-height: 100vh;
 }
-
-
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
 .letterroom-container {
   width: 100%;

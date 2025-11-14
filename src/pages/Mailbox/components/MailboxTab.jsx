@@ -1,8 +1,9 @@
 // src/pages/Mailbox/components/MailboxTabs.jsx
 import React, { useState, useMemo, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Mail, Lock, Clock, X } from "lucide-react";
 import { jsPDF } from "jspdf";              // ⬅️ 추가
-import { getInbox, getSent } from "../../../api/mailbox";
+import { getInbox, getSent, getSelfLetters } from "../../../api/mailbox";
 import "../styles/mailbox-tab.css";
 
 
@@ -55,81 +56,49 @@ const downloadLetterPdf = (item) => {
 
 
 export default function MailboxTabs() {
+  const location = useLocation();
+  
   // API 데이터 상태
   const [inbox, setInbox] = useState([]);
   const [sent, setSent] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [dataVersion, setDataVersion] = useState(0); // 데이터 새로고침용
 
   const [tab, setTab] = useState("inbox"); // 'inbox' | 'sent'
   const [selected, setSelected] = useState(null); // 모달용
 
-  // API에서 데이터 가져오기
+  // API에서 데이터 가져오기 (페이지 이동 시 새로고침 포함)
   useEffect(() => {
     const fetchMailboxData = async () => {
       try {
+        console.log("🔄 MailboxTab: 데이터 새로고침 시작");
         setLoading(true);
         
-        // 받은편지 목업 데이터
-        const mockInboxData = [
-          {
-            id: 1,
-            title: "안녕하세요! 처음 편지예요",
-            sender: "친구A",
-            locked: false,
-            openAt: "2024.12.10",
-            dday: 0,
-            sentAt: "2024.12.10",
-            body: "안녕하세요! 처음으로 편지를 보내봅니다. 잘 부탁드려요! 이렇게 연결되어서 정말 기쁩니다.",
-            content: "안녕하세요! 처음으로 편지를 보내봅니다. 잘 부탁드려요! 이렇게 연결되어서 정말 기쁩니다."
-          },
-          {
-            id: 2,
-            title: "크리스마스 편지",
-            sender: "산타",
-            locked: true,
-            openAt: "2024.12.25",
-            dday: 11,
-            sentAt: "2024.12.01",
-            body: "",
-            content: ""
-          },
-          {
-            id: 3,
-            title: "새해 편지",
-            sender: "엄마",
-            locked: true,
-            openAt: "2025.01.01",
-            dday: 18,
-            sentAt: "2024.12.01",
-            body: "",
-            content: ""
-          }
-        ];
-
-        // 보낸편지 목업 데이터
-        const mockSentData = [
-          {
-            id: 1,
-            title: "친구에게 보낸 편지",
-            sender: "김친구",
-            locked: false,
-            sentAt: "2024.12.13",
-            body: "안녕! 오랜만이야~ 어떻게 지내?",
-            content: "안녕! 오랜만이야~ 어떻게 지내?"
-          },
-          {
-            id: 2,
-            title: "가족에게 안부 편지",
-            sender: "엄마",
-            locked: false,
-            sentAt: "2024.12.12",
-            body: "엄마 안녕하세요~ 저 잘 지내고 있어요!",
-            content: "엄마 안녕하세요~ 저 잘 지내고 있어요!"
-          }
-        ];
+        // 실제 API 호출로 데이터 가져오기
+        const [inboxResponse, sentResponse, selfResponse] = await Promise.all([
+          getInbox().catch(err => {
+            console.error("받은편지 API 에러:", err);
+            return { data: [] };
+          }),
+          getSent().catch(err => {
+            console.error("보낸편지 API 에러:", err);
+            return { data: [] };
+          }),
+          getSelfLetters().catch(err => {
+            console.error("나에게 보낸편지 API 에러:", err);
+            return { data: [] };
+          })
+        ]);
         
-        setInbox(mockInboxData);
-        setSent(mockSentData);
+        // 보낸편지에 나에게 보낸 편지도 합치기
+        const sentData = sentResponse.data || [];
+        const selfData = (selfResponse.data || []).map(letter => ({
+          ...letter,
+          isSelfLetter: true // 나에게 보낸 편지 구분용 플래그
+        }));
+        
+        setInbox(inboxResponse.data || []);
+        setSent([...sentData, ...selfData]); // 보낸편지 + 나에게 보낸편지
         
       } catch (err) {
         console.error("메일박스 데이터 로드 에러:", err);
@@ -141,7 +110,17 @@ export default function MailboxTabs() {
     };
 
     fetchMailboxData();
-  }, []);
+  }, [location.pathname, dataVersion]); // 페이지 이동 시와 데이터 변경 시 새로고침
+  
+  // 편지 전송 후 focus 처리
+  useEffect(() => {
+    if (location.state?.focus === "sent") {
+      console.log("📨 MailboxTab: 보낸편지 탭으로 이동");
+      setTab("sent");
+      // 데이터 강제 새로고침
+      setDataVersion(prev => prev + 1);
+    }
+  }, [location.state]);
 
   const list = tab === "inbox" ? inbox : sent;
   const isEmpty = list.length === 0;
@@ -192,7 +171,7 @@ export default function MailboxTabs() {
                   return (
                     <li
                       key={item.id}
-                      className="mbx-mail-card"
+                      className={`mbx-mail-card ${item.isSelfLetter ? 'self-letter' : ''}`}
                       onClick={() => setSelected(item)}
                     >
                       <div
@@ -229,8 +208,10 @@ export default function MailboxTabs() {
                             </div>
                             {/* 구분선 */}
                             <div className="mbx-mail-open-divider" />
-                            {/* 작성자 */}
-                            <div className="mbx-mail-open-sender">{sender}</div>
+                            {/* 작성자 (나에게 보낸 편지는 "나에게" 표시) */}
+                            <div className="mbx-mail-open-sender">
+                              {item.isSelfLetter ? "나에게" : sender}
+                            </div>
                           </>
                         )}
                       </div>
